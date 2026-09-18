@@ -1,1 +1,47 @@
-{"$schema":"https://schema.tauri.app/config/2","productName":"RPG Campaign Creator","version":"0.1.0","identifier":"com.siller94.rpgcampaigncreator","build":{"beforeDevCommand":"npm run dev","devUrl":"http://localhost:5173","beforeBuildCommand":"npm run build","frontendDist":"../dist"},"app":{"windows":[{"label":"main","title":"RPG Campaign Creator","width":1280,"height":850,"minWidth":900,"minHeight":650,"resizable":true}],"security":{"csp":null}},"bundle":{"active":true,"targets":["nsis","dmg"],"category":"Productivity","shortDescription":"Create D&D 5e characters and campaign content.","longDescription":"A simple desktop campaign creator for characters, DM content, print layouts, VTT tokens and Foundry VTT export.","windows":{"nsis":{"installMode":"currentUser"}},"macOS":{"minimumSystemVersion":"10.15"}}}
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "RPG Campaign Creator",
+  "version": "0.1.0",
+  "identifier": "com.siller94.rpgcampaigncreator",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "RPG Campaign Creator",
+        "width": 1280,
+        "height": 850,
+        "minWidth": 900,
+        "minHeight": 650,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis",
+      "dmg"
+    ],
+    "category": "Productivity",
+    "shortDescription": "Create D&D 5e characters and campaign content.",
+    "longDescription": "A simple desktop campaign creator for characters, DM content, print layouts, VTT tokens and Foundry VTT export.",
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "icon": []
+  }
+}
