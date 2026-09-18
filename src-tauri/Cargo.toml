@@ -1,0 +1,18 @@
+[package]
+name = "rpg-book-builder"
+version = "0.3.0"
+description = "Local-first tabletop RPG book designer"
+authors = ["RPG Book Builder"]
+edition = "2021"
+
+[lib]
+name = "rpg_book_builder_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
