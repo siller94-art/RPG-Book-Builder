@@ -1,11 +1,12 @@
 import type { CampaignProject } from "./models";
+import { starterSrd } from "./srdData";
 
 const KEY = "rpg-book-builder.campaign.v1";
 
 export const emptyProject = (): CampaignProject => ({
   schemaVersion: 1,
   name: "My Campaign",
-  entries: [],
+  entries: [...starterSrd],
 });
 
 export function loadProject(): CampaignProject {
