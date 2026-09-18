@@ -1,0 +1,10 @@
+{
+  "id": "rpg-book-builder-importer",
+  "title": "RPG Book Builder Importer",
+  "description": "Imports RPG Book Builder transfer packages into Foundry VTT.",
+  "version": "0.1.0",
+  "compatibility": { "minimum": "12", "verified": "12" },
+  "authors": [{ "name": "RPG Book Builder" }],
+  "esmodules": ["scripts/importer.js"],
+  "styles": []
+}
