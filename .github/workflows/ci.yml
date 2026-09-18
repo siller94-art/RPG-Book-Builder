@@ -29,6 +29,20 @@ jobs:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
+      - name: Generate desktop icons
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os, struct, zlib, binascii
+          os.makedirs('src-tauri/icons', exist_ok=True)
+          w=h=32
+          raw=b''.join(b'\\x00'+b'\\x7c\\x30\\x2b\\xff'*w for _ in range(h))
+          def chunk(t,d): return struct.pack('>I',len(d))+t+d+struct.pack('>I',binascii.crc32(t+d)&0xffffffff)
+          png=b'\\x89PNG\\r\\n\\x1a\\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',w,h,8,6,0,0,0))+chunk(b'IDAT',zlib.compress(raw))+chunk(b'IEND',b'')
+          open('src-tauri/icons/icon.png','wb').write(png)
+          ico=struct.pack('<HHH',0,1,1)+struct.pack('<BBBBHHII',32,32,0,0,1,32,len(png),22)+png
+          open('src-tauri/icons/icon.ico','wb').write(ico)
+          PY
       - run: npm run tauri -- build
       - uses: actions/upload-artifact@v4
         with:
