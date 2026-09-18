@@ -3,7 +3,7 @@ on:
   push:
   pull_request:
 jobs:
-  build:
+  web-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,3 +12,30 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run build
+  desktop-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            artifact: macOS
+          - os: windows-latest
+            artifact: Windows
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm install
+      - run: npm run tauri -- build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RPG-Book-Builder-${{ matrix.artifact }}
+          path: |
+            src-tauri/target/release/bundle/**/*.dmg
+            src-tauri/target/release/bundle/**/*.app
+            src-tauri/target/release/bundle/**/*.exe
+            src-tauri/target/release/bundle/**/*.msi
+          if-no-files-found: error
