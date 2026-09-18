@@ -13,3 +13,8 @@ Run npm run build:macos on a Mac to create the .dmg. Public distribution should 
 
 ## Releases
 The GitHub Actions release workflow runs tests and creates Windows NSIS and macOS DMG bundles for version tags.
+
+
+## CI trigger
+
+Desktop CI is configured to run on pushes to the development branch and on pull requests. Windows and macOS installer artifacts are uploaded only after tests, the web build, and the Tauri bundle step succeed.
