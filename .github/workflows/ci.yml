@@ -29,18 +29,19 @@ jobs:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
-      - name: Generate desktop icons
+      - name: Generate desktop icons with Tauri
         shell: bash
         run: |
           mkdir -p src-tauri/icons
           node - <<'NODE'
-          const fs=require('fs');
-          const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMUlEQVR4nO3OMQEAIAzAMMC/5yFjRxMFfXpn5g5gUQhYFAIWhYBFIWBRCFgUAhbFALgABm4CPxZ7b0wAAAAASUVORK5CYII=','base64');
-          fs.writeFileSync('src-tauri/icons/icon.png',png);
-          const head=Buffer.alloc(22);head.writeUInt16LE(0,0);head.writeUInt16LE(1,2);head.writeUInt16LE(1,4);head[6]=32;head[7]=32;head.writeUInt16LE(1,10);head.writeUInt16LE(32,12);head.writeUInt32LE(png.length,14);head.writeUInt32LE(22,18);
-          fs.writeFileSync('src-tauri/icons/icon.ico',Buffer.concat([head,png]));
+          const fs=require('fs'),zlib=require('zlib');
+          const crc=(buf)=>{let c=0xffffffff;for(const x of buf){c^=x;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0)}return (c^0xffffffff)>>>0};
+          const chunk=(t,d)=>{const tb=Buffer.from(t),n=Buffer.alloc(4),r=Buffer.alloc(4);n.writeUInt32BE(d.length);r.writeUInt32BE(crc(Buffer.concat([tb,d])));return Buffer.concat([n,tb,d,r])};
+          const w=512,h=512,rows=[];for(let y=0;y<h;y++){const row=Buffer.alloc(1+w*4);for(let x=0;x<w;x++){const i=1+x*4;row[i]=36;row[i+1]=45;row[i+2]=58;row[i+3]=255}rows.push(row)}
+          const sig=Buffer.from([137,80,78,71,13,10,26,10]),ih=Buffer.alloc(13);ih.writeUInt32BE(w,0);ih.writeUInt32BE(h,4);ih[8]=8;ih[9]=6;
+          fs.writeFileSync('src-tauri/app-icon.png',Buffer.concat([sig,chunk('IHDR',ih),chunk('IDAT',zlib.deflateSync(Buffer.concat(rows))),chunk('IEND',Buffer.alloc(0))]));
           NODE
-          file src-tauri/icons/icon.png src-tauri/icons/icon.ico || true
+          npm run tauri -- icon src-tauri/app-icon.png -o src-tauri/icons
       - run: npm run tauri -- build
       - uses: actions/upload-artifact@v4
         with:
