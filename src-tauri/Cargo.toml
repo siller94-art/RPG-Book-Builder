@@ -1,6 +1,6 @@
 [package]
 name = "rpg-book-builder"
-version = "0.3.0"
+version = "0.4.0"
 description = "Local-first tabletop RPG book designer"
 authors = ["RPG Book Builder"]
 edition = "2021"
