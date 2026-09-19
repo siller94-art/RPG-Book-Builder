@@ -1,5 +1,5 @@
 name: RPG Book Builder CI
-# trigger: validate editor MVP
+# trigger: validate editor MVP branch
 on:
   workflow_dispatch:
   pull_request:
