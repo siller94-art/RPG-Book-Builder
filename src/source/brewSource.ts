@@ -9,10 +9,12 @@ export function parseBrewSource(source:string):ParsedSource{
 const esc=(s:string)=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]!));
 const inline=(s:string)=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>');
 export function safeBrewCss(css:string){return css.split('}').map(rule=>{const [sel,body]=rule.split('{');if(!body)return'';const safeSel=(sel||'').trim();if(!/^(?:\.brew[-\\w ]*|h[1-6]|p|blockquote|table|th|td)(?:[.#:>+~\\w\\s-]*)$/.test(safeSel))return'';const declarations=body.split(';').map(d=>d.trim()).filter(d=>/^(?:color|background(?:-color)?|font-(?:size|weight|style)|text-align|border(?:-[\\w-]+)?|padding(?:-[\\w-]+)?|margin(?:-[\\w-]+)?|width|max-width|min-height|column-count|column-gap)\s*:/i.test(d)&&!/(url\s*\(|expression\s*\(|javascript:|@import)/i.test(d));return declarations.length?safeSel+'{'+declarations.join(';')+'}':''}).filter(Boolean).join('\n')}
+function expandContainers(source:string){return source.replace(/{{\s*(note|descriptive|monster|statblock|wide|columns?)\s*\n([\s\S]*?)\n}}/gi,(_m,type,body)=>':::BREW:'+String(type).toLowerCase()+'\n'+body+'\n:::END')}
 export function renderBrewMarkdown(source:string){
- const lines=source.replace(/<style[\s\S]*?<\/style>/gi,'').split(/\n/),out:string[]=[];let list=false,quote=false,table=false;
+ const lines=expandContainers(source.replace(/<style[\s\S]*?<\/style>/gi,'')).split(/\n/),out:string[]=[];let list=false,quote=false,table=false,container='';
  const close=()=>{if(list){out.push('</ul>');list=false}if(quote){out.push('</blockquote>');quote=false}if(table){out.push('</tbody></table>');table=false}};
  for(let i=0;i<lines.length;i++){const raw=lines[i],s=raw.trim();
+  if(/^:::BREW:/.test(s)){close();container=s.slice(8);out.push('<div class="brew-snippet '+container+'">');continue}if(s===':::END'){close();if(container)out.push('</div>');container='';continue}
   if(!s){close();continue}
   const h=s.match(/^(#{1,6})\s+(.+)$/);if(h){close();out.push('<h'+h[1].length+'>'+inline(h[2])+'</h'+h[1].length+'>');continue}
   if(/^___+$/.test(s)){close();out.push('<hr>');continue}
