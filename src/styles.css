@@ -54,3 +54,48 @@
 .themePicker{display:grid;gap:6px;margin-bottom:10px;font-size:12px}.themeChoices{display:grid;grid-template-columns:1fr 1fr;gap:5px}.themeChoice{display:flex;align-items:center;justify-content:flex-start;gap:6px;padding:6px;font-size:10px}.themeChoice i{width:18px;height:18px;border-radius:4px;border:1px solid #777;background:#f5efd9}.themeChoice.clean i{background:#fff}.themeChoice.dark i{background:#1d2026}.themeChoice.arcane i{background:#dceaf0}.themeChoice.selected{outline:2px solid #a77b43;outline-offset:1px}
 
 .recoveryTools{display:grid;gap:5px;margin:8px 0}.recoveryList{display:grid;gap:4px;padding:6px;background:#242424;border:1px solid #444;border-radius:6px}.recoveryList button{text-align:left;font-size:10px;padding:6px}.recoveryList small{color:#aaa;padding:4px}
+
+
+/* Final RPG Book Builder desktop UI — mockup target */
+:root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0d1621;color:#dce6f1}
+body{background:#0d1621}
+.app{grid-template:72px 1fr/236px minmax(620px,1fr) 286px;background:#101a26}
+header{height:72px;background:linear-gradient(180deg,#172432 0%,#111b27 100%);border-bottom:1px solid #304153;padding:0 18px;gap:18px;box-shadow:0 1px 0 #071019;z-index:10}
+header b{font:700 22px Georgia,serif;color:#ead29a;white-space:nowrap;letter-spacing:.2px}
+header b svg{width:25px;height:25px;color:#e4bd67}
+.projectTitle{width:210px;background:#101a26;border:1px solid #33465a;color:#e9edf2;border-radius:7px;padding:9px 11px}
+.projectTitle:focus{border-color:#668bb6;box-shadow:0 0 0 2px #3f638533}
+nav{gap:6px;align-items:center}
+nav button,.quality{min-height:36px;background:#162231;border:1px solid #35485c;color:#dfe8f2;border-radius:6px;padding:8px 10px}
+nav button:hover{background:#21344a;border-color:#547395}
+nav .primary{background:#263e59;border-color:#577ca6;color:#fff}
+nav .primary:hover{background:#315173}
+.pages,.tools{background:linear-gradient(180deg,#121e2b,#0f1924);color:#d9e2ec;padding:15px;border-color:#2d3e50}
+.pages h3,.tools h3{font:700 13px Georgia,serif;color:#e6cc91;text-transform:none;letter-spacing:.2px;margin:4px 0 12px}
+.pageName{background:#162433;border:1px solid #354a60;color:#f0f4f8;border-radius:6px}
+.pageActions button,.pages>button,.tools>button{background:#162433;border-color:#31465b;color:#dce6f1}
+.pageActions button:hover,.pages>button:hover,.tools>button:hover{background:#213750;border-color:#54779c}
+.pages .thumb{height:64px!important;background:#111c28!important;color:#d8e2ed!important;border:1px solid #2d4053!important;border-radius:6px;padding:10px 12px;justify-content:center;gap:5px;box-shadow:none}
+.pages .thumb.selected{background:#203a5c!important;border-color:#426b9c!important;box-shadow:inset 3px 0 #6f9ed2}
+.pages .thumb:after{display:none}
+.pages .thumb span{font:600 13px Inter,sans-serif}
+.pages .thumb small{color:#8799ac;font-size:10px}
+.pages .danger{color:#f0a6a0}
+.tools .field{color:#aebdcc}
+.tools .field select,.quality{background:#111d29;border-color:#354a60;color:#e4ebf3}
+main{background:#17222e;padding:28px;box-shadow:inset 0 0 40px #07101966}
+.paper{background:#f2e6c8;color:#2d2922;box-shadow:0 8px 28px #0009,0 0 0 1px #c8ad7b;border-radius:2px;background-image:radial-gradient(circle at 45% 20%,#fff8df90,transparent 48%),linear-gradient(90deg,#8f6b3810,#fff0 10%,#fff0 90%,#8f6b3810);padding:60px 62px}
+.paper .pageTitle{font:700 12px Georgia,serif;color:#7b2925;letter-spacing:2.4px;border-bottom:1px solid #a65d4f}
+.blockTitle{font-family:Georgia,serif;color:#7c302b}
+.block textarea{font-family:Georgia,serif;color:#2e2922}
+.block:hover{outline:1px dashed #8a744d55;outline-offset:6px}
+.blockMove button,.remove{background:#172535;border-color:#425b74;color:#e1e9f2}
+.statblock{background:#ead9b5;border-color:#7c302b}
+.overflowWarning{background:#402826;border-color:#9b5b52;color:#fff2e8}
+.storageMeter{background:#152231;border-color:#334a60;color:#dbe5ef}
+.storageMeter.watch{background:#352f20;border-color:#8f773a}.storageMeter.large{background:#3c2424;border-color:#9b504a}
+.themePicker{color:#c5d1dc}.themeChoice{background:#152332;border-color:#344b61}.themeChoice.selected{outline-color:#668db8}
+.recoveryList{background:#0d1722;border-color:#31465b}
+.imageControls{background:#f4ead4cc;padding:6px;border-radius:5px}
+@media(max-width:1180px){.app{grid-template-columns:205px minmax(560px,1fr) 245px}header{gap:10px}.projectTitle{width:160px}nav button{padding:8px}}
+@media print{.app{display:none!important}}
