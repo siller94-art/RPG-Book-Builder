@@ -5,15 +5,15 @@ export function createTextBlock():TextBlock{return{id:uid(),kind:'text',title:'N
 export function createImageBlock(src='',alt='Artwork'):ImageBlock{return{id:uid(),kind:'image',title:alt,src,alt,fit:'contain',opacity:1,width:100,position:'center',layer:'inline',focalX:50,focalY:50,height:320}}
 export function createStatblock(template:StatblockKind='monster'):StatblockBlock{
  const presets:Record<StatblockKind,Record<string,string>>={
-  monster:{sizeType:'Medium creature',alignment:'unaligned',ac:'15',hp:'45',speed:'30 ft.',str:'10',dex:'10',con:'10',int:'10',wis:'10',cha:'10',saves:'',skills:'',senses:'',languages:'',cr:'1',traits:'',actions:'Add attacks and actions here.',reactions:'',legendary:''},
-  npc:{role:'NPC',ancestry:'',alignment:'',ac:'10',hp:'10',speed:'30 ft.',str:'10',dex:'10',con:'10',int:'10',wis:'10',cha:'10',skills:'',languages:'',traits:'',actions:''},
+  monster:{sizeType:'Medium creature',alignment:'unaligned',ac:'15',hp:'45',speed:'30 ft.',str:'10',dex:'10',con:'10',int:'10',wis:'10',cha:'10',saves:'',skills:'',senses:'',languages:'',cr:'1'},
+  npc:{role:'NPC',ancestry:'',alignment:'',ac:'10',hp:'10',speed:'30 ft.',str:'10',dex:'10',con:'10',int:'10',wis:'10',cha:'10',skills:'',languages:''},
   spell:{levelSchool:'1st-level spell',school:'Evocation',ritual:'No',castingTime:'1 action',range:'60 feet',components:'V, S',material:'',duration:'Instantaneous',concentration:'No',classes:'',higherLevels:''},
   item:{itemType:'Wondrous item',rarity:'Uncommon',attunement:'No',attunementReq:'',charges:'',recharge:'',properties:''},
   vehicle:{vehicleType:'Vehicle',size:'Large',ac:'15',hp:'100',damageThreshold:'',speed:'',crew:'',passengers:'',cargo:'',capacity:'',actions:''},
   trap:{level:'Moderate',type:'Mechanical',trigger:'',effect:'',save:'DC 13',damage:'',detect:'',disable:'',countermeasures:''},
   encounter:{difficulty:'Medium',party:'4 characters',creatures:'',environment:'',objectives:'',waves:'',complications:'',rewards:''},
   custom:{subtitle:'Custom RPG Block',category:'Reference',tags:''}
- };return{id:uid(),kind:'statblock',template,title:template==='spell'?'New Spell':template==='item'?'New Item':template==='encounter'?'New Encounter':template==='trap'?'New Trap':template==='vehicle'?'New Vehicle':template==='custom'?'Custom Block':'New Creature',body:'Add rules and details here.',fields:presets[template],sections:(template==='monster'||template==='npc')?{traits:[],actions:[],reactions:[],legendary:[]}:undefined}}
+ };return{id:uid(),kind:'statblock',template,title:template==='spell'?'New Spell':template==='item'?'New Item':template==='encounter'?'New Encounter':template==='trap'?'New Trap':template==='vehicle'?'New Vehicle':template==='custom'?'Custom Block':'New Creature',body:'Add rules and details here.',fields:presets[template],sections:(template==='monster'||template==='npc')?{traits:[],actions:template==='monster'?[{id:uid(),name:'Attack',text:'Add an attack or action here.'}]:[],reactions:[],legendary:[]}:undefined}}
 
 export function createPage(name='Page 1'):Page{return{id:uid(),name,blocks:[]}}
 export function createProject():Project{const page=createPage();page.blocks=[{id:uid(),kind:'text',title:'Chapter One',body:'Begin writing your adventure here.',columns:1}];return{schemaVersion:PROJECT_SCHEMA_VERSION,id:uid(),title:'Untitled Adventure',pages:[page],activePageId:page.id,settings:{pageSize:'letter',orientation:'portrait',themeId:'parchment'},updatedAt:new Date().toISOString()}}
