@@ -52,3 +52,5 @@
 .paper.theme-dark textarea,.paper.theme-dark input,.paper.theme-dark select{background:#23272e;border-color:#555e68}
 
 .themePicker{display:grid;gap:6px;margin-bottom:10px;font-size:12px}.themeChoices{display:grid;grid-template-columns:1fr 1fr;gap:5px}.themeChoice{display:flex;align-items:center;justify-content:flex-start;gap:6px;padding:6px;font-size:10px}.themeChoice i{width:18px;height:18px;border-radius:4px;border:1px solid #777;background:#f5efd9}.themeChoice.clean i{background:#fff}.themeChoice.dark i{background:#1d2026}.themeChoice.arcane i{background:#dceaf0}.themeChoice.selected{outline:2px solid #a77b43;outline-offset:1px}
+
+.recoveryTools{display:grid;gap:5px;margin:8px 0}.recoveryList{display:grid;gap:4px;padding:6px;background:#242424;border:1px solid #444;border-radius:6px}.recoveryList button{text-align:left;font-size:10px;padding:6px}.recoveryList small{color:#aaa;padding:4px}
