@@ -8,4 +8,4 @@ export interface StatblockBlock extends BaseBlock{kind:'statblock';template:Stat
 export type DocumentBlock=TextBlock|ImageBlock|StatblockBlock;
 export interface Page{id:string;name:string;blocks:DocumentBlock[];}
 export interface ProjectSettings{pageSize:'letter'|'a4';orientation:'portrait'|'landscape';themeId:string;}
-export interface Project{schemaVersion:1;id:string;title:string;pages:Page[];activePageId:string;settings:ProjectSettings;updatedAt:string;}
+export interface Project{schemaVersion:1;id:string;title:string;pages:Page[];activePageId:string;settings:ProjectSettings;updatedAt:string;brewSource?:string;}
