@@ -14,3 +14,5 @@
 .paper.letter.landscape{width:1056px;min-height:816px}.paper.a4.landscape{width:1123px;min-height:794px}.printPaper.letter.landscape{width:11in;min-height:8.5in}.printPaper.a4.landscape{width:297mm;min-height:210mm}@media print{.printPaper.landscape{page:landscapePage}@page landscapePage{size:landscape;margin:0}}
 
 .paper{height:1056px;overflow:hidden}.paper.a4{height:1123px}.paper.letter.landscape{height:816px}.paper.a4.landscape{height:794px}.overflowWarning{position:sticky;top:0;z-index:4;margin:0 auto 12px;max-width:816px;background:#4a2521;color:#fff0e8;border:1px solid #a95b4f;border-radius:8px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px}.overflowWarning button{padding:6px 9px;background:#743a32;border-color:#b26a5e}@media print{.overflowWarning{display:none!important}}
+
+.layoutControls{display:flex;justify-content:flex-end;gap:10px;align-items:center;margin-bottom:4px;font:11px Inter,sans-serif;color:#7c6d58}.layoutControls label{display:flex;align-items:center;gap:4px}.layoutControls input[type=range]{width:82px}@media print{.layoutControls{display:none!important}}
