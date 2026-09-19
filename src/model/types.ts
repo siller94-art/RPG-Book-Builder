@@ -1,6 +1,6 @@
 export type BlockKind='text'|'image'|'statblock';
 export type StatblockKind='monster'|'npc'|'spell'|'item'|'vehicle'|'trap'|'encounter'|'custom';
-export interface BaseBlock{id:string;kind:BlockKind;title:string;}
+export interface BaseBlock{id:string;kind:BlockKind;title:string;width?:number;spacing?:number;}
 export interface TextBlock extends BaseBlock{kind:'text';body:string;columns:1|2;style?:'body'|'heading'|'note'|'table';align?:'left'|'center'|'right';fontSize?:number;}
 export interface ImageBlock extends BaseBlock{kind:'image';src:string;alt:string;fit:'contain'|'cover';opacity:number;width:number;position:'left'|'center'|'right';layer:'inline'|'background';}
 export type StatFields=Record<string,string>;
