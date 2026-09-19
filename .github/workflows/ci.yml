@@ -1,93 +1,51 @@
 name: RPG Book Builder CI
-
 on:
-  push:
-    branches:
-      - main
-      - build/editor-mvp
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
-
-concurrency:
-  group: rpg-book-builder-ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["build/editor-mvp"]
 permissions:
   contents: read
-
 jobs:
-  web:
-    name: Web build and tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Install
-        run: npm install
-      - name: Build
-        run: npm run build
-      - name: Test
-        run: npm test
-
-  desktop:
-    name: Desktop - ${{ matrix.name }}
-    needs: web
+  build:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: windows-latest
-            name: Windows
-          - os: macos-latest
-            name: macOS
-    runs-on: ${{ matrix.os }}
+          - platform: macos-latest
+            args: --bundles dmg
+            artifact: macos-dmg-editor-mvp
+            path: src-tauri/target/release/bundle/dmg/*.dmg
+          - platform: windows-latest
+            args: --bundles nsis
+            artifact: windows-installer-editor-mvp
+            path: src-tauri/target/release/bundle/nsis/*.exe
+    runs-on: ${{ matrix.platform }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Install
-        run: npm install
-      - name: Generate icons
-        shell: bash
-        run: |
-          mkdir -p src-tauri/icons
-          node - <<'NODE'
-          const fs=require('fs'),zlib=require('zlib');
-          const crc=(b)=>{let c=0xffffffff;for(const x of b){c^=x;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0)}return(c^0xffffffff)>>>0};
-          const chunk=(t,d)=>{const tb=Buffer.from(t),n=Buffer.alloc(4),r=Buffer.alloc(4);n.writeUInt32BE(d.length);r.writeUInt32BE(crc(Buffer.concat([tb,d])));return Buffer.concat([n,tb,d,r])};
-          const w=512,h=512,rows=[];
-          for(let y=0;y<h;y++){const row=Buffer.alloc(1+w*4);for(let x=0;x<w;x++){const i=1+x*4;row[i]=36;row[i+1]=45;row[i+2]=58;row[i+3]=255}rows.push(row)}
-          const sig=Buffer.from([137,80,78,71,13,10,26,10]),ih=Buffer.alloc(13);ih.writeUInt32BE(w,0);ih.writeUInt32BE(h,4);ih[8]=8;ih[9]=6;
-          fs.writeFileSync('src-tauri/app-icon.png',Buffer.concat([sig,chunk('IHDR',ih),chunk('IDAT',zlib.deflateSync(Buffer.concat(rows))),chunk('IEND',Buffer.alloc(0))]));
-          NODE
-          npm run tauri -- icon src-tauri/app-icon.png -o src-tauri/icons
-      - name: Build desktop
-        run: npm run tauri -- build
-      - name: Verify macOS signature
+      - uses: dtolnay/rust-toolchain@stable
+      - run: npm install
+      - name: Test
+        run: npm test
+      - name: Web production build
+        run: npm run build
+      - name: Desktop bundle
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && '-' || '' }}
+        run: npm run tauri -- build ${{ matrix.args }}
+      - name: Verify macOS bundle
         if: runner.os == 'macOS'
         shell: bash
         run: |
           APP="$(find src-tauri/target/release/bundle/macos -maxdepth 1 -name '*.app' -print -quit)"
           test -n "$APP"
           codesign --verify --deep --strict --verbose=4 "$APP"
-      - name: Upload desktop installer
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: RPG-Book-Builder-${{ matrix.name }}
-          path: |
-            src-tauri/target/release/bundle/**/*.dmg
-            src-tauri/target/release/bundle/**/*.app
-            src-tauri/target/release/bundle/**/*.exe
-            src-tauri/target/release/bundle/**/*.msi
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.path }}
           if-no-files-found: error
