@@ -5,15 +5,23 @@ export function parseBrewSource(source:string):ParsedSource{
  const rawPages=normalized.split(/^\s*(?:\\page|\\pagebreak|{{pageNumber[^}]*}})\s*$/gmi);
  return{pages:rawPages.map(raw=>({source:raw.trim(),columns:raw.split(/^\s*(?:\\column|\\columnbreak|{{column[^}]*}})\s*$/gmi).map(x=>x.trim()).filter(Boolean)})).filter(p=>p.source||p.columns.length)}
 }
+const esc=(s:string)=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]!));
+const inline=(s:string)=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>');
+export function renderBrewMarkdown(source:string){
+ const lines=source.replace(/<style[\s\S]*?<\/style>/gi,'').split(/\n/),out:string[]=[];let list=false,quote=false,table=false;
+ const close=()=>{if(list){out.push('</ul>');list=false}if(quote){out.push('</blockquote>');quote=false}if(table){out.push('</tbody></table>');table=false}};
+ for(let i=0;i<lines.length;i++){const raw=lines[i],s=raw.trim();
+  if(!s){close();continue}
+  const h=s.match(/^(#{1,6})\s+(.+)$/);if(h){close();out.push('<h'+h[1].length+'>'+inline(h[2])+'</h'+h[1].length+'>');continue}
+  if(/^___+$/.test(s)){close();out.push('<hr>');continue}
+  if(/^>/.test(s)){if(!quote){close();quote=true;out.push('<blockquote class="brew-note">')}out.push('<p>'+inline(s.replace(/^>\s?/,''))+'</p>');continue}
+  if(/^[-*]\s+/.test(s)){if(!list){close();list=true;out.push('<ul>')}out.push('<li>'+inline(s.replace(/^[-*]\s+/,''))+'</li>');continue}
+  if(s.includes('|')&&i+1<lines.length&&/^\s*\|?\s*:?-+/.test(lines[i+1])){close();const heads=s.replace(/^\||\|$/g,'').split('|');out.push('<table><thead><tr>'+heads.map(x=>'<th>'+inline(x.trim())+'</th>').join('')+'</tr></thead><tbody>');table=true;i++;continue}
+  if(table&&s.includes('|')){const cells=s.replace(/^\||\|$/g,'').split('|');out.push('<tr>'+cells.map(x=>'<td>'+inline(x.trim())+'</td>').join('')+'</tr>');continue}
+  const box=s.match(/^{{\s*(note|descriptive|monster|statblock)\s*,?\s*(.*?)\s*}}$/i);if(box){close();out.push('<div class="brew-snippet '+box[1].toLowerCase()+'">'+inline(box[2])+'</div>');continue}
+  close();out.push('<p>'+inline(s)+'</p>')
+ }close();return out.join('\n')
+}
 export function sourceToPlainText(source:string){
- return source
-  .replace(/<style[\s\S]*?<\/style>/gi,'')
-  .replace(/{{[^}]+}}/g,'')
-  .replace(/^\s*\\(?:page|pagebreak|column|columnbreak)\s*$/gmi,'')
-  .replace(/^#{1,6}\s+/gm,'')
-  .replace(/\*\*([^*]+)\*\*/g,'$1')
-  .replace(/\*([^*]+)\*/g,'$1')
-  .replace(/__([^_]+)__/g,'$1')
-  .replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1')
-  .trim()
+ return source.replace(/<style[\s\S]*?<\/style>/gi,'').replace(/{{[^}]+}}/g,'').replace(/^\s*\\(?:page|pagebreak|column|columnbreak)\s*$/gmi,'').replace(/^#{1,6}\s+/gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/\*([^*]+)\*/g,'$1').replace(/__([^_]+)__/g,'$1').replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1').trim()
 }
