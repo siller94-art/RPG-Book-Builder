@@ -24,3 +24,8 @@ describe('brew round trip compatibility',()=>{
  it('renders multiline statblock containers',()=>{const h=renderBrewMarkdown('{{statblock\n## Goblin\n**Armor Class** 15\n}}');expect(h).toContain('brew-snippet statblock');expect(h).toContain('<h2>Goblin</h2>');expect(h).toContain('<strong>Armor Class</strong>')});
  it('preserves page source exactly through parsing',()=>{const src='# One\nText\n\\page\n# Two\n{{note\nKeep me\n}}';const p=parseBrewSource(src);expect(p.pages.map(x=>x.source).join('\n\\page\n')).toBe(src)});
 });
+
+describe('brew project persistence',()=>{
+ it('normalizes projects that contain preserved brew source',()=>{const p=createProject();p.brewSource='# Saved Brew\n\\page\n## Two';const n=normalizeProject(JSON.parse(JSON.stringify(p)));expect(n.brewSource).toBe(p.brewSource)});
+ it('keeps legacy projects valid without brew source',()=>{const p=createProject();delete p.brewSource;expect(normalizeProject(JSON.parse(JSON.stringify(p))).brewSource).toBeUndefined()});
+});
