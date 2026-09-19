@@ -50,3 +50,5 @@
 .paper.theme-arcane,.printPaper.theme-arcane{background-image:radial-gradient(circle at 50% 15%,#52758a12,transparent 42%),linear-gradient(#52758a0a 1px,transparent 1px);background-size:auto,100% 30px}
 .paper.theme-parchment,.printPaper.theme-parchment{background-image:radial-gradient(circle at 50% 20%,#fff8dd80,transparent 55%),linear-gradient(90deg,#7c302b12 0 2px,transparent 2px);background-size:auto,100% 100%}
 .paper.theme-dark textarea,.paper.theme-dark input,.paper.theme-dark select{background:#23272e;border-color:#555e68}
+
+.themePicker{display:grid;gap:6px;margin-bottom:10px;font-size:12px}.themeChoices{display:grid;grid-template-columns:1fr 1fr;gap:5px}.themeChoice{display:flex;align-items:center;justify-content:flex-start;gap:6px;padding:6px;font-size:10px}.themeChoice i{width:18px;height:18px;border-radius:4px;border:1px solid #777;background:#f5efd9}.themeChoice.clean i{background:#fff}.themeChoice.dark i{background:#1d2026}.themeChoice.arcane i{background:#dceaf0}.themeChoice.selected{outline:2px solid #a77b43;outline-offset:1px}
