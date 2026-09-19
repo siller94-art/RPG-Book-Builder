@@ -7,8 +7,8 @@ export function createStatblock(template:StatblockKind='monster'):StatblockBlock
  const presets:Record<StatblockKind,Record<string,string>>={
   monster:{sizeType:'Medium creature',alignment:'unaligned',ac:'15',hp:'45',speed:'30 ft.',str:'10',dex:'10',con:'10',int:'10',wis:'10',cha:'10',saves:'',skills:'',senses:'',languages:'',cr:'1',traits:'',actions:'Add attacks and actions here.',reactions:'',legendary:''},
   npc:{role:'NPC',ancestry:'',alignment:'',ac:'10',hp:'10',speed:'30 ft.',str:'10',dex:'10',con:'10',int:'10',wis:'10',cha:'10',skills:'',languages:'',traits:'',actions:''},
-  spell:{levelSchool:'1st-level spell',castingTime:'1 action',range:'60 feet',components:'V, S',duration:'Instantaneous',classes:'',higherLevels:''},
-  item:{typeRarity:'Wondrous item, uncommon',attunement:'No',properties:''},
+  spell:{levelSchool:'1st-level spell',school:'Evocation',ritual:'No',castingTime:'1 action',range:'60 feet',components:'V, S',material:'',duration:'Instantaneous',concentration:'No',classes:'',higherLevels:''},
+  item:{itemType:'Wondrous item',rarity:'Uncommon',attunement:'No',attunementReq:'',charges:'',recharge:'',properties:''},
   vehicle:{vehicleType:'Vehicle',ac:'15',hp:'100',speed:'',crew:'',capacity:'',actions:''},
   trap:{level:'Moderate',trigger:'',effect:'',save:'DC 13',countermeasures:''},
   encounter:{difficulty:'Medium',party:'',creatures:'',environment:'',objectives:'',rewards:''},
