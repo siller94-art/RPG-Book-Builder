@@ -19,3 +19,8 @@ describe('advanced brew compatibility',()=>{
  it('renders positioned image hints',()=>{const h=renderBrewMarkdown('![Map](https://example.com/map.png "Map") {width=60 position=right}');expect(h).toContain('brew-image right');expect(h).toContain('width:60%')});
  it('recognizes statblock and wide snippets',()=>{expect(renderBrewMarkdown('{{statblock, Goblin}}')).toContain('statblock');expect(renderBrewMarkdown('{{wide, Across the page}}')).toContain('wide')});
 });
+
+describe('brew round trip compatibility',()=>{
+ it('renders multiline statblock containers',()=>{const h=renderBrewMarkdown('{{statblock\n## Goblin\n**Armor Class** 15\n}}');expect(h).toContain('brew-snippet statblock');expect(h).toContain('<h2>Goblin</h2>');expect(h).toContain('<strong>Armor Class</strong>')});
+ it('preserves page source exactly through parsing',()=>{const src='# One\nText\n\\page\n# Two\n{{note\nKeep me\n}}';const p=parseBrewSource(src);expect(p.pages.map(x=>x.source).join('\n\\page\n')).toBe(src)});
+});
