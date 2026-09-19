@@ -3,7 +3,8 @@ export type StatblockKind='monster'|'npc'|'spell'|'item'|'vehicle'|'trap'|'encou
 export interface BaseBlock{id:string;kind:BlockKind;title:string;}
 export interface TextBlock extends BaseBlock{kind:'text';body:string;columns:1|2;style?:'body'|'heading'|'note'|'table';align?:'left'|'center'|'right';fontSize?:number;}
 export interface ImageBlock extends BaseBlock{kind:'image';src:string;alt:string;fit:'contain'|'cover';opacity:number;width:number;position:'left'|'center'|'right';layer:'inline'|'background';}
-export type StatFields=Record<string,string>;\nexport interface StatblockBlock extends BaseBlock{kind:'statblock';template:StatblockKind;body:string;fields:StatFields;}
+export type StatFields=Record<string,string>;
+export interface StatblockBlock extends BaseBlock{kind:'statblock';template:StatblockKind;body:string;fields:StatFields;}
 export type DocumentBlock=TextBlock|ImageBlock|StatblockBlock;
 export interface Page{id:string;name:string;blocks:DocumentBlock[];}
 export interface ProjectSettings{pageSize:'letter'|'a4';themeId:string;}
