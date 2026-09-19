@@ -44,6 +44,18 @@ jobs:
           NODE
           npm run tauri -- icon src-tauri/app-icon.png -o src-tauri/icons
       - run: npm run tauri -- build
+      - name: Verify macOS bundle signature
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          APP="$(find src-tauri/target/release/bundle/macos -maxdepth 1 -name '*.app' -print -quit)"
+          test -n "$APP"
+          codesign --verify --deep --strict --verbose=4 "$APP"
+          codesign -dv --verbose=4 "$APP" 2>&1 || true
+          spctl --assess --type execute --verbose=4 "$APP" || {
+            echo "::error::macOS Gatekeeper rejected the app. A Developer ID Application certificate and Apple notarization are required for normal distribution."
+            exit 1
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: RPG-Book-Builder-${{ matrix.artifact }}
