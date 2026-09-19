@@ -4,7 +4,7 @@ export function parseBrewSource(source:string):ParsedSource{
  const normalized=source.replace(/\r\n?/g,'\n');
  const customCss=[...normalized.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].map(m=>m[1]).join('\n');
  const rawPages=normalized.split(/^\s*(?:\\page|\\pagebreak|{{pageNumber[^}]*}})\s*$/gmi);
- return{pages:rawPages.map(raw=>({source:raw.trim(),columns:raw.split(/^\s*(?:\\column|\\columnbreak|{{column[^}]*}})\s*$/gmi).map(x=>x.trim()).filter(Boolean)})).filter(p=>p.source||p.columns.length)}
+ return{pages:rawPages.map(raw=>({source:raw.trim(),columns:raw.split(/^\s*(?:\\column|\\columnbreak|{{column[^}]*}})\s*$/gmi).map(x=>x.trim()).filter(Boolean)})).filter(p=>p.source||p.columns.length),customCss}
 }
 const esc=(s:string)=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]!));
 const inline=(s:string)=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>');
