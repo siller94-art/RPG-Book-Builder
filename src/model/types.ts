@@ -7,5 +7,5 @@ export type StatFields=Record<string,string>;
 export interface StatblockBlock extends BaseBlock{kind:'statblock';template:StatblockKind;body:string;fields:StatFields;}
 export type DocumentBlock=TextBlock|ImageBlock|StatblockBlock;
 export interface Page{id:string;name:string;blocks:DocumentBlock[];}
-export interface ProjectSettings{pageSize:'letter'|'a4';themeId:string;}
+export interface ProjectSettings{pageSize:'letter'|'a4';orientation:'portrait'|'landscape';themeId:string;}
 export interface Project{schemaVersion:1;id:string;title:string;pages:Page[];activePageId:string;settings:ProjectSettings;updatedAt:string;}
