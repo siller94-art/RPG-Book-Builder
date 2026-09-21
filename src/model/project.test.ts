@@ -73,6 +73,6 @@ describe('stamps and seals',()=>{
  it('provides simple built-in stamp assets',()=>{expect(stampAssets.some(x=>x.kind==='seal')).toBe(true);expect(stampAssets.some(x=>x.kind==='wave')).toBe(true);expect(stampAssets.some(x=>x.kind==='tear')).toBe(true)});
  it('creates safe default placement',()=>{const p=createStampPlacement('seal');expect(p.size).toBe(120);expect(p.opacity).toBe(.8);expect(p.layer).toBe('front')});
  it('clamps extreme stamp controls',()=>{const p=clampStamp({...createStampPlacement('wave'),size:9999,opacity:5,rotation:900,x:-20,y:500});expect(p).toMatchObject({size:400,opacity:1,rotation:180,x:0,y:100})});
- it('persists image stamp overlay data through normalization',()=>{const p=createProject(),img=createImageBlock('data:image/png;base64,AA==','Map');img.stamps=[{id:'s1',assetId:'wave',glyph:'≋',...createStampPlacement('wave')}];p.pages[0].blocks=[img];const n=normalizeProject(p),b=n.pages[0].blocks[0];expect(b.kind==='image'&&b.stamps?.[0].assetId).toBe('wave')});
+ it('persists image stamp overlay data through normalization',()=>{const p=createProject(),img=createImageBlock('data:image/png;base64,AA==','Map');img.stamps=[{id:'s1',glyph:'≋',...createStampPlacement('wave')}];p.pages[0].blocks=[img];const n=normalizeProject(p),b=n.pages[0].blocks[0];expect(b.kind==='image'&&b.stamps?.[0].assetId).toBe('wave')});
  it('stress checks 5000 stamp placements',()=>{expect(()=>Array.from({length:5000},(_,i)=>clampStamp({...createStampPlacement('seal'),size:i,rotation:i,x:i%140,y:i%170}))).not.toThrow()});
 });
