@@ -44,9 +44,14 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          APP="$(find src-tauri/target/release/bundle/macos -maxdepth 1 -name '*.app' -print -quit)"
+          DMG="$(find src-tauri/target/release/bundle/dmg -maxdepth 1 -name '*.dmg' -print -quit)"
+          test -n "$DMG"
+          MOUNT="$(mktemp -d)"
+          hdiutil attach "$DMG" -nobrowse -readonly -mountpoint "$MOUNT"
+          APP="$(find "$MOUNT" -maxdepth 1 -name '*.app' -print -quit)"
           test -n "$APP"
           codesign --verify --deep --strict --verbose=4 "$APP"
+          hdiutil detach "$MOUNT"
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
