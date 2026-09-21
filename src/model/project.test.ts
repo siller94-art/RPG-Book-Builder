@@ -5,6 +5,9 @@ import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../
 describe('brew source compatibility',()=>{
  it('splits Homebrewery page directives without losing source',()=>{const p=parseBrewSource('# One\nBody\n\\page\n# Two\nMore');expect(p.pages).toHaveLength(2);expect(p.pages[1].source).toContain('# Two')});
  it('splits column directives',()=>{const p=parseBrewSource('Left\n\\column\nRight');expect(p.pages[0].columns).toEqual(['Left','Right'])});
+ it('supports pagebreak and columnbreak aliases with Windows line endings',()=>{const p=parseBrewSource('# One\r\n\\columnbreak\r\nRight\r\n\\pagebreak\r\n# Two');expect(p.pages).toHaveLength(2);expect(p.pages[0].columns).toEqual(['# One','Right']);expect(p.pages[1].columns).toEqual(['# Two'])});
+ it('preserves an intentionally empty first column',()=>{const p=parseBrewSource('\\column\nRight side');expect(p.pages[0].columns).toEqual(['','Right side'])});
+ it('keeps page and column boundaries independent across multiple pages',()=>{const p=parseBrewSource('A\n\\column\nB\n\\page\nC\n\\column\nD');expect(p.pages.map(x=>x.columns)).toEqual([['A','B'],['C','D']])});
  it('produces readable fallback text',()=>{expect(sourceToPlainText('## Heading\n**Bold** text')).toContain('Heading\nBold text')});
 });
 
