@@ -1,7 +1,7 @@
 import{describe,expect,it}from'vitest';import{createProject,createStatblock,normalizeProject}from'./project';
 describe('project model',()=>{it('creates a valid project',()=>{const p=createProject();expect(p.schemaVersion).toBe(1);expect(p.pages).toHaveLength(1);expect(p.settings.orientation).toBe('portrait')});it('creates structured monster sections',()=>{const b=createStatblock('monster');expect(b.sections?.actions).toHaveLength(1);expect(b.fields.str).toBe('10')});it('normalizes legacy image crop defaults',()=>{const p=createProject();p.pages[0].blocks=[{id:'i',kind:'image',title:'Art',src:'data:image/png;base64,AA==',alt:'Art',fit:'cover',opacity:1,width:100,position:'center',layer:'inline'}];const n=normalizeProject(p);const b=n.pages[0].blocks[0];expect(b.kind==='image'&&b.focalX).toBe(50);expect(b.kind==='image'&&b.focalY).toBe(50)});it('migrates legacy monster action text',()=>{const p=createProject();const b=createStatblock('monster');delete b.sections;b.fields.actions='Claw attack';p.pages[0].blocks=[b];const n=normalizeProject(p);const m=n.pages[0].blocks[0];expect(m.kind==='statblock'&&m.sections?.actions[0].text).toBe('Claw attack')})});
 
-import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../source/brewSource';import{applyIssue,applySafeIssues,inspectSource}from'../source/writingHelper';import{consistencyIssues,encyclopedia,factionSource,findLoreLinks,npcSource,playerSafeSource,timelineFromSource}from'../source/loreStudio';
+import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../source/brewSource';import{applyIssue,applySafeIssues,inspectSource}from'../source/writingHelper';import{consistencyIssues,encyclopedia,factionSource,findLoreLinks,npcSource,playerSafeSource,timelineFromSource}from'../source/loreStudio';import{applyPhotoPreset,photoAdvice}from'../source/photoHelper';
 describe('brew source compatibility',()=>{
  it('splits Homebrewery page directives without losing source',()=>{const p=parseBrewSource('# One\nBody\n\\page\n# Two\nMore');expect(p.pages).toHaveLength(2);expect(p.pages[1].source).toContain('# Two')});
  it('splits column directives',()=>{const p=parseBrewSource('Left\n\\column\nRight');expect(p.pages[0].columns).toEqual(['Left','Right'])});
@@ -60,4 +60,11 @@ describe('lore studio',()=>{
  it('sorts timeline events',()=>{const s='# B\n**Year / Age:** 900\nEvent B\n# A\n**Year / Age:** 100\nEvent A';const t=timelineFromSource(s);expect(t.map(x=>x.year)).toEqual([100,900])});
  it('removes GM-only entries from player source',()=>{const s='# Public\n*NPC · Player*\nKnown\n# Hidden\n*NPC · GM Only*\nSecret';const p=playerSafeSource(s);expect(p).toContain('Public');expect(p).not.toContain('Hidden')});
  it('handles a 1000-entry encyclopedia and relationship graph source',()=>{const s=Array.from({length:1000},(_,i)=>`# Place ${i}\n*Settlement · Player*\nSee @Place ${(i+1)%1000}.\n`).join('');expect(encyclopedia(s)).toHaveLength(1000);expect(findLoreLinks(s)).toHaveLength(1000);expect(consistencyIssues(s)).toHaveLength(0)});
+});
+
+describe('photo helper',()=>{
+ it('applies book layout presets without replacing artwork',()=>{const img=createImageBlock('data:image/png;base64,abc','Hero');const src=img.src,patch=applyPhotoPreset(img,'portrait');expect(patch.width).toBe(42);expect(patch.fit).toBe('cover');expect(img.src).toBe(src)});
+ it('warns when a tiny embedded image is stretched wide',()=>{const img=createImageBlock('x','Tiny');img.width=100;img.storedBytes=40*1024;expect(photoAdvice(img).some(x=>x.level==='warning'&&x.message.includes('blurry'))).toBe(true)});
+ it('warns about heavy background opacity',()=>{const img=createImageBlock('x','Background');img.layer='background';img.opacity=.8;expect(photoAdvice(img).some(x=>x.message.includes('difficult to read'))).toBe(true)});
+ it('handles thousands of image checks without mutating blocks',()=>{const images=Array.from({length:2000},(_,i)=>{const x=createImageBlock('x','Art '+i);x.storedBytes=(i%30)*100000;x.width=20+(i%81);return x});expect(()=>images.forEach(photoAdvice)).not.toThrow();expect(images[0].title).toBe('Art 0')});
 });
