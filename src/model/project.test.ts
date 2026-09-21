@@ -1,7 +1,7 @@
 import{describe,expect,it}from'vitest';import{createProject,createStatblock,normalizeProject}from'./project';
 describe('project model',()=>{it('creates a valid project',()=>{const p=createProject();expect(p.schemaVersion).toBe(1);expect(p.pages).toHaveLength(1);expect(p.settings.orientation).toBe('portrait')});it('creates structured monster sections',()=>{const b=createStatblock('monster');expect(b.sections?.actions).toHaveLength(1);expect(b.fields.str).toBe('10')});it('normalizes legacy image crop defaults',()=>{const p=createProject();p.pages[0].blocks=[{id:'i',kind:'image',title:'Art',src:'data:image/png;base64,AA==',alt:'Art',fit:'cover',opacity:1,width:100,position:'center',layer:'inline'}];const n=normalizeProject(p);const b=n.pages[0].blocks[0];expect(b.kind==='image'&&b.focalX).toBe(50);expect(b.kind==='image'&&b.focalY).toBe(50)});it('migrates legacy monster action text',()=>{const p=createProject();const b=createStatblock('monster');delete b.sections;b.fields.actions='Claw attack';p.pages[0].blocks=[b];const n=normalizeProject(p);const m=n.pages[0].blocks[0];expect(m.kind==='statblock'&&m.sections?.actions[0].text).toBe('Claw attack')})});
 
-import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../source/brewSource';import{applyIssue,applySafeIssues,inspectSource}from'../source/writingHelper';
+import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../source/brewSource';import{applyIssue,applySafeIssues,inspectSource}from'../source/writingHelper';import{consistencyIssues,encyclopedia,factionSource,findLoreLinks,npcSource,playerSafeSource,timelineFromSource}from'../source/loreStudio';
 describe('brew source compatibility',()=>{
  it('splits Homebrewery page directives without losing source',()=>{const p=parseBrewSource('# One\nBody\n\\page\n# Two\nMore');expect(p.pages).toHaveLength(2);expect(p.pages[1].source).toContain('# Two')});
  it('splits column directives',()=>{const p=parseBrewSource('Left\n\\column\nRight');expect(p.pages[0].columns).toEqual(['Left','Right'])});
@@ -51,4 +51,13 @@ describe('stress and resilience',()=>{
  it('survives heavily malformed brew input',()=>{const source=('{{note\n#Bad\n\\column text\n{{statblock\n').repeat(500);expect(()=>inspectSource(source)).not.toThrow();expect(()=>parseBrewSource(source)).not.toThrow();expect(inspectSource(source).some(x=>x.id==='unbalanced-containers')).toBe(true)});
  it('keeps safe-fix positions correct when many issues exist',()=>{const source='The the guard. Sea sea wall. A a road.';const fixed=applySafeIssues(source,inspectSource(source));expect(fixed).toBe('The guard. Sea wall. A road.')});
  it('handles a large realistic lore document',()=>{const chapter=`# Coral\n**Population:** 65,000\n## Overview\nA capital city beside the sea.\n## Landmark\nImperial Palace\n## Important People\nThe court.\n\\column\n## History\nAncient history.\n`;const source=Array.from({length:120},()=>chapter).join('\\page\n');expect(()=>{inspectSource(source);parseBrewSource(source);sourceToPlainText(source)}).not.toThrow()});
+});
+
+describe('lore studio',()=>{
+ it('creates NPC and faction lore with visibility',()=>{expect(npcSource('Mira','Captain','','Secret','GM Only')).toContain('GM Only');expect(factionSource('Wardens','Faction','Guard the coast','Player')).toContain('# Wardens')});
+ it('finds @ lore links and unresolved references',()=>{const s='# Coral\nSee @Port Stell and @Coral.';expect(findLoreLinks(s)).toEqual(['Port Stell','Coral']);expect(consistencyIssues(s)).toContain('Unresolved lore link: @Port Stell')});
+ it('builds a searchable encyclopedia index',()=>{expect(encyclopedia('# Coral\n*Capital*\nText\n# Stellaris\n*Empire*')).toHaveLength(2)});
+ it('sorts timeline events',()=>{const s='# B\n**Year / Age:** 900\nEvent B\n# A\n**Year / Age:** 100\nEvent A';const t=timelineFromSource(s);expect(t.map(x=>x.year)).toEqual([100,900])});
+ it('removes GM-only entries from player source',()=>{const s='# Public\n*NPC · Player*\nKnown\n# Hidden\n*NPC · GM Only*\nSecret';const p=playerSafeSource(s);expect(p).toContain('Public');expect(p).not.toContain('Hidden')});
+ it('handles a 1000-entry encyclopedia and relationship graph source',()=>{const s=Array.from({length:1000},(_,i)=>`# Place ${i}\n*Settlement · Player*\nSee @Place ${(i+1)%1000}.\n`).join('');expect(encyclopedia(s)).toHaveLength(1000);expect(findLoreLinks(s)).toHaveLength(1000);expect(consistencyIssues(s)).toHaveLength(0)});
 });
