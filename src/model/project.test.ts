@@ -38,3 +38,9 @@ describe('writing helper',()=>{
  it('detects unbalanced brew containers without auto-changing them',()=>{const issues=inspectSource('{{note\nMissing close');expect(issues.some(x=>x.id==='unbalanced-containers'&&!x.safe)).toBe(true)});
  it('fixes only safe suggestions in bulk',()=>{const source='The the guard has Armour Class 15.';expect(applySafeIssues(source,inspectSource(source))).toBe('The guard has Armor Class 15.')});
 });
+
+describe('writing helper lore validation',()=>{
+ it('reports settlement sections that need attention',()=>{const s='# Harbor\n*Town*\n\n## Overview\nA port town.';const i=inspectSource(s);expect(i.some(x=>x.type==='settlement'&&x.message.includes('Landmark'))).toBe(true);expect(i.some(x=>x.type==='settlement'&&x.message.includes('Important People'))).toBe(true)});
+ it('reports incomplete creature statblocks',()=>{const s='{{statblock\n## Guard\n**Armor Class** 15\n**Speed** 30 ft.\n}}';expect(inspectSource(s).some(x=>x.type==='5e'&&x.message.includes('Hit Points'))).toBe(true)});
+ it('provides source positions for clickable highlighting',()=>{const s='The sea sea moves.';const i=inspectSource(s).find(x=>x.message==='Repeated word')!;expect(s.slice(i.start,i.end)).toBe(i.before)});
+});
