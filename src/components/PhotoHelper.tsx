@@ -1,0 +1,6 @@
+import{useState}from'react';import type{ImageBlock}from'../model/types';import{applyPhotoPreset,photoAdvice,photoPresets,type PhotoPreset}from'../source/photoHelper';
+interface Props{image:ImageBlock;onApply:(patch:Partial<ImageBlock>)=>void}
+export default function PhotoHelper({image,onApply}:Props){
+ const[open,setOpen]=useState(false),advice=photoAdvice(image);
+ return <div className="photoHelper"><button className="photoHelperToggle" onClick={()=>setOpen(v=>!v)}>✦ Photo Helper {advice.some(x=>x.level==='warning')?'⚠':''}</button>{open&&<div className="photoHelperPanel"><div className="photoAdvice">{advice.map((a,i)=><div key={i} className={'photoAdviceRow '+a.level}>{a.level==='good'?'✓':a.level==='warning'?'⚠':'•'} {a.message}</div>)}</div><div className="photoPresetGrid">{(Object.keys(photoPresets) as PhotoPreset[]).map(k=><button key={k} onClick={()=>onApply(applyPhotoPreset(image,k))}><b>{photoPresets[k].label}</b><small>{photoPresets[k].description}</small></button>)}</div><small className="photoHelperNote">Presets change placement only. Your original imported artwork is kept in the project until you replace it.</small></div>}</div>
+}
