@@ -44,3 +44,11 @@ describe('writing helper lore validation',()=>{
  it('reports incomplete creature statblocks',()=>{const s='{{statblock\n## Guard\n**Armor Class** 15\n**Speed** 30 ft.\n}}';expect(inspectSource(s).some(x=>x.type==='5e'&&x.message.includes('Hit Points'))).toBe(true)});
  it('provides source positions for clickable highlighting',()=>{const s='The sea sea moves.';const i=inspectSource(s).find(x=>x.message==='Repeated word')!;expect(s.slice(i.start,i.end)).toBe(i.before)});
 });
+
+describe('stress and resilience',()=>{
+ it('parses a 250-page two-column brew without losing boundaries',()=>{const source=Array.from({length:250},(_,i)=>`# Page ${i+1}\nLeft ${i}\n\\column\nRight ${i}`).join('\n\\page\n');const p=parseBrewSource(source);expect(p.pages).toHaveLength(250);expect(p.pages.every(x=>x.columns.length===2)).toBe(true);expect(p.pages[249].columns[1]).toContain('Right 249')});
+ it('finds and safely fixes 1000 repeated-word mistakes',()=>{const source=Array.from({length:1000},(_,i)=>`The sea sea moves ${i}.`).join('\n');const issues=inspectSource(source);expect(issues.filter(x=>x.message==='Repeated word')).toHaveLength(1000);const fixed=applySafeIssues(source,issues);expect(fixed.match(/sea sea/g)).toBeNull();expect(fixed).toContain('The sea moves 999.')});
+ it('survives heavily malformed brew input',()=>{const source=('{{note\n#Bad\n\\column text\n{{statblock\n').repeat(500);expect(()=>inspectSource(source)).not.toThrow();expect(()=>parseBrewSource(source)).not.toThrow();expect(inspectSource(source).some(x=>x.id==='unbalanced-containers')).toBe(true)});
+ it('keeps safe-fix positions correct when many issues exist',()=>{const source='The the guard. Sea sea wall. A a road.';const fixed=applySafeIssues(source,inspectSource(source));expect(fixed).toBe('The guard. Sea wall. A road.')});
+ it('handles a large realistic lore document',()=>{const chapter=`# Coral\n**Population:** 65,000\n## Overview\nA capital city beside the sea.\n## Landmark\nImperial Palace\n## Important People\nThe court.\n\\column\n## History\nAncient history.\n`;const source=Array.from({length:120},()=>chapter).join('\\page\n');expect(()=>{inspectSource(source);parseBrewSource(source);sourceToPlainText(source)}).not.toThrow()});
+});
