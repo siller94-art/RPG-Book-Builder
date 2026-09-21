@@ -1,7 +1,7 @@
 import{describe,expect,it}from'vitest';import{createProject,createStatblock,normalizeProject}from'./project';
 describe('project model',()=>{it('creates a valid project',()=>{const p=createProject();expect(p.schemaVersion).toBe(1);expect(p.pages).toHaveLength(1);expect(p.settings.orientation).toBe('portrait')});it('creates structured monster sections',()=>{const b=createStatblock('monster');expect(b.sections?.actions).toHaveLength(1);expect(b.fields.str).toBe('10')});it('normalizes legacy image crop defaults',()=>{const p=createProject();p.pages[0].blocks=[{id:'i',kind:'image',title:'Art',src:'data:image/png;base64,AA==',alt:'Art',fit:'cover',opacity:1,width:100,position:'center',layer:'inline'}];const n=normalizeProject(p);const b=n.pages[0].blocks[0];expect(b.kind==='image'&&b.focalX).toBe(50);expect(b.kind==='image'&&b.focalY).toBe(50)});it('migrates legacy monster action text',()=>{const p=createProject();const b=createStatblock('monster');delete b.sections;b.fields.actions='Claw attack';p.pages[0].blocks=[b];const n=normalizeProject(p);const m=n.pages[0].blocks[0];expect(m.kind==='statblock'&&m.sections?.actions[0].text).toBe('Claw attack')})});
 
-import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../source/brewSource';
+import{parseBrewSource,renderBrewMarkdown,safeBrewCss,sourceToPlainText}from'../source/brewSource';import{applyIssue,applySafeIssues,inspectSource}from'../source/writingHelper';
 describe('brew source compatibility',()=>{
  it('splits Homebrewery page directives without losing source',()=>{const p=parseBrewSource('# One\nBody\n\\page\n# Two\nMore');expect(p.pages).toHaveLength(2);expect(p.pages[1].source).toContain('# Two')});
  it('splits column directives',()=>{const p=parseBrewSource('Left\n\\column\nRight');expect(p.pages[0].columns).toEqual(['Left','Right'])});
@@ -31,4 +31,10 @@ describe('brew round trip compatibility',()=>{
 describe('brew project persistence',()=>{
  it('normalizes projects that contain preserved brew source',()=>{const p=createProject();p.brewSource='# Saved Brew\n\\page\n## Two';const n=normalizeProject(JSON.parse(JSON.stringify(p)));expect(n.brewSource).toBe(p.brewSource)});
  it('keeps legacy projects valid without brew source',()=>{const p=createProject();delete p.brewSource;expect(normalizeProject(JSON.parse(JSON.stringify(p))).brewSource).toBeUndefined()});
+});
+
+describe('writing helper',()=>{
+ it('finds repeated words and applies a chosen fix',()=>{const issues=inspectSource('The sea sea was calm.');expect(issues.some(x=>x.message==='Repeated word')).toBe(true);const issue=issues.find(x=>x.message==='Repeated word')!;expect(applyIssue('The sea sea was calm.',issue)).toBe('The sea was calm.')});
+ it('detects unbalanced brew containers without auto-changing them',()=>{const issues=inspectSource('{{note\nMissing close');expect(issues.some(x=>x.id==='unbalanced-containers'&&!x.safe)).toBe(true)});
+ it('fixes only safe suggestions in bulk',()=>{const source='The the guard has Armour Class 15.';expect(applySafeIssues(source,inspectSource(source))).toBe('The guard has Armor Class 15.')});
 });
