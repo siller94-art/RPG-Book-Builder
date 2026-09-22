@@ -1,8 +1,8 @@
 {
   "id": "rpg-book-builder-companion",
   "title": "RPG Book Builder Companion",
-  "description": "Imports lore export packages from RPG Book Builder into Foundry VTT journals and folders.",
-  "version": "0.1.0",
+  "description": "Standalone lore importer for Foundry VTT with native RPG Book Builder integration. Imports .rpgfoundry, JSON, Markdown, and plain text into organized Journals, Actors, and Items.",
+  "version": "0.2.0",
   "authors": [
     {
       "name": "RPG Book Builder"
