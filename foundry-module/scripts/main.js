@@ -57,13 +57,14 @@ async function importPackage(data){
   const root=await ensureFolder(data.title||"RPG Book Builder");
   const kindFolders=new Map();
   let journals=0;
+  const created=new Map();
   for(const entry of data.entries){
     if(!entry?.name)continue;
     const kind=entry.kind||"Lore";
     let folder=kindFolders.get(kind);
     if(!folder){folder=await ensureFolder(kind,root);kindFolders.set(kind,folder)}
     const ownership=entry.visibility==="Player"?{default:2}:{default:0};
-    await JournalEntry.create({
+    const journal=await JournalEntry.create({
       name:entry.name,
       folder:folder.id,
       ownership,
