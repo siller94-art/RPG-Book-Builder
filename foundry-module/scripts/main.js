@@ -72,5 +72,23 @@ async function importPackage(data){
     });
     journals++;
   }
+  await resolveLoreLinks();
   return{journals};
+}
+
+async function resolveLoreLinks(){
+  const journals=game.journal?.contents||[];
+  const byName=new Map(journals.map(j=>[j.name.toLowerCase(),j]));
+  for(const journal of journals){
+    const flag=journal.getFlag(MODULE_ID,"links");
+    if(!Array.isArray(flag)||!flag.length)continue;
+    const resolved=flag.map(name=>{const target=byName.get(String(name).toLowerCase());return target?{name,uuid:target.uuid}:{name,uuid:null}});
+    await journal.setFlag(MODULE_ID,"resolvedLinks",resolved);
+    for(const page of journal.pages||[]){
+      if(page.type!=="text")continue;
+      let content=page.text?.content||"";
+      for(const link of resolved)if(link.uuid){content=content.split("@"+link.name).join("@UUID["+link.uuid+"]{"+link.name+"}")}
+      if(content!==(page.text?.content||""))await page.update({"text.content":content});
+    }
+  }
 }
