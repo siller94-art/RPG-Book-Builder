@@ -1,0 +1,21 @@
+{
+  "id": "rpg-book-builder-companion",
+  "title": "RPG Book Builder Companion",
+  "description": "Imports lore export packages from RPG Book Builder into Foundry VTT journals and folders.",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "RPG Book Builder"
+    }
+  ],
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "esmodules": [
+    "scripts/main.js"
+  ],
+  "styles": [
+    "styles/companion.css"
+  ]
+}
