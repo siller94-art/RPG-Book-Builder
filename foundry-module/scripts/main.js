@@ -1,95 +1,20 @@
 const MODULE_ID="rpg-book-builder-companion";
-
 Hooks.once("init",()=>console.log("RPG Book Builder Companion | Initializing"));
-
-Hooks.once("ready",()=>{
-  game.modules.get(MODULE_ID).api={importPackage,validatePackage};
-  if(game.user?.isGM) ui.notifications.info("RPG Book Builder Companion ready.");
-});
-
-Hooks.on("renderJournalDirectory",(app,html)=>{
-  if(!game.user?.isGM)return;
-  const root=html instanceof HTMLElement?html:html?.[0];
-  if(!root||root.querySelector("[data-rpgbb-import]"))return;
-  const button=document.createElement("button");
-  button.type="button";
-  button.dataset.rpgbbImport="";
-  button.className="rpgbb-import";
-  button.innerHTML='<i class="fas fa-book-import"></i> RPG Book Builder';
-  button.addEventListener("click",choosePackage);
-  const header=root.querySelector(".directory-header .header-actions, .directory-header")||root;
-  header.append(button);
-});
-
-async function choosePackage(){
-  const input=document.createElement("input");
-  input.type="file";
-  input.accept=".json,.rpgfoundry,application/json";
-  input.addEventListener("change",async()=>{
-    const file=input.files?.[0]; if(!file)return;
-    try{const data=JSON.parse(await file.text());const result=await importPackage(data);ui.notifications.info(`Imported ${result.journals} lore journals.`)}
-    catch(error){console.error("RPG Book Builder Companion | Import failed",error);ui.notifications.error(error?.message||"Lore import failed.")}
-  },{once:true});
-  input.click();
-}
-
-function validatePackage(data){
-  if(!data||typeof data!=="object")throw new Error("Invalid RPG Book Builder package.");
-  if(data.format!=="rpg-book-builder-foundry")throw new Error("This is not an RPG Book Builder Foundry export.");
-  if(!Array.isArray(data.entries))throw new Error("The package has no lore entries.");
-  return true;
-}
-
+Hooks.once("ready",()=>{game.modules.get(MODULE_ID).api={importPackage,validatePackage,previewPackage};if(game.user?.isGM)ui.notifications.info("RPG Book Builder Companion ready.")});
+Hooks.on("renderJournalDirectory",(app,html)=>{if(!game.user?.isGM)return;const root=html instanceof HTMLElement?html:html?.[0];if(!root||root.querySelector("[data-rpgbb-import]"))return;const button=document.createElement("button");button.type="button";button.dataset.rpgbbImport="";button.className="rpgbb-import";button.innerHTML='<i class="fas fa-book-import"></i> RPG Book Builder';button.addEventListener("click",choosePackage);(root.querySelector(".directory-header .header-actions, .directory-header")||root).append(button)});
+async function choosePackage(){const input=document.createElement("input");input.type="file";input.accept=".json,.rpgfoundry,application/json";input.addEventListener("change",async()=>{const file=input.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());validatePackage(data);await showPreview(data)}catch(error){console.error("RPG Book Builder Companion | Import failed",error);ui.notifications.error(error?.message||"Lore import failed.")}},{once:true});input.click()}
+function validatePackage(data){if(!data||typeof data!=="object")throw new Error("Invalid RPG Book Builder package.");if(data.format!=="rpg-book-builder-foundry")throw new Error("This is not an RPG Book Builder Foundry export.");if(!Array.isArray(data.entries))throw new Error("The package has no lore entries.");return true}
+function previewPackage(data){return data.entries.reduce((a,e)=>{const type=e.kind==="Creature"||e.kind==="Person"?"Actor":e.kind==="Item"?"Item":"Journal";a[type]=(a[type]||0)+1;return a},{Journal:0,Actor:0,Item:0})}
+async function showPreview(data){const p=previewPackage(data),content=`<div class="rpgbb-preview"><h2>${escapeHtml(data.title||"RPG Book Builder")}</h2><p>Ready to import:</p><ul><li><b>${p.Journal}</b> Journals</li><li><b>${p.Actor}</b> Actors</li><li><b>${p.Item}</b> Items</li></ul><p>Existing RPG Book Builder records with the same source ID will be updated instead of duplicated.</p></div>`;new Dialog({title:"RPG Book Builder Import",content,buttons:{import:{icon:'<i class="fas fa-file-import"></i>',label:"Import",callback:async()=>{const r=await importPackage(data);ui.notifications.info(`RPG Book Builder: ${r.created} created, ${r.updated} updated.`)}},cancel:{label:"Cancel"}},default:"import"}).render(true)}
 function escapeHtml(value=""){const div=document.createElement("div");div.textContent=String(value);return div.innerHTML}
-function loreHtml(entry){
-  const body=entry.html||`<p>${escapeHtml(entry.body||"").replace(/\n\n/g,"</p><p>").replace(/\n/g,"<br>")}</p>`;
-  const visibility=escapeHtml(entry.visibility||"Player");
-  const kind=escapeHtml(entry.kind||"Lore");
-  return `<section class="rpgbb-lore"><p class="rpgbb-meta"><strong>${kind}</strong> · ${visibility}</p>${body}</section>`;
-}
-async function ensureFolder(name,parent=null){
-  const existing=game.folders?.find(f=>f.type==="JournalEntry"&&f.name===name&&(f.folder?.id??null)===(parent?.id??null));
-  return existing||Folder.create({name,type:"JournalEntry",folder:parent?.id??null});
-}
-async function importPackage(data){
-  if(!game.user?.isGM)throw new Error("Only a GM can import lore.");
-  validatePackage(data);
-  const root=await ensureFolder(data.title||"RPG Book Builder");
-  const kindFolders=new Map();
-  let journals=0;
-  const created=new Map();
-  for(const entry of data.entries){
-    if(!entry?.name)continue;
-    const kind=entry.kind||"Lore";
-    let folder=kindFolders.get(kind);
-    if(!folder){folder=await ensureFolder(kind,root);kindFolders.set(kind,folder)}
-    const ownership=entry.visibility==="Player"?{default:2}:{default:0};
-    const journal=await JournalEntry.create({
-      name:entry.name,
-      folder:folder.id,
-      ownership,
-      flags:{[MODULE_ID]:{sourceId:entry.id||null,visibility:entry.visibility||"Player",links:entry.links||[]}},
-      pages:[{name:entry.name,type:"text",text:{format:1,content:loreHtml(entry)}}]
-    });
-    journals++;
-  }
-  await resolveLoreLinks();
-  return{journals};
-}
-
-async function resolveLoreLinks(){
-  const journals=game.journal?.contents||[];
-  const byName=new Map(journals.map(j=>[j.name.toLowerCase(),j]));
-  for(const journal of journals){
-    const flag=journal.getFlag(MODULE_ID,"links");
-    if(!Array.isArray(flag)||!flag.length)continue;
-    const resolved=flag.map(name=>{const target=byName.get(String(name).toLowerCase());return target?{name,uuid:target.uuid}:{name,uuid:null}});
-    await journal.setFlag(MODULE_ID,"resolvedLinks",resolved);
-    for(const page of journal.pages||[]){
-      if(page.type!=="text")continue;
-      let content=page.text?.content||"";
-      for(const link of resolved)if(link.uuid){content=content.split("@"+link.name).join("@UUID["+link.uuid+"]{"+link.name+"}")}
-      if(content!==(page.text?.content||""))await page.update({"text.content":content});
-    }
-  }
-}
+function loreHtml(entry){const body=entry.html||`<p>${escapeHtml(entry.body||"").replace(/\n\n/g,"</p><p>").replace(/\n/g,"<br>")}</p>`;return `<section class="rpgbb-lore"><p class="rpgbb-meta"><strong>${escapeHtml(entry.kind||"Lore")}</strong> · ${escapeHtml(entry.visibility||"Player")}</p>${body}</section>`}
+async function ensureFolder(name,type,parent=null){const existing=game.folders?.find(f=>f.type===type&&f.name===name&&(f.folder?.id??null)===(parent?.id??null));return existing||Folder.create({name,type,folder:parent?.id??null})}
+function ownership(entry){return entry.visibility==="Player"?{default:CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER}:{default:CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE}}
+function sourceFlag(entry){return{[MODULE_ID]:{sourceId:entry.id||null,visibility:entry.visibility||"Player",links:entry.links||[]}}}
+function findBySource(collection,id){return id?collection?.find(d=>d.getFlag(MODULE_ID,"sourceId")===id):null}
+function actorData(entry,folder){const npc=entry.kind==="Creature";return{name:entry.name,type:"npc",folder:folder.id,img:entry.image||undefined,ownership:ownership(entry),flags:sourceFlag(entry),system:{details:{biography:{value:loreHtml(entry)},type:{value:npc?"custom":"humanoid",custom:npc?"Creature":"NPC"}}}}}
+function itemData(entry,folder){return{name:entry.name,type:"loot",folder:folder.id,img:entry.image||undefined,ownership:ownership(entry),flags:sourceFlag(entry),system:{description:{value:loreHtml(entry)}}}}
+async function upsertJournal(entry,folder){const old=findBySource(game.journal,entry.id),data={name:entry.name,folder:folder.id,ownership:ownership(entry),flags:sourceFlag(entry)};if(old){await old.update(data);const page=old.pages?.contents?.[0];if(page)await page.update({name:entry.name,"text.content":loreHtml(entry)});else await old.createEmbeddedDocuments("JournalEntryPage",[{name:entry.name,type:"text",text:{format:1,content:loreHtml(entry)}}]);return{doc:old,updated:true}}const doc=await JournalEntry.create({...data,pages:[{name:entry.name,type:"text",text:{format:1,content:loreHtml(entry)}}]});return{doc,updated:false}}
+async function upsertActor(entry,folder){const old=findBySource(game.actors,entry.id),data=actorData(entry,folder);if(old){await old.update(data);return{doc:old,updated:true}}return{doc:await Actor.implementation.create(data),updated:false}}
+async function upsertItem(entry,folder){const old=findBySource(game.items,entry.id),data=itemData(entry,folder);if(old){await old.update(data);return{doc:old,updated:true}}return{doc:await Item.implementation.create(data),updated:false}}
+async function importPackage(data){if(!game.user?.isGM)throw new Error("Only a GM can import lore.");validatePackage(data);const roots={Journal:await ensureFolder(data.title||"RPG Book Builder","JournalEntry"),Actor:await ensureFolder(data.title||"RPG Book Builder","Actor"),Item:await ensureFolder(data.title||"RPG Book Builder","Item")},createdDocs=new Map();let created=0,updated=0;for(const entry of data.entries){if(!entry?.name)continue;const kind=entry.kind==="Creature"||entry.kind==="Person"?"Actor":entry.kind==="Item"?"Item":"Journal";const folder=await ensureFolder(entry.kind||"Lore",kind==="Journal"?"JournalEntry":kind,roots[kind]);const r=kind==="Actor"?await upsertActor(entry,folder):kind==="Item"?await upsertItem(entry,folder):await upsertJournal(entry,folder);createdDocs.set(entry.name.toLowerCase(),r.doc);r.updated?updated++:created++}for(const entry of data.entries){const doc=createdDocs.get(entry.name?.toLowerCase());if(!doc||doc.documentName!=="JournalEntry")continue;const page=doc.pages?.contents?.[0];if(!page)continue;let content=page.text?.content||"";for(const linkName of entry.links||[]){const target=createdDocs.get(String(linkName).toLowerCase());if(!target)continue;content=content.split(`@${linkName}`).join(`@UUID[${target.uuid}]{${linkName}}`)}if(content!==page.text?.content)await page.update({"text.content":content})}return{created,updated,total:created+updated}}
