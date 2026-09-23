@@ -32,4 +32,65 @@ async function upsertJournal(entry,folder){const old=findBySource(game.journal,e
 async function upsertActor(entry,folder){const old=findBySource(game.actors,entry.id),data=actorData(entry,folder);let doc,updated=false;if(old){await old.update(data);doc=old;updated=true}else doc=await Actor.implementation.create(data);const features=featureItems(entry);if(features.length){const previous=doc.items?.filter(i=>i.getFlag(MODULE_ID,"importedFeature"));if(previous?.length)await doc.deleteEmbeddedDocuments("Item",previous.map(i=>i.id));await doc.createEmbeddedDocuments("Item",features.map(x=>({...x,flags:{[MODULE_ID]:{importedFeature:true}}})))}return{doc,updated}}
 function itemData(entry,folder){return{name:entry.name,type:"loot",folder:folder.id,img:entry.image||undefined,ownership:ownership(entry),flags:sourceFlag(entry),system:{description:{value:loreHtml(entry)}}}}
 async function upsertItem(entry,folder){const old=findBySource(game.items,entry.id),data=itemData(entry,folder);if(old){await old.update(data);return{doc:old,updated:true}}return{doc:await Item.implementation.create(data),updated:false}}
-async function importPackage(data){if(!game.user?.isGM)throw new Error("Only a GM can import lore.");validatePackage(data);const active=data.entries.filter(e=>e?.name&&entryStatus(e)!=="Unchanged"),unchanged=data.entries.length-active.length;if(!active.length)return{created:0,updated:0,unchanged,total:data.entries.length};const roots={Journal:await ensureFolder(data.title||"RPG Book Builder","JournalEntry"),Actor:await ensureFolder(data.title||"RPG Book Builder","Actor"),Item:await ensureFolder(data.title||"RPG Book Builder","Item")},createdDocs=new Map();let created=0,updated=0;for(const entry of active){const kind=targetType(entry);const folder=await ensureFolder(entry.kind||"Lore",kind==="Journal"?"JournalEntry":kind,roots[kind]);const r=kind==="Actor"?await upsertActor(entry,folder):kind==="Item"?await upsertItem(entry,folder):await upsertJournal(entry,folder);createdDocs.set(entry.name.toLowerCase(),r.doc);r.updated?updated++:created++}for(const entry of active){const doc=createdDocs.get(entry.name?.toLowerCase());if(!doc||doc.documentName!=="JournalEntry")continue;const page=doc.pages?.contents?.[0];if(!page)continue;let content=page.text?.content||"";for(const linkName of entry.links||[]){const target=createdDocs.get(String(linkName).toLowerCase())||existingFor(active.find(e=>e.name?.toLowerCase()===String(linkName).toLowerCase())||{});if(!target)continue;content=content.split(`@${linkName}`).join(`@UUID[${target.uuid}]{${linkName}}`)}if(content!==page.text?.content)await page.update({"text.content":content})}return{created,updated,unchanged,total:data.entries.length}}
+async function importPackage(data){if(!game.user?.isGM)throw new Error("Only a GM can import lore.");validatePackage(data);const active=data.entries.filter(e=>e?.name&&entryStatus(e)!=="Unchanged"),unchanged=data.entries.length-active.length;if(!active.length)return{created:0,updated:0,unchanged,total:data.entries.length};const roots={Journal:await ensureFolder(data.title||"RPG Book Builder","JournalEntry"),Actor:await ensureFolder(data.title||"RPG Book Builder","Actor"),Item:await ensureFolder(data.title||"RPG Book Builder","Item")},createdDocs=new Map();let created=0,updated=0;for(const entry of active){const kind=targetType(entry);const folder=await ensureFolder(entry.kind||"Lore",kind==="Journal"?"JournalEntry":kind,roots[kind]);const r=kind==="Actor"?await upsertActor(entry,folder):kind==="Item"?await upsertItem(entry,folder):await upsertJournal(entry,folder);createdDocs.set(entry.name.toLowerCase(),r.doc);r.updated?updated++:created++}for(const entry of active){const doc=createdDocs.get(entry.name?.toLowerCase());if(!doc||doc.documentName!=="JournalEntry")continue;const page=doc.pages?.contents?.[0];if(!page)continue;let content=page.text?.content||"";for(const linkName of entry.links||[]){const target=createdDocs.get(String(linkName).toLowerCase())||importedByName(linkName);if(!target)continue;content=content.split(`@${linkName}`).join(`@UUID[${target.uuid}]{${linkName}}`)}if(content!==page.text?.content)await page.update({"text.content":content})}return{created,updated,unchanged,total:data.entries.length}}
+
+
+function escapeHtml(value=""){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
+function loreHtml(entry){
+  if(entry.html)return String(entry.html);
+  const body=escapeHtml(entry.body||"").replace(/\n{2,}/g,"</p><p>").replace(/\n/g,"<br>");
+  return body?`<p>${body}</p>`:"<p></p>"
+}
+function ownership(entry){
+  const observer=CONST?.DOCUMENT_OWNERSHIP_LEVELS?.OBSERVER??2;
+  const none=CONST?.DOCUMENT_OWNERSHIP_LEVELS?.NONE??0;
+  return {default:entry.visibility==="Player"?observer:none}
+}
+async function ensureFolder(name,type,parent=null){
+  const parentId=parent?.id??parent??null;
+  const existing=game.folders?.find(f=>f.name===name&&f.type===type&&(f.folder?.id??f.folder??null)===parentId);
+  if(existing)return existing;
+  return Folder.create({name,type,folder:parentId})
+}
+function importedByName(name){
+  const wanted=String(name||"").toLowerCase();
+  if(!wanted)return null;
+  for(const collection of [game.journal,game.actors,game.items]){
+    const found=collection?.find(d=>String(d.name||"").toLowerCase()===wanted&&d.getFlag?.(MODULE_ID,"sourceId"));
+    if(found)return found
+  }
+  return null
+}
+async function showPreview(data){
+  const counts=previewPackage(data);
+  const rows=data.entries.map((entry,index)=>{
+    const status=entryStatus(entry),disabled=status==="Unchanged"?" disabled":"";
+    return `<label class="rpgbb-row"><input type="checkbox" data-entry="${index}"${disabled?"": " checked"}${disabled}><span><b>${escapeHtml(entry.name||"Untitled")}</b><small>${escapeHtml(entry.kind||"History")} · ${escapeHtml(entry.visibility||"Player")}</small></span><em class="${status.toLowerCase()}">${status}</em></label>`
+  }).join("");
+  const content=`<div class="rpgbb-preview"><div class="rpgbb-summary"><b>${escapeHtml(data.title||"Lore Import")}</b><span>${counts.Journal} Journal · ${counts.Actor} Actor · ${counts.Item} Item · ${counts.New} New · ${counts.Update} Update · ${counts.Unchanged} Unchanged</span></div><div class="rpgbb-filter"><button type="button" data-select="all">All</button><button type="button" data-select="none">None</button></div><div class="rpgbb-rows">${rows}</div></div>`;
+  return new Promise(resolve=>{
+    new Dialog({
+      title:"RPG Book Builder Import Manager",
+      content,
+      buttons:{
+        import:{icon:'<i class="fas fa-file-import"></i>',label:"Import Selected",callback:async html=>{
+          const root=html?.[0]||html;
+          const indexes=[...(root?.querySelectorAll?.('input[data-entry]:checked')||[])].map(el=>Number(el.dataset.entry));
+          const selected={...data,entries:indexes.map(i=>data.entries[i]).filter(Boolean)};
+          if(!selected.entries.length){ui.notifications.info("No entries selected.");resolve({created:0,updated:0,unchanged:0,total:0});return}
+          const result=await importPackage(selected);
+          ui.notifications.info(`Import complete: ${result.created} created, ${result.updated} updated, ${result.unchanged} unchanged.`);
+          resolve(result)
+        }},
+        cancel:{label:"Cancel",callback:()=>resolve(null)}
+      },
+      render:html=>{
+        const root=html?.[0]||html;
+        root?.querySelector?.('[data-select="all"]')?.addEventListener("click",()=>root.querySelectorAll('input[data-entry]:not(:disabled)').forEach(x=>x.checked=true));
+        root?.querySelector?.('[data-select="none"]')?.addEventListener("click",()=>root.querySelectorAll('input[data-entry]:not(:disabled)').forEach(x=>x.checked=false))
+      },
+      default:"import",
+      close:()=>resolve(null)
+    }).render(true)
+  })
+}
