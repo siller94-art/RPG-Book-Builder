@@ -19,7 +19,7 @@ async function ensureFolder(name,type,parent=null){const existing=game.folders?.
 function ownership(entry){return entry.visibility==="Player"?{default:CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER}:{default:CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE}}
 function sourceFlag(entry){return{[MODULE_ID]:{sourceId:entry.id||null,visibility:entry.visibility||"Player",links:entry.links||[],fingerprint:stableEntry(entry)}}}
 function findBySource(collection,id){return id?collection?.find(d=>d.getFlag(MODULE_ID,"sourceId")===id):null}
-function num(v,fallback=0){const match=String(v??"").match(/-?\\d+(?:\\.\\d+)?/);if(!match)return fallback;const n=Number(match[0]);return Number.isFinite(n)?n:fallback}
+function num(v,fallback=0){const match=String(v??"").match(/-?\d+(?:\.\d+)?/);if(!match)return fallback;const n=Number(match[0]);return Number.isFinite(n)?n:fallback}
 function field(entry,...names){const f=entry.dnd5e?.fields||{};for(const n of names){const k=Object.keys(f).find(x=>x.toLowerCase()===n.toLowerCase());if(k)return f[k]}return""}
 function ability(entry,key){return num(field(entry,key,key.toUpperCase()),10)}
 function parseSpeed(value=""){const out={walk:0,fly:0,swim:0,climb:0,burrow:0,units:"ft"};const text=String(value);const walk=text.match(/(?:^|,)\s*(\d+)\s*ft/i);out.walk=walk?num(walk[1]):30;for(const k of ["fly","swim","climb","burrow"]){const m=text.match(new RegExp(k+"\\s+(\\d+)\\s*ft","i"));if(m)out[k]=num(m[1])}return out}
