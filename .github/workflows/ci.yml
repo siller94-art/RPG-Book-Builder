@@ -34,6 +34,12 @@ jobs:
         run: npm test
       - name: Web production build
         run: npm run build
+      - name: Verify web build output
+        shell: bash
+        run: |
+          test -f dist/index.html
+          test -d dist/assets
+          test -n "$(find dist/assets -type f -print -quit)"
       - name: Generate desktop icons
         run: npm run tauri -- icon src-tauri/app-icon.svg
       - name: Desktop bundle
