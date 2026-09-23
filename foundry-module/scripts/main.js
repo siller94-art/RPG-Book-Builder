@@ -11,6 +11,8 @@ function targetType(e){return e.kind==="Creature"||e.kind==="Person"?"Actor":e.k
 function existingFor(entry){const type=targetType(entry),collection=type==="Actor"?game.actors:type==="Item"?game.items:game.journal;return findBySource(collection,entry.id)}
 function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==="object")return Object.keys(value).sort().reduce((out,key)=>(out[key]=canonical(value[key]),out),{});return value}
 function stableEntry(entry){return JSON.stringify(canonical({name:entry.name||"",kind:entry.kind||"History",visibility:entry.visibility||"Player",body:entry.body||"",html:entry.html||"",links:entry.links||[],image:entry.image||"",dnd5e:entry.dnd5e||null}))}
+function entryStatus(entry){const old=existingFor(entry);if(!old)return"New";return old.getFlag(MODULE_ID,"fingerprint")===stableEntry(entry)?"Unchanged":"Update"}
+function previewPackage(data){return data.entries.reduce((a,e)=>{const type=targetType(e),status=entryStatus(e);a[type]=(a[type]||0)+1;a[status]=(a[status]||0)+1;return a},{Journal:0,Actor:0,Item:0,New:0,Update:0,Unchanged:0})}
 function sourceFlag(entry){return{[MODULE_ID]:{sourceId:entry.id||null,visibility:entry.visibility||"Player",links:entry.links||[],fingerprint:stableEntry(entry)}}}
 function findBySource(collection,id){return id?collection?.find(d=>d.getFlag(MODULE_ID,"sourceId")===id):null}
 function num(v,fallback=0){const match=String(v??"").match(/-?\d+(?:\.\d+)?/);if(!match)return fallback;const n=Number(match[0]);return Number.isFinite(n)?n:fallback}
