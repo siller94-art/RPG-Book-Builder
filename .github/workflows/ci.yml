@@ -30,6 +30,8 @@ jobs:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
+      - name: Pre-release verification
+        run: npm run check
       - name: Test
         run: npm test
       - name: Web production build
