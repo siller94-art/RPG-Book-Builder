@@ -22,9 +22,9 @@ function legacyFingerprints(entry){
   ])
 }
 function fingerprintMatches(entry,value){return typeof value==="string"&&legacyFingerprints(entry).has(value)}
-function entryStatus(entry){const old=existingFor(entry);if(!old)return"New";return fingerprintMatches(entry,old.getFlag(MODULE_ID,"fingerprint"))?"Unchanged":"Update"}
+function entryStatus(entry){const old=existingFor(entry);if(!old)return"New";const stored=old.getFlag(MODULE_ID,"fingerprint");return fingerprintMatches(entry,stored)?"Unchanged":"Update"}
 function previewPackage(data){return data.entries.reduce((a,e)=>{const type=targetType(e),status=entryStatus(e);a[type]=(a[type]||0)+1;a[status]=(a[status]||0)+1;return a},{Journal:0,Actor:0,Item:0,New:0,Update:0,Unchanged:0})}
-function sourceFlag(entry){return{[MODULE_ID]:{sourceId:entry.id||null,visibility:entry.visibility||"Player",links:entry.links||[],fingerprint:stableEntry(entry)}}}
+function sourceFlag(entry){return{[MODULE_ID]:{sourceId:entry.id||null,visibility:entry.visibility||"Player",links:entry.links||[],fingerprint:stableEntry(entry),fingerprintVersion:2}}}
 function findBySource(collection,id){return id?collection?.find(d=>d.getFlag(MODULE_ID,"sourceId")===id):null}
 function num(v,fallback=0){const match=String(v??"").match(/-?\d+(?:\.\d+)?/);if(!match)return fallback;const n=Number(match[0]);return Number.isFinite(n)?n:fallback}
 function field(entry,...names){const f=entry.dnd5e?.fields||{};for(const n of names){const k=Object.keys(f).find(x=>x.toLowerCase()===n.toLowerCase());if(k)return f[k]}return""}
