@@ -1,0 +1,1 @@
+import{describe,it,expect}from"vitest";import{createFoundryPackage}from"./foundryExport";describe("Foundry export",()=>{it("creates versioned package",()=>{const p=createFoundryPackage({schemaVersion:1,name:"Test",entries:[]});expect(p.format).toBe("rpg-book-builder-foundry");expect(p.version).toBe(1);expect(p.entries).toEqual([])})});
