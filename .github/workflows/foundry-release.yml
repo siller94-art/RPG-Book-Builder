@@ -31,17 +31,7 @@ jobs:
           cd release
           zip -r ../rpg-book-builder-companion.zip module.json scripts styles README.md
           cd ..
-          unzip -l rpg-book-builder-companion.zip | grep -E '^.* module.json
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          name: RPG Book Builder Companion v${{ steps.module.outputs.version }}
-          generate_release_notes: true
-          files: |
-            rpg-book-builder-companion.zip
-            module.json
-
+          unzip -l rpg-book-builder-companion.zip | grep -E '^.* module.json$'
           test "$(unzip -Z1 rpg-book-builder-companion.zip | head -1)" = "module.json"
           cp foundry-module/module.json ./module.json
 
