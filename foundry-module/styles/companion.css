@@ -1,6 +1,12 @@
 .rpgbb-import{margin:.35rem .5rem;padding:.35rem .6rem}
 .rpgbb-lore .rpgbb-meta{opacity:.72;border-bottom:1px solid var(--color-border-light-2);padding-bottom:.35rem;margin-bottom:.75rem}
-.rpgbb-preview{min-width:560px}
+.rpgbb-preview{width:100%;min-width:0}
+.rpgbb-preview .rpgbb-summary{display:grid;grid-template-columns:1fr;align-items:start}
+.rpgbb-preview .rpgbb-summary span{margin-left:0;white-space:normal;overflow-wrap:anywhere}
+.rpgbb-preview .rpgbb-filter{flex-wrap:wrap}
+.rpgbb-preview .rpgbb-filter button{min-width:7rem}
+.rpgbb-preview .rpgbb-row{grid-template-columns:24px minmax(0,1fr) auto}
+.rpgbb-preview .rpgbb-row span{min-width:0}
 .rpgbb-summary{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;padding:.7rem;background:rgba(0,0,0,.08);border-radius:6px;margin-bottom:.6rem}
 .rpgbb-summary span{margin-left:auto}
 .rpgbb-filter{display:flex;gap:.35rem;margin:.35rem 0}
