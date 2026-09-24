@@ -1,1 +1,1 @@
-fn main() { rpg_book_builder_lib::run(); }
+fn main(){rpg_book_builder_lib::run();}

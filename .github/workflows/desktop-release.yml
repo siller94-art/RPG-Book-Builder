@@ -33,6 +33,8 @@ jobs:
         run: npm test
       - name: Web production build
         run: npm run build
+      - name: Generate desktop icons
+        run: npm run tauri -- icon src-tauri/app-icon.svg
       - name: Desktop bundle
         env:
           APPLE_SIGNING_IDENTITY: ${{ runner.os == 'macOS' && '-' || '' }}
