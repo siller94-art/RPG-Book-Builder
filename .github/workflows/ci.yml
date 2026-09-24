@@ -60,6 +60,25 @@ jobs:
           test -n "$APP"
           codesign --verify --deep --strict --verbose=4 "$APP"
           hdiutil detach "$MOUNT"
+      - name: Package Foundry runtime test module
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          rm -rf foundry-test-package
+          mkdir -p foundry-test-package/rpg-book-builder-companion
+          cp -R foundry-module/module.json foundry-module/scripts foundry-module/styles foundry-module/README.md foundry-test-package/rpg-book-builder-companion/
+          cd foundry-test-package
+          zip -r ../rpg-book-builder-companion-test.zip rpg-book-builder-companion
+          cd ..
+          unzip -l rpg-book-builder-companion-test.zip | grep 'rpg-book-builder-companion/module.json'
+          unzip -l rpg-book-builder-companion-test.zip | grep 'rpg-book-builder-companion/scripts/main.js'
+      - name: Upload Foundry runtime test module
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: foundry-runtime-test-module
+          path: rpg-book-builder-companion-test.zip
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
