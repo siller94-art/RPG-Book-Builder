@@ -64,10 +64,10 @@ function importedByName(name){
 async function showPreview(data){
   const counts=previewPackage(data);
   const rows=data.entries.map((entry,index)=>{
-    const status=entryStatus(entry),disabled=status==="Unchanged"?" disabled":"";
-    return `<label class="rpgbb-row"><input type="checkbox" data-entry="${index}"${disabled?"": " checked"}${disabled}><span><b>${escapeHtml(entry.name||"Untitled")}</b><small>${escapeHtml(entry.kind||"History")} · ${escapeHtml(entry.visibility||"Player")}</small></span><em class="${status.toLowerCase()}">${status}</em></label>`
+    const status=entryStatus(entry),unchanged=status==="Unchanged";
+    return `<label class="rpgbb-row ${unchanged?"is-unchanged":""}"><input type="checkbox" data-entry="${index}" ${unchanged?"disabled":"checked"}><span><b>${escapeHtml(entry.name||"Untitled")}</b><small>${escapeHtml(entry.kind||"History")} · ${escapeHtml(entry.visibility||"Player")}</small></span><em class="${status.toLowerCase()}">${status}</em></label>`
   }).join("");
-  const content=`<div class="rpgbb-preview"><div class="rpgbb-summary"><b>${escapeHtml(data.title||"Lore Import")}</b><span>${counts.Journal} Journal · ${counts.Actor} Actor · ${counts.Item} Item · ${counts.New} New · ${counts.Update} Update · ${counts.Unchanged} Unchanged</span></div><div class="rpgbb-filter"><button type="button" data-select="all">All</button><button type="button" data-select="none">None</button></div><div class="rpgbb-rows">${rows}</div></div>`;
+  const content=`<div class="rpgbb-preview"><div class="rpgbb-summary"><b>${escapeHtml(data.title||"Lore Import")}</b><div class="rpgbb-counts"><span>${counts.Journal} Journal</span><span>${counts.Actor} Actor</span><span>${counts.Item} Item</span><span>${counts.New} New</span><span>${counts.Update} Update</span><strong>${counts.Unchanged} Unchanged</strong></div></div><div class="rpgbb-filter"><button type="button" data-select="all">All</button><button type="button" data-select="none">None</button></div><div class="rpgbb-rows">${rows}</div></div>`;
   return new Promise(resolve=>{
     new Dialog({
       title:"RPG Book Builder Import Manager",
