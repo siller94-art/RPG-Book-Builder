@@ -18,7 +18,7 @@ describe('Foundry release package',()=>{
     expect(manifest.esmodules).toContain('scripts/main.js');
     expect(manifest.styles).toContain('styles/companion.css');
     expect(manifest.manifest).toMatch(/releases\/latest\/download\/module\.json$/);
-    expect(manifest.download).toMatch(/releases\/latest\/download\/rpg-book-builder-companion\.zip$/);
+    expect(manifest.download).toBe(`https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v${manifest.version}/rpg-book-builder-companion.zip`);
   });
   it('keeps manifest entry points inside the packaged folder',()=>{
     for(const file of [...manifest.esmodules,...manifest.styles])expect(fs.existsSync(path.join(root,file)),file).toBe(true);
