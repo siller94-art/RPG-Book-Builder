@@ -20,3 +20,9 @@
 .rpgbb-row em.update{border:1px solid currentColor}
 .rpgbb-row em.unchanged{opacity:.6}
 .rpgbb-row:has(input:disabled){opacity:.58}
+
+.rpgbb-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.3rem .5rem;width:100%;font-size:.82rem}
+.rpgbb-counts span,.rpgbb-counts strong{display:block;white-space:nowrap}
+.rpgbb-row.is-unchanged{opacity:.48}
+.rpgbb-row.is-unchanged input{cursor:not-allowed}
+@media(max-width:620px){.rpgbb-counts{grid-template-columns:repeat(2,minmax(0,1fr))}}
