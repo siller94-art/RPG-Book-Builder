@@ -79,29 +79,29 @@ async function showPreview(data){
     return `<label class="rpgbb-row ${unchanged?"is-unchanged":""}"><input type="checkbox" data-entry="${index}" ${unchanged?"disabled":"checked"}><span><b>${escapeHtml(entry.name||"Untitled")}</b><small>${escapeHtml(entry.kind||"History")} · ${escapeHtml(entry.visibility||"Player")}</small></span><em class="${status.toLowerCase()}">${status}</em></label>`
   }).join("");
   const content=`<div class="rpgbb-preview"><div class="rpgbb-summary"><b>${escapeHtml(data.title||"Lore Import")}</b><div class="rpgbb-counts"><span>${counts.Journal} Journal</span><span>${counts.Actor} Actor</span><span>${counts.Item} Item</span><span>${counts.New} New</span><span>${counts.Update} Update</span><strong>${counts.Unchanged} Unchanged</strong></div></div><div class="rpgbb-filter"><button type="button" data-select="all">All</button><button type="button" data-select="none">None</button></div><div class="rpgbb-rows">${rows}</div></div>`;
-  return new Promise(resolve=>{
-    new Dialog({
-      title:"RPG Book Builder Import Manager",
-      content,
-      buttons:{
-        import:{icon:'<i class="fas fa-file-import"></i>',label:"Import Selected",callback:async html=>{
-          const root=html?.[0]||html;
-          const indexes=[...(root?.querySelectorAll?.('input[data-entry]:checked')||[])].map(el=>Number(el.dataset.entry));
-          const selected={...data,entries:indexes.map(i=>data.entries[i]).filter(Boolean)};
-          if(!selected.entries.length){ui.notifications.info("No entries selected.");resolve({created:0,updated:0,unchanged:0,total:0});return}
-          const result=await importPackage(selected);
-          ui.notifications.info(`Import complete: ${result.created} created, ${result.updated} updated, ${result.unchanged} unchanged.`);
-          resolve(result)
-        }},
-        cancel:{label:"Cancel",callback:()=>resolve(null)}
-      },
-      render:html=>{
-        const root=html?.[0]||html;
-        root?.querySelector?.('[data-select="all"]')?.addEventListener("click",()=>root.querySelectorAll('input[data-entry]:not(:disabled)').forEach(x=>x.checked=true));
-        root?.querySelector?.('[data-select="none"]')?.addEventListener("click",()=>root.querySelectorAll('input[data-entry]:not(:disabled)').forEach(x=>x.checked=false))
-      },
-      default:"import",
-      close:()=>resolve(null)
-    }).render(true)
+  const DialogV2=foundry?.applications?.api?.DialogV2;
+  if(!DialogV2)throw new Error("Foundry VTT 14 DialogV2 API is unavailable.");
+  return DialogV2.wait({
+    window:{title:"RPG Book Builder Import Manager",resizable:true},
+    position:{width:640,height:720},
+    content,
+    rejectClose:false,
+    buttons:[
+      {action:"import",icon:"<i class=\"fas fa-file-import\"></i>",label:"Import Selected",default:true,callback:async(event,button)=>{
+        const root=button?.form||button?.closest?.("form")||button?.ownerDocument;
+        const indexes=[...(root?.querySelectorAll?.('input[data-entry]:checked')||[])].map(el=>Number(el.dataset.entry));
+        const selected={...data,entries:indexes.map(i=>data.entries[i]).filter(Boolean)};
+        if(!selected.entries.length){ui.notifications.info("No entries selected.");return{created:0,updated:0,unchanged:0,total:0}}
+        const result=await importPackage(selected);
+        ui.notifications.info(`Import complete: ${result.created} created, ${result.updated} updated, ${result.unchanged} unchanged.`);
+        return result
+      }},
+      {action:"cancel",label:"Cancel"}
+    ],
+    render:(event,dialog)=>{
+      const root=dialog?.element;
+      root?.querySelector?.('[data-select="all"]')?.addEventListener("click",()=>root.querySelectorAll('input[data-entry]:not(:disabled)').forEach(x=>x.checked=true));
+      root?.querySelector?.('[data-select="none"]')?.addEventListener("click",()=>root.querySelectorAll('input[data-entry]:not(:disabled)').forEach(x=>x.checked=false))
+    }
   })
 }
