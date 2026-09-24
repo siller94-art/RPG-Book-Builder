@@ -25,11 +25,24 @@ jobs:
       - name: Build module ZIP
         shell: bash
         run: |
-          mkdir -p release/rpg-book-builder-companion
-          cp -R foundry-module/module.json foundry-module/scripts foundry-module/styles foundry-module/README.md release/rpg-book-builder-companion/
+          rm -rf release
+          mkdir -p release
+          cp -R foundry-module/module.json foundry-module/scripts foundry-module/styles foundry-module/README.md release/
           cd release
-          zip -r ../rpg-book-builder-companion.zip rpg-book-builder-companion
+          zip -r ../rpg-book-builder-companion.zip module.json scripts styles README.md
           cd ..
+          unzip -l rpg-book-builder-companion.zip | grep -E '^.* module.json
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: RPG Book Builder Companion v${{ steps.module.outputs.version }}
+          generate_release_notes: true
+          files: |
+            rpg-book-builder-companion.zip
+            module.json
+
+          test "$(unzip -Z1 rpg-book-builder-companion.zip | head -1)" = "module.json"
           cp foundry-module/module.json ./module.json
 
       - name: Create GitHub release
