@@ -11,10 +11,11 @@ describe('Foundry release package',()=>{
       expect(fs.existsSync(path.join(root,file)),file).toBe(true);
     }
   });
-  it('uses the v0.2.0 release manifest contract',()=>{
+  it('uses the Foundry v14 release manifest contract',()=>{
     expect(manifest.id).toBe('rpg-book-builder-companion');
-    expect(manifest.version).toBe('0.2.0');
-    expect(manifest.compatibility.minimum).toBe('13');
+    expect(manifest.version).toBe('0.3.0');
+    expect(manifest.compatibility.minimum).toBe('14.367');
+    expect(manifest.compatibility.verified).toBe('14.368');
     expect(manifest.esmodules).toContain('scripts/main.js');
     expect(manifest.styles).toContain('styles/companion.css');
     expect(manifest.manifest).toMatch(/releases\/latest\/download\/module\.json$/);
