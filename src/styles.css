@@ -173,3 +173,6 @@ main{background:#eef0f1;padding:20px;overflow:auto}.mockEditorTitle{max-width:11
 .workspaceBanner{display:none}.sourceModeBar{background:#fff;border:1px solid #d4d9dd;margin-bottom:10px}.sourceWorkspace,.loreStudio,.loreCreators,.writingHelper{border-color:#d2d7db}
 nav button,.quality{background:#13283a;border-color:#3e607b;color:#fff}.quality{display:none}nav .primary{background:#efbd4f;border-color:#ffd46e;color:#17120a;font-weight:700}
 @media(max-width:1200px){.app{grid-template-columns:205px minmax(600px,1fr) 190px}.workspaceNav button{min-width:70px}}
+
+/* Page formatting helper */
+.pageHelper{display:grid;gap:7px;margin-bottom:16px;padding:11px;border:1px solid #d7c38d;border-radius:8px;background:#fff8e5;color:#30291d}.pageHelperHead{display:grid;gap:2px;border-bottom:1px solid #e4d6ad;padding-bottom:7px}.pageHelperHead b{font:700 15px Georgia,serif;color:#72521f}.pageHelperHead small{font-size:10px;color:#887a5e}.pageHelper p{margin:0;padding:5px 0;border-bottom:1px solid #eee3c6;font-size:11px;line-height:1.35}.tools .pageHelper button{min-height:34px;background:#173047;border-color:#355b79;color:#fff;justify-content:center}.tools .pageHelper .pageHelperAction{background:#eab94e;border-color:#d2a23c;color:#1d170d;font-weight:700}
