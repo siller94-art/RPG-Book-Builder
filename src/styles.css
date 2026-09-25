@@ -157,3 +157,19 @@ main{background:#17222e;padding:28px;box-shadow:inset 0 0 40px #07101966}
   .app>.printPages{display:block!important}
   .printPaper{margin:0!important;box-shadow:none!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 }
+
+
+/* Approved RPG Book Builder mockup layout */
+.app{grid-template:60px 1fr/238px minmax(720px,1fr) 220px;background:#111b22}
+header{height:60px;background:#0b151a;border-bottom:1px solid #344047;padding:0 20px}
+header b{font:700 21px Georgia,serif;color:#f1d493}
+.workspaceNav{margin-left:22px;border:0}.workspaceNav button{min-width:90px;color:#eee;border:0;background:transparent}.workspaceNav button.active{background:transparent;box-shadow:inset 0 -3px #77aee5;color:#fff}
+.campaignName{margin-left:auto;display:flex;align-items:center;gap:8px}.campaignName span{display:none}.projectTitle{background:transparent;border:0;color:#fff;text-align:right;width:190px}
+.pages{grid-row:2;background:linear-gradient(180deg,#111b20,#101a1e);padding:18px 14px}.bookContentLabel{position:fixed;left:22px;top:78px;z-index:20;color:#fff;font:700 18px Georgia,serif;pointer-events:none}.pages{padding-top:58px}.pages h3{color:#f4f4f4;font:600 13px Inter,sans-serif}.pages .thumb{background:transparent!important;border:0!important;box-shadow:none!important}.pages .thumb.selected{background:#284d6c!important;border:1px solid #52789a!important}.pageNumber{display:none}
+main{background:#eef0f1;padding:20px;overflow:auto}.mockEditorTitle{max-width:1120px;margin:0 auto 10px;background:#fff;border:1px solid #d4d9dd;border-radius:9px 9px 0 0;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;color:#16191b}.mockEditorTitle h1{font:700 25px Inter,sans-serif;margin:0}.mockEditorTitle button{background:#eef0f1;border:1px solid #d8dcdf;color:#202326;padding:7px 11px}
+.paper{margin:0 auto;background:#f4e5bf;color:#2e2922;box-shadow:0 3px 14px #0004;border:1px solid #c9ac72;padding:55px 58px}
+.paper .pageTitle{font:700 12px Georgia,serif;color:#7b2925}
+.tools{grid-row:2;background:#f7f7f7;color:#242424;border-left:1px solid #d4d8db;padding:18px 12px}.pageElementsTitle{font:700 20px Georgia,serif;margin:5px 4px 18px}.tools h3{color:#444}.tools button{background:#fff;border:1px solid #cfd4d8;color:#222;min-height:42px;justify-content:flex-start}.tools .field{color:#555}.tools .field select{background:#fff;color:#222;border-color:#ccd2d7}
+.workspaceBanner{display:none}.sourceModeBar{background:#fff;border:1px solid #d4d9dd;margin-bottom:10px}.sourceWorkspace,.loreStudio,.loreCreators,.writingHelper{border-color:#d2d7db}
+nav button,.quality{background:#13283a;border-color:#3e607b;color:#fff}.quality{display:none}nav .primary{background:#efbd4f;border-color:#ffd46e;color:#17120a;font-weight:700}
+@media(max-width:1200px){.app{grid-template-columns:205px minmax(600px,1fr) 190px}.workspaceNav button{min-width:70px}}
