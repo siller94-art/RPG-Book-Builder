@@ -79,7 +79,7 @@ async function handleSocket(message){
 async function openPlayerContentBuilder(){
   const mine=listPlayerSubmissions();
   const draft=game.settings.get(MODULE_ID,DRAFT_SETTING)||{};
-  const rows=mine.map(s=>`<div class="rpgbb-submission"><span><b>${esc(s.content.name)}</b><small>${esc(s.content.type)} · ${esc(s.status)}</small></span><em>${esc(s.gmNote||"")}</em></div>`).join("")||'<p class="hint">No submissions yet.</p>';
+  const rows=mine.map(s=>`<div class="rpgbb-submission"><span><b>${esc(s.content.name)}</b><small>${esc(s.content.type)} · ${esc(s.status)}</small></span><em>${esc(s.gmNote||"")}</em>${s.status===STATUS.CHANGES?`<button type="button" data-edit-returned="${s.id}">Edit Returned Content</button>`:""}</div>`).join("")||'<p class="hint">No submissions yet.</p>';
   const content=`<div class="rpgbb-approval"><p>Create a custom species, item, or spell. It remains unavailable to the character until a GM approves it.</p>
   <input type="hidden" name="submissionId" value="\${esc(draft.submissionId||"")}"><div class="form-group"><label>Type</label><select name="type"><option value="species" \${draft.type==="species"?"selected":""}>Species / Race</option><option value="item" \${draft.type==="item"?"selected":""}>Item</option><option value="spell" \${draft.type==="spell"?"selected":""}>Spell</option></select></div>
   <div class="form-group"><label>Name</label><input name="name" required value="\${esc(draft.name||"")}"></div>
@@ -90,7 +90,7 @@ async function openPlayerContentBuilder(){
     {action:"submit",label:"Submit to GM",icon:"<i class='fas fa-paper-plane'></i>",default:true,callback:async(_e,b)=>{
       const f=b.form; await submitPlayerContent({type:f.elements.type.value,name:f.elements.name.value,description:f.elements.description.value},f.elements.submissionId.value); return true;
     }},{action:"cancel",label:"Close"}
-  ]});
+  ],render:(_e,d)=>{d.element.querySelectorAll("[data-edit-returned]").forEach(btn=>btn.addEventListener("click",async()=>{const s=mine.find(x=>x.id===btn.dataset.editReturned);if(!s)return;await game.settings.set(MODULE_ID,DRAFT_SETTING,{type:s.content.type,name:s.content.name,description:s.content.description,submissionId:s.id});ui.notifications.info("Returned content loaded into your draft. Reopen My Custom Content to edit and resubmit.");d.close();}));}});
 }
 
 async function openApprovalQueue(){
