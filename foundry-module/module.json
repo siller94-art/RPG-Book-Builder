@@ -1,8 +1,8 @@
 {
   "id": "rpg-book-builder-companion",
   "title": "RPG Book Builder Companion",
-  "description": "Standalone lore importer for Foundry VTT with native RPG Book Builder integration. Imports .rpgfoundry, JSON, Markdown, and plain text into organized Journals, Actors, and Items.",
-  "version": "0.3.0",
+  "description": "Foundry VTT companion with RPG Book Builder imports plus player-authored species, items, and spells that require GM approval.",
+  "version": "0.4.0",
   "authors": [
     {
       "name": "RPG Book Builder"
@@ -13,12 +13,13 @@
     "verified": "14.368"
   },
   "esmodules": [
-    "scripts/main.js"
+    "scripts/main.js",
+    "scripts/approval.js"
   ],
   "styles": [
     "styles/companion.css"
   ],
   "url": "https://github.com/siller94-art/RPG-Book-Builder",
   "manifest": "https://github.com/siller94-art/RPG-Book-Builder/releases/latest/download/module.json",
-  "download": "https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v0.3.0/rpg-book-builder-companion.zip"
+  "download": "https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v0.4.0/rpg-book-builder-companion.zip"
 }
