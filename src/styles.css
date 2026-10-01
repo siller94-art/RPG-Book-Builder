@@ -207,3 +207,15 @@ nav button,.quality{background:#13283a;border-color:#3e607b;color:#fff}.quality{
 .relationWeb{height:calc(100% - 38px);position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;place-items:center;background:radial-gradient(circle,#18354a 1px,transparent 1px);background-size:18px 18px}.relationWeb:before{content:"";position:absolute;width:70%;height:1px;background:#487b94;transform:rotate(18deg)}.relationWeb i,.relationWeb strong{z-index:1;background:#0c1822;border:1px solid #8d6b2c;border-radius:50%;width:74px;height:74px;display:grid;place-items:center;text-align:center;font-size:9px;font-style:normal}.relationWeb strong{border-color:#09a6d8;background:#1a4058}.miniTimeline{padding:5px 10px;border-left:2px solid #08a9dc;margin-left:14px}.miniTimeline p{display:grid;grid-template-columns:52px 1fr;gap:7px;font-size:9px;margin:6px 0}.miniTimeline b{color:#dce7ee}.miniTimeline span{color:#aebdc7}
 .worldInspector h3{font:700 13px Georgia,serif;color:#e7ca84;border-bottom:1px solid #203747;padding-bottom:8px}.worldInspector h4{font-size:11px;color:#e7ca84;margin:12px 0 6px}.worldInspector label{display:grid;gap:5px;font-size:10px;margin:9px 0}.worldInspector select{background:#0d1c28;color:#dce7ee;border:1px solid #294457;border-radius:5px;padding:6px}.artThumb{height:60px;background:linear-gradient(135deg,#b39a61,#527a82);border:1px solid #294457;border-radius:5px;padding:8px;display:flex;align-items:end;justify-content:space-between}.themeGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.themeGrid button{font-size:9px;padding:7px}.worldInspector .chosen{outline:1px solid #00aee1;background:#153248}.seg{display:flex}.seg button{width:40px}.insertBtn{display:block!important;width:100%;text-align:left;margin:4px 0!important;border-color:#294457!important;font-size:10px!important;padding:7px 9px!important}.tabWorkspace{margin-top:8px;min-height:440px;border:1px solid #203747;border-radius:6px;padding:24px;background:#091722}.tabWorkspace h2{font-family:Georgia,serif;color:#e7ca84}
 @media(max-width:1150px){.lockedWorld{grid-template-columns:210px minmax(600px,1fr)}.worldInspector{display:none}.workspace-world>header>b{min-width:180px}.workspace-world .workspaceNav button{padding:0 9px!important;font-size:10px}.worldBottom{grid-template-columns:1fr 1fr}.worldBottom>section:last-child{display:none}}
+
+/* Authoritative World Creator actions + PDF print fix */
+.workspace-world>header>nav{display:flex!important;margin-left:auto!important}
+.workspace-world>header>nav button,.workspace-world>header>nav select{display:flex!important}
+@media print{
+ .app{display:block!important;height:auto!important;background:#fff!important}
+ .app>header,.app>.pages,.app>.tools,.app>main,.app>.bookContentLabel{display:none!important}
+ .app>.printPages{display:block!important}
+ .printPaper{margin:0!important;box-shadow:none!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .printPaper:last-child{break-after:auto!important}
+ @page{margin:0}
+}
