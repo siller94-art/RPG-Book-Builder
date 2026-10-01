@@ -1,9 +1,11 @@
 const MODULE_ID = "rpg-book-builder-companion";
 const SETTING = "contentSubmissions";
+const DRAFT_SETTING = "contentDraft";
 const ALLOWED_TYPES = new Set(["species", "item", "spell"]);
 const STATUS = Object.freeze({DRAFT:"draft",PENDING:"pending",APPROVED:"approved",CHANGES:"changes-requested",REJECTED:"rejected"});
 
 Hooks.once("init", () => {
+  game.settings.register(MODULE_ID, DRAFT_SETTING, {name:"Player Content Draft",scope:"client",config:false,type:Object,default:{type:"species",name:"",description:"",submissionId:""}});
   game.settings.register(MODULE_ID, SETTING, {
     name: "Player Content Submissions",
     scope: "world",
@@ -49,10 +51,12 @@ function sanitize(data){
 }
 function listPlayerSubmissions(userId=game.user.id){return store().submissions.filter(x=>x.userId===userId)}
 
-async function submitPlayerContent(data){
+async function submitPlayerContent(data, submissionId=""){
   if(game.user.isGM)throw new Error("GM users should create content directly or review the queue.");
   const content=sanitize(data);
-  const submission={id:id(),userId:game.user.id,userName:game.user.name,content,status:STATUS.PENDING,createdAt:Date.now(),updatedAt:Date.now(),revision:1,gmNote:""};
+  const previous=submissionId?listPlayerSubmissions().find(x=>x.id===submissionId):null;
+  if(previous && previous.status!==STATUS.CHANGES)throw new Error("Only content returned for changes can be resubmitted.");
+  const submission={id:previous?.id||id(),userId:game.user.id,userName:game.user.name,content,status:STATUS.PENDING,createdAt:previous?.createdAt||Date.now(),updatedAt:Date.now(),revision:(previous?.revision||0)+1,gmNote:""};
   game.socket.emit(`module.${MODULE_ID}`,{action:"submit",submission});
   ui.notifications.info(`${content.name} submitted to the GM for approval.`);
   return submission;
@@ -65,23 +69,26 @@ async function handleSocket(message){
     if(!s?.id||!s?.userId)return;
     try{s.content=sanitize(s.content)}catch(e){console.warn(MODULE_ID,e);return}
     s.status=STATUS.PENDING;s.updatedAt=Date.now();
-    const db=store(); if(db.submissions.some(x=>x.id===s.id))return;
-    db.submissions.push(s); await saveStore(db);
+    const db=store(); const existing=db.submissions.find(x=>x.id===s.id);
+    if(existing){if(existing.userId!==s.userId||existing.status!==STATUS.CHANGES)return;Object.assign(existing,s)}else db.submissions.push(s);
+    await saveStore(db);
     ui.notifications.info(`New custom ${s.content.type} submission from ${s.userName}.`);
   }
 }
 
 async function openPlayerContentBuilder(){
   const mine=listPlayerSubmissions();
+  const draft=game.settings.get(MODULE_ID,DRAFT_SETTING)||{};
   const rows=mine.map(s=>`<div class="rpgbb-submission"><span><b>${esc(s.content.name)}</b><small>${esc(s.content.type)} · ${esc(s.status)}</small></span><em>${esc(s.gmNote||"")}</em></div>`).join("")||'<p class="hint">No submissions yet.</p>';
   const content=`<div class="rpgbb-approval"><p>Create a custom species, item, or spell. It remains unavailable to the character until a GM approves it.</p>
-  <div class="form-group"><label>Type</label><select name="type"><option value="species">Species / Race</option><option value="item">Item</option><option value="spell">Spell</option></select></div>
-  <div class="form-group"><label>Name</label><input name="name" required></div>
-  <div class="form-group stacked"><label>Description / Rules</label><textarea name="description" rows="8"></textarea></div>
+  <input type="hidden" name="submissionId" value="\${esc(draft.submissionId||"")}"><div class="form-group"><label>Type</label><select name="type"><option value="species" \${draft.type==="species"?"selected":""}>Species / Race</option><option value="item" \${draft.type==="item"?"selected":""}>Item</option><option value="spell" \${draft.type==="spell"?"selected":""}>Spell</option></select></div>
+  <div class="form-group"><label>Name</label><input name="name" required value="\${esc(draft.name||"")}"></div>
+  <div class="form-group stacked"><label>Description / Rules</label><textarea name="description" rows="8">\${esc(draft.description||"")}</textarea></div>
   <h3>My submissions</h3><div class="rpgbb-submissions">${rows}</div></div>`;
   return foundry.applications.api.DialogV2.wait({window:{title:"My Custom Content",resizable:true},position:{width:620,height:680},content,rejectClose:false,buttons:[
+    {action:"save",label:"Save Draft",icon:"<i class='fas fa-floppy-disk'></i>",callback:async(_e,b)=>{const f=b.form;await game.settings.set(MODULE_ID,DRAFT_SETTING,{type:f.elements.type.value,name:f.elements.name.value,description:f.elements.description.value,submissionId:f.elements.submissionId.value});ui.notifications.info("Draft saved.");return false;}},
     {action:"submit",label:"Submit to GM",icon:"<i class='fas fa-paper-plane'></i>",default:true,callback:async(_e,b)=>{
-      const f=b.form; await submitPlayerContent({type:f.elements.type.value,name:f.elements.name.value,description:f.elements.description.value}); return true;
+      const f=b.form; await submitPlayerContent({type:f.elements.type.value,name:f.elements.name.value,description:f.elements.description.value},f.elements.submissionId.value); return true;
     }},{action:"cancel",label:"Close"}
   ]});
 }
