@@ -7,5 +7,9 @@ export type StatFields=Record<string,string>;export interface StatEntry{id:strin
 export interface StatblockBlock extends BaseBlock{kind:'statblock';template:StatblockKind;body:string;fields:StatFields;sections?:StatSections;}
 export type DocumentBlock=TextBlock|ImageBlock|StatblockBlock;
 export interface Page{id:string;name:string;blocks:DocumentBlock[];}
-export interface ProjectSettings{pageSize:'letter'|'a4';orientation:'portrait'|'landscape';themeId:string;}\nexport interface MapPin{id:number;x:number;y:number;label:string} export interface MapWorkspace{name:string;notes:string;image:string;pins:MapPin[]} export interface TimelineEvent{date:string;title:string;text:string} export interface BoardCard{title:string;text:string;status?:string} export interface WorldToolsData{maps:MapWorkspace;timeline:TimelineEvent[];boards:BoardCard[]}
+export interface ProjectSettings{pageSize:'letter'|'a4';orientation:'portrait'|'landscape';themeId:string;}\nexport interface MapPin{id:number;x:number;y:number;label:string}
+export interface MapWorkspace{name:string;notes:string;image:string;pins:MapPin[]}
+export interface TimelineEvent{date:string;title:string;text:string}
+export interface BoardCard{title:string;text:string;status?:string}
+export interface WorldToolsData{maps:MapWorkspace;timeline:TimelineEvent[];boards:BoardCard[]}
 export interface Project{schemaVersion:1;id:string;title:string;pages:Page[];activePageId:string;settings:ProjectSettings;updatedAt:string;brewSource?:string;worldTools?:WorldToolsData;}
