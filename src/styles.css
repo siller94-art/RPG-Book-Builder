@@ -356,3 +356,5 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
  .paper,.paper.a4{width:100%;padding:22px;aspect-ratio:auto}
  .simpleBuilder .builderForm{grid-template-columns:1fr}
 }
+
+.advancedWork{margin-top:16px;padding:12px;border:1px solid #294457;border-radius:8px;background:#0b1b27}.advancedWork>p,.formatCodePanel p{font-size:12px;color:#8fa3b6;margin:0 0 9px}.formatCodeToggle{width:100%;justify-content:center;background:#132c3d;border-color:#3b6079}.formatCodePanel{display:grid;gap:8px;margin-top:9px}.formatCodePanel textarea{width:100%;min-height:130px;resize:vertical;background:#07131c;color:#dbe6ee;border:1px solid #315069;border-radius:6px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}
