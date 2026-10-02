@@ -26,3 +26,16 @@
 .rpgbb-row.is-unchanged{opacity:.48}
 .rpgbb-row.is-unchanged input{cursor:not-allowed}
 @media(max-width:620px){.rpgbb-counts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.rpgbb-player-content{margin:.35rem .5rem;padding:.35rem .6rem}
+.rpgbb-approval .form-group{display:grid;grid-template-columns:140px 1fr;gap:.6rem;align-items:center;margin:.55rem 0}
+.rpgbb-approval .form-group.stacked{grid-template-columns:1fr}
+.rpgbb-approval textarea{width:100%;resize:vertical}
+.rpgbb-submissions{display:grid;gap:.4rem;max-height:220px;overflow:auto}
+.rpgbb-submission{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.5rem;padding:.55rem;border:1px solid var(--color-border-light-2);border-radius:5px}
+.rpgbb-submission span{display:flex;flex-direction:column}.rpgbb-submission small{opacity:.7}.rpgbb-submission em{font-style:normal;opacity:.75}
+.rpgbb-review-list{display:grid;gap:.7rem}.rpgbb-review-card{border:1px solid var(--color-border-light-2);border-radius:6px;padding:.7rem}
+.rpgbb-review-card header{display:flex;justify-content:space-between;gap:.6rem;border-bottom:1px solid var(--color-border-light-2);padding-bottom:.4rem}
+.rpgbb-review-body{padding:.65rem 0;max-height:180px;overflow:auto}.rpgbb-review-card footer{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.4rem}
+.rpgbb-review-card footer button:first-child{font-weight:700}
+@media(max-width:620px){.rpgbb-approval .form-group,.rpgbb-submission{grid-template-columns:1fr}.rpgbb-review-card header{flex-direction:column}}
