@@ -295,3 +295,27 @@ nav button,.quality{background:#13283a;border-color:#3e607b;color:#fff}.quality{
   .workspace-characters .contentBuilder,.workspace-items .contentBuilder,.workspace-spells .contentBuilder,.workspace-monsters .contentBuilder{grid-template-columns:145px minmax(0,1fr)}
   .workspace-characters .builderPreview,.workspace-items .builderPreview,.workspace-spells .builderPreview,.workspace-monsters .builderPreview{display:none}
 }
+
+
+/* Compact desktop window fit — prevent the content workspaces from forcing an oversized app width */
+.workspace-characters.app,.workspace-items.app,.workspace-spells.app,.workspace-monsters.app{min-width:0!important;width:100%!important}
+.workspace-characters>header,.workspace-items>header,.workspace-spells>header,.workspace-monsters>header{min-width:0;overflow:hidden}
+.workspace-characters .workspaceNav,.workspace-items .workspaceNav,.workspace-spells .workspaceNav,.workspace-monsters .workspaceNav{min-width:0;overflow-x:auto;scrollbar-width:thin}
+.workspace-characters .contentBuilder,.workspace-items .contentBuilder,.workspace-spells .contentBuilder,.workspace-monsters .contentBuilder{
+  width:100%;
+  min-width:0;
+  grid-template-columns:minmax(125px,16%) minmax(0,1fr) minmax(210px,24%);
+}
+.contentBuilder .builderLibrary,.contentBuilder .builderCenter,.contentBuilder .builderPreview{min-width:0}
+@media(max-width:1100px){
+  .workspace-characters .contentBuilder,.workspace-items .contentBuilder,.workspace-spells .contentBuilder,.workspace-monsters .contentBuilder{
+    grid-template-columns:135px minmax(0,1fr);
+  }
+  .workspace-characters .builderPreview,.workspace-items .builderPreview,.workspace-spells .builderPreview,.workspace-monsters .builderPreview{display:none}
+}
+@media(max-width:820px){
+  .workspace-characters .contentBuilder,.workspace-items .contentBuilder,.workspace-spells .contentBuilder,.workspace-monsters .contentBuilder{grid-template-columns:1fr}
+  .workspace-characters .builderLibrary,.workspace-items .builderLibrary,.workspace-spells .builderLibrary,.workspace-monsters .builderLibrary{display:none}
+  .contentBuilder .builderCenter{padding:10px}
+  .contentBuilder .builderForm{grid-template-columns:1fr}
+}
