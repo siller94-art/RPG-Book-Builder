@@ -358,3 +358,31 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 }
 
 .advancedWork{margin-top:16px;padding:12px;border:1px solid #294457;border-radius:8px;background:#0b1b27}.advancedWork>p,.formatCodePanel p{font-size:12px;color:#8fa3b6;margin:0 0 9px}.formatCodeToggle{width:100%;justify-content:center;background:#132c3d;border-color:#3b6079}.formatCodePanel{display:grid;gap:8px;margin-top:9px}.formatCodePanel textarea{width:100%;min-height:130px;resize:vertical;background:#07131c;color:#dbe6ee;border:1px solid #315069;border-radius:6px;padding:10px;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* Full workspace routing fixes: tool tabs own the canvas instead of rendering beside the book editor */
+.workspace-world.app,.workspace-maps.app,.workspace-timeline.app,.workspace-boards.app,.workspace-stamps.app,.workspace-assets.app{grid-template:58px minmax(0,1fr)/1fr!important;height:100vh;overflow:hidden}
+.workspace-world>header,.workspace-maps>header,.workspace-timeline>header,.workspace-boards>header,.workspace-stamps>header,.workspace-assets>header{grid-column:1!important;grid-row:1;height:58px}
+.workspace-world>.bookContentLabel,.workspace-maps>.bookContentLabel,.workspace-timeline>.bookContentLabel,.workspace-boards>.bookContentLabel,.workspace-stamps>.bookContentLabel,.workspace-assets>.bookContentLabel,
+.workspace-world>.pages,.workspace-maps>.pages,.workspace-timeline>.pages,.workspace-boards>.pages,.workspace-stamps>.pages,.workspace-assets>.pages,
+.workspace-world>.tools,.workspace-maps>.tools,.workspace-timeline>.tools,.workspace-boards>.tools,.workspace-stamps>.tools,.workspace-assets>.tools{display:none!important}
+.workspace-world>main,.workspace-maps>main,.workspace-timeline>main,.workspace-boards>main,.workspace-stamps>main,.workspace-assets>main{grid-column:1!important;grid-row:2!important;max-width:none!important;width:100%;padding:0!important;overflow:auto!important;background:#08141e}
+.workspace-world>main>.mockEditorTitle,.workspace-maps>main>.mockEditorTitle,.workspace-timeline>main>.mockEditorTitle,.workspace-boards>main>.mockEditorTitle,.workspace-stamps>main>.mockEditorTitle,.workspace-assets>main>.mockEditorTitle,
+.workspace-world>main>.workspaceBanner,.workspace-maps>main>.workspaceBanner,.workspace-timeline>main>.workspaceBanner,.workspace-boards>main>.workspaceBanner,.workspace-stamps>main>.workspaceBanner,.workspace-assets>main>.workspaceBanner,
+.workspace-world>main>.paper,.workspace-maps>main>.paper,.workspace-timeline>main>.paper,.workspace-boards>main>.paper,.workspace-stamps>main>.paper,.workspace-assets>main>.paper,
+.workspace-world>main>.overflowWarning,.workspace-maps>main>.overflowWarning,.workspace-timeline>main>.overflowWarning,.workspace-boards>main>.overflowWarning,.workspace-stamps>main>.overflowWarning,.workspace-assets>main>.overflowWarning{display:none!important}
+.workspace-maps .worldTool,.workspace-timeline .worldTool,.workspace-boards .worldTool,.workspace-stamps .dedicatedWorkspace,.workspace-assets .dedicatedWorkspace{width:100%;min-height:calc(100vh - 58px);margin:0;padding:18px;box-sizing:border-box}
+.workspace-stamps .stampStudio{width:100%;max-width:none}.workspace-stamps .stampLayout{min-height:620px}
+.workspace-assets .dedicatedWorkspace{display:flex;flex-direction:column;align-items:flex-start;gap:14px;background:#0b1923}.workspace-assets .dedicatedWorkspace p{max-width:720px;color:#b9c8d2;font-size:15px;line-height:1.6}.workspace-assets .dedicatedWorkspace button{min-width:180px}
+
+/* Darker book controls and tables; remove the glaring white editor surfaces */
+.tools,.tools button,.tools select,.tools input,.recoveryTools button,.recentRow button{background:#10202b!important;color:#e8edf0!important;border-color:#38505f!important}
+.tools .themeChoice.selected,.tools button:hover{background:#52242a!important;border-color:#8d4449!important}
+.block.table textarea,.block.table,.paper table,.liveWorldPreview table,.lockedPreview table{background:#2b1518!important;color:#f0dddd!important;border-color:#71353b!important}
+.block.table textarea{border:1px solid #71353b!important}
+.block.table textarea:focus{outline:2px solid #8d4449!important}
+.tabWorkspace{background:#0d1c28!important;color:#dbe5ea!important;border:1px solid #294457!important;padding:20px!important;min-height:320px}
+.tabWorkspace button{background:#492126!important;color:#f4e4e4!important;border:1px solid #824047!important;margin:4px;padding:8px 12px;border-radius:5px}
+
+/* Build page: keep controls compact rather than allowing Page Elements to become the main canvas */
+.workspace-build .tools{background:#0b1923!important;overflow-y:auto}
+.workspace-build .themeChoices{grid-template-columns:1fr 1fr!important}.workspace-build .themeChoice{min-height:34px!important}
