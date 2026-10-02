@@ -1,6 +1,6 @@
 import{describe,expect,it}from'vitest';import{createProject,createPage,createTextBlock}from'../model/project';import{parseProject,serializeProject}from'./projectStorage';
 describe('editable project file stress coverage',()=>{
- it('round trips a normal JSON project without losing editable data',()=>{const p=createProject();p.title='Test Book';p.pages[0].blocks.push({...createTextBlock(),title:'Intro',body:'Editable text'});const out=parseProject(serializeProject(p));expect(out.title).toBe('Test Book');expect(out.pages[0].blocks[0]).toMatchObject({title:'Intro',body:'Editable text'})});
+ it('round trips a normal JSON project without losing editable data',()=>{const p=createProject();p.title='Test Book';p.pages[0].blocks.push({...createTextBlock(),title:'Intro',body:'Editable text'});const out=parseProject(serializeProject(p));expect(out.title).toBe('Test Book');expect(out.pages[0].blocks.at(-1)).toMatchObject({title:'Intro',body:'Editable text'})});
  it('round trips a large multi-page project',()=>{const p=createProject();p.pages=[];for(let i=0;i<1500;i++){const page=createPage('Page '+(i+1));page.blocks.push({...createTextBlock(),title:'Section '+i,body:'Large project content '.repeat(80)});p.pages.push(page)}p.activePageId=p.pages[0].id;const raw=serializeProject(p),out=parseProject(raw);expect(out.pages).toHaveLength(1500);expect(out.pages[1499].blocks[0].title).toBe('Section 1499')});
  it('rejects malformed JSON instead of silently creating a damaged project',()=>{expect(()=>parseProject('{broken')).toThrow()});
 });
