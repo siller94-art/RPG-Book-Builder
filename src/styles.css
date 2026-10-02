@@ -386,3 +386,5 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 /* Build page: keep controls compact rather than allowing Page Elements to become the main canvas */
 .workspace-build .tools{background:#0b1923!important;overflow-y:auto}
 .workspace-build .themeChoices{grid-template-columns:1fr 1fr!important}.workspace-build .themeChoice{min-height:34px!important}
+
+.assetHead{width:100%;display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.assetHead h1{margin:0;color:#e8c96f}.assetGrid{width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}.assetGrid article{display:grid;gap:8px;background:#10232f;border:1px solid #315064;border-radius:8px;padding:10px}.assetGrid img{width:100%;height:150px;object-fit:cover;border-radius:5px;background:#07131c}.assetGrid small{color:#93a7b5}.assetGrid button{background:#492126;color:#f5e5e5;border:1px solid #824047}.emptyAsset{grid-column:1/-1;padding:48px;text-align:center;border:1px dashed #3a5668;border-radius:8px;color:#93a7b5}
