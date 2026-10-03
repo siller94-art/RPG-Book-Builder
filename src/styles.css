@@ -488,3 +488,11 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .textControls .textColor input[type=color]{display:block!important;width:34px!important;height:25px!important;min-width:34px!important;opacity:1!important;visibility:visible!important}
 .worldTree button{width:100%;text-align:left}
 .emptyWorldPanel button{margin:10px 0 0}
+
+/* Prominent writing color control: large swatch opens the native macOS/Windows color chooser */
+.textControls .textColor{display:flex!important;align-items:center!important;gap:6px!important;padding:4px 7px!important;background:#f4e5c8!important;border:1px solid #9e7254!important;border-radius:6px!important;color:#3d2b24!important;font-weight:800!important}
+.textControls .textColor>span{white-space:nowrap}
+.textControls .textColor input[type=color]{appearance:auto!important;-webkit-appearance:auto!important;display:block!important;width:46px!important;height:30px!important;min-width:46px!important;max-width:46px!important;padding:1px!important;opacity:1!important;visibility:visible!important;cursor:pointer!important;border:2px solid #6e4b38!important;background:#fff!important}
+.textControls .textColor .colorHex{display:block!important;width:76px!important;max-width:76px!important;background:#fff8e8!important;color:#33251f!important;border:1px solid #9e7254!important;font:11px ui-monospace,SFMono-Regular,Menlo,monospace!important}
+.saveStatus,.writeOn{display:inline-flex;align-items:center;padding:7px 10px;border-radius:5px;background:#102535;color:#dce8ee;font-size:12px}
+.worldDetailField{display:grid;gap:6px;max-width:520px;color:#c7d5dd}.worldDetailField input{background:#10202b;color:#fff;border:1px solid #38505f;border-radius:5px;padding:9px}
