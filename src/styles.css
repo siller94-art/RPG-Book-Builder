@@ -521,3 +521,33 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .insertBtn{border-color:#bcae97!important}
 .worldProjectName{display:flex;align-items:center;gap:10px;margin:2px 8px 8px;padding:8px 10px;background:#f8f3e8;border:1px solid #c9bda8;border-radius:6px;color:#554a3e;font-size:11px;font-weight:800}
 .worldProjectName input{flex:1;min-width:180px;background:#fffdf8;color:#29251f;border:1px solid #bcae97;border-radius:5px;padding:8px 10px;font:700 14px Georgia,serif}
+
+/* World Creator correction: restore original dark UI; only book content stays parchment */
+.workspace-world.app{background:#07121b!important}.workspace-world>main{background:#07121b!important}
+.lockedWorld{background:#08141e!important;color:#dce7ee!important}
+.worldRail,.worldInspector{background:#091722!important;color:#dce7ee!important;border-color:#203747!important}
+.worldRail button,.worldInspector button,.articleHead button,.articleTabs button,.worldBottom button,.formatBar button{background:#0d1c28!important;color:#dce7ee!important;border-color:#294457!important}
+.worldRail .newProject{background:#5a22d5!important;color:#fff!important;border-color:#7136ed!important}
+.worldRail .railActive,.worldTree .selectedTree,.articleTabs button.active{background:#07527c!important;color:#fff!important}
+.treeTitle,.articleTabs,.formatBar,.worldInspector h3{border-color:#203747!important}
+.worldCenter{background:#08141e!important}.crumb,.articleHead small{color:#aebdc7!important}.articleIcon{background:#142735!important;color:#dce7ee!important}
+.sourcePane{background:#091722!important}.sourcePane textarea{background:#091722!important;color:#e6edf2!important;border-color:#203747!important}
+.splitEditor{border-color:#203747!important;background:#091722!important}.formatBar{background:#091722!important}.formatBar .writeOn{background:#0a5683!important;color:#fff!important}
+.worldBottom>section,.tabWorkspace{background:#091722!important;color:#dbe5ea!important;border-color:#203747!important}
+.worldInspector h3,.tabWorkspace h2{color:#e7ca84!important}.worldDetailField{color:#c7d5dd!important}
+.worldDetailField input,.worldInspector select{background:#0d1c28!important;color:#dce7ee!important;border-color:#294457!important}.insertBtn{border-color:#294457!important}
+.worldProjectName{background:#0d1c28!important;border-color:#294457!important;color:#dce7ee!important}
+.worldProjectName input{background:#091722!important;color:#fff!important;border-color:#38505f!important}
+
+/* Full book-page preview inside World Creator */
+.splitEditor{grid-template-columns:minmax(360px,.8fr) minmax(440px,1.2fr);height:min(70vh,760px)}
+.worldPagePreview{box-sizing:border-box;margin:14px auto!important;width:min(100%,612px)!important;height:auto!important;min-height:0!important;aspect-ratio:8.5/11;padding:42px 46px!important;box-shadow:0 8px 24px #0006;overflow:auto!important}
+.worldPagePreview.a4{aspect-ratio:210/297}.worldPagePreview.landscape{aspect-ratio:11/8.5;width:min(100%,760px)!important}.worldPagePreview.a4.landscape{aspect-ratio:297/210}
+.worldPageNumber{text-align:right;font:10px Inter,sans-serif;color:#76654d;margin-bottom:8px}
+.worldTree button{white-space:normal!important}
+
+/* D&D-style note/reference boxes for tables instead of dark-red charts */
+.paper table,.liveWorldPreview table,.lockedPreview table{width:100%;border-collapse:collapse!important;background:#efe0b9!important;color:#2d251c!important;border:2px solid #8b6a3d!important;box-shadow:inset 0 0 0 2px #f8edcf!important;font-family:Georgia,serif!important}
+.paper table th,.liveWorldPreview table th,.lockedPreview table th{background:#d8c28f!important;color:#3b2b1e!important;border-bottom:2px solid #8b6a3d!important;padding:6px 8px!important;text-align:left}
+.paper table td,.liveWorldPreview table td,.lockedPreview table td{background:transparent!important;color:#2d251c!important;border-bottom:1px solid #c4aa73!important;padding:5px 8px!important}
+.paper table tr:nth-child(even) td,.liveWorldPreview table tr:nth-child(even) td,.lockedPreview table tr:nth-child(even) td{background:#f7ebcf!important}
