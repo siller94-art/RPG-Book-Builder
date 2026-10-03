@@ -60,10 +60,10 @@ export function markdownToTextSections(source:string){
  const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];let columns:1|2=1;
  const flush=()=>{const text=body.join('\n').trim();if(title||text)sections.push({title:title||'New Section',body:text,style:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body',columns});title='';body=[];columns=1};
  for(const line of lines){
-  const h=line.match(/^#{1,6}\s+(.+)$/);
-  if(h){flush();title=h[1].trim();continue}
   if(/^\s*\\(?:page|pagebreak)\s*$/i.test(line)){flush();continue}
   if(/^\s*\\(?:column|columnbreak)\s*$/i.test(line)){flush();columns=2;continue}
+  const h=line.match(/^#{1,6}\s+(.+)$/);
+  if(h){const nextColumns=columns;flush();columns=nextColumns;title=h[1].trim();continue}
   if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
   body.push(line)
  }
