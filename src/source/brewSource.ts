@@ -63,7 +63,8 @@ export function markdownToTextSections(source:string){
   const h=line.match(/^#{1,6}\s+(.+)$/);
   if(h){flush();title=h[1].trim();continue}
   if(/^\s*\\(?:page|pagebreak)\s*$/i.test(line)){flush();continue}
-  if(/^\s*\\(?:column|columnbreak)\s*$/i.test(line)){flush();columns=2;continue}\n  if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
+  if(/^\s*\\(?:column|columnbreak)\s*$/i.test(line)){flush();columns=2;continue}
+  if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
   body.push(line)
  }
  flush();return sections;
