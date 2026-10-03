@@ -49,20 +49,21 @@ export function projectTextToMarkdown(pages:{name:string;blocks:{kind:string;tit
    else if(b.style==='note')out.push('> **'+(b.title||'Note')+'**\n> '+body.replace(/\n/g,'\n> '));
    else if(b.style==='table')out.push('## '+(b.title||'Table')+'\n\n'+body);
    else out.push((b.title?'## '+b.title+'\n\n':'')+body);
+   if(b.columns===2)out.push('\\column');
   }
   if(pages.length>1&&page!==pages[pages.length-1])out.push('\\page');
  }
  return out.join('\n\n').replace(/\n{3,}/g,'\n\n').trim();
 }
 export function markdownToTextSections(source:string){
- const sections:{title:string;body:string;style:'body'|'heading'|'note'|'table'}[]=[];
- const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];
- const flush=()=>{const text=body.join('\n').trim();if(title||text)sections.push({title:title||'New Section',body:text,style:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body'});title='';body=[]};
+ const sections:{title:string;body:string;style:'body'|'heading'|'note'|'table';columns:1|2}[]=[];
+ const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];let columns:1|2=1;
+ const flush=()=>{const text=body.join('\n').trim();if(title||text)sections.push({title:title||'New Section',body:text,style:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body',columns});title='';body=[];columns=1};
  for(const line of lines){
   const h=line.match(/^#{1,6}\s+(.+)$/);
   if(h){flush();title=h[1].trim();continue}
   if(/^\s*\\(?:page|pagebreak)\s*$/i.test(line)){flush();continue}
-  if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
+  if(/^\s*\\(?:column|columnbreak)\s*$/i.test(line)){flush();columns=2;continue}\n  if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
   body.push(line)
  }
  flush();return sections;
