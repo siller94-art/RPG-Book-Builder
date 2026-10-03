@@ -496,3 +496,28 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .textControls .textColor .colorHex{display:block!important;width:76px!important;max-width:76px!important;background:#fff8e8!important;color:#33251f!important;border:1px solid #9e7254!important;font:11px ui-monospace,SFMono-Regular,Menlo,monospace!important}
 .saveStatus,.writeOn{display:inline-flex;align-items:center;padding:7px 10px;border-radius:5px;background:#102535;color:#dce8ee;font-size:12px}
 .worldDetailField{display:grid;gap:6px;max-width:520px;color:#c7d5dd}.worldDetailField input{background:#10202b;color:#fff;border:1px solid #38505f;border-radius:5px;padding:9px}
+
+/* World Creator readability pass — light book workspace */
+.workspace-world.app{background:#e9e2d3!important}
+.workspace-world>main{background:#e9e2d3!important}
+.lockedWorld{background:#eee7d8!important;color:#2e2923!important}
+.worldRail,.worldInspector{background:#f5efe2!important;color:#332d27!important;border-color:#c9bda8!important}
+.worldRail button,.worldInspector button,.articleHead button,.articleTabs button,.worldBottom button,.formatBar button{background:#e7ddca!important;color:#302a24!important;border-color:#c8b89e!important}
+.worldRail .newProject{background:#7352b8!important;color:#fff!important;border-color:#6243a6!important}
+.worldRail .railActive,.worldTree .selectedTree,.articleTabs button.active{background:#2e708d!important;color:#fff!important}
+.treeTitle,.articleTabs,.formatBar,.worldInspector h3{border-color:#c9bda8!important}
+.worldCenter{background:#eee7d8!important}
+.crumb,.articleHead small{color:#6f665b!important}
+.articleIcon{background:#ddd0ba!important;color:#44382c!important}
+.sourcePane{background:#faf7f0!important}
+.sourcePane textarea{background:#fffdf8!important;color:#29251f!important;border-color:#cbbda6!important}
+.splitEditor{border-color:#bcae97!important;background:#fffdf8!important}
+.formatBar{background:#eee5d5!important}
+.formatBar .writeOn{background:#2e708d!important;color:#fff!important}
+.worldBottom>section,.tabWorkspace{background:#f8f3e8!important;color:#302a24!important;border-color:#c9bda8!important}
+.worldInspector h3,.tabWorkspace h2{color:#795a2a!important}
+.worldDetailField{color:#4a4137!important}
+.worldDetailField input,.worldInspector select{background:#fffdf8!important;color:#29251f!important;border-color:#bcae97!important}
+.insertBtn{border-color:#bcae97!important}
+.worldProjectName{display:flex;align-items:center;gap:10px;margin:2px 8px 8px;padding:8px 10px;background:#f8f3e8;border:1px solid #c9bda8;border-radius:6px;color:#554a3e;font-size:11px;font-weight:800}
+.worldProjectName input{flex:1;min-width:180px;background:#fffdf8;color:#29251f;border:1px solid #bcae97;border-radius:5px;padding:8px 10px;font:700 14px Georgia,serif}
