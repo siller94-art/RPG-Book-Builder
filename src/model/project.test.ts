@@ -83,9 +83,10 @@ describe('empty source resilience',()=>{
 });
 
 describe('page and column layout synchronization',()=>{
- it('serializes two-column text with a column break marker',()=>{const p=createProject();const b=p.pages[0].blocks[0] as any;b.columns=2;const md=projectTextToMarkdown(p.pages as any);expect(md).toContain('\\\\column')});
- it('restores column layout from synchronized markdown',()=>{const pages=markdownToProjectPages('# Page 1\\n\\n## First\\nText\\n\\n\\\\column\\n\\n## Second\\nMore');expect(pages[0].sections.some((s:any)=>s.columns===2)).toBe(true)});
- it('preserves page boundaries and column metadata together',()=>{const pages=markdownToProjectPages('# One\\n\\nText\\n\\n\\\\page\\n\\n# Two\\n\\n## Next\\nMore\\n\\n\\\\column\\n\\n## Last\\nEnd');expect(pages).toHaveLength(2);expect(pages[1].sections.some((s:any)=>s.columns===2)).toBe(true)});
+ it('serializes two-column text with a column break marker',()=>{const p=createProject();const b=p.pages[0].blocks[0] as any;b.columns=2;const md=projectTextToMarkdown(p.pages as any);expect(md).toContain('\\column')});
+ it('restores column layout from synchronized markdown',()=>{const pages=markdownToProjectPages('# Page 1\n\n## First\nText\n\n\\column\n\n## Second\nMore');expect(pages[0].sections.some((s:any)=>s.title==='Second'&&s.columns===2)).toBe(true)});
+ it('preserves page boundaries and column metadata together',()=>{const pages=markdownToProjectPages('# One\n\nText\n\n\\page\n\n# Two\n\n## Next\nMore\n\n\\column\n\n## Last\nEnd');expect(pages).toHaveLength(2);expect(pages[1].sections.some((s:any)=>s.title==='Last'&&s.columns===2)).toBe(true)});
+ it('round trips page and column breaks without moving content',()=>{const p=createProject();p.pages[0].name='One';const first=p.pages[0].blocks[0] as any;first.title='Left';first.body='Left text';const second={...first,id:'right',title:'Right',body:'Right text',columns:2};p.pages[0].blocks=[first,second];const md=projectTextToMarkdown(p.pages as any);const back=markdownToProjectPages(md);expect(back[0].sections.map((s:any)=>[s.title,s.body,s.columns])).toEqual([['Left','Left text',1],['Right','Right text',2]])});
 });
 
 describe('book and World Creator synchronization',()=>{
