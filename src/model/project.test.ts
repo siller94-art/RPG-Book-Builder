@@ -55,8 +55,8 @@ describe('stress and resilience',()=>{
 
 describe('lore studio',()=>{
  it('creates NPC and faction lore with visibility',()=>{expect(npcSource('Mira','Captain','','Secret','GM Only')).toContain('GM Only');expect(factionSource('Wardens','Faction','Guard the coast','Player')).toContain('# Wardens')});
- it('finds @ lore links and unresolved references',()=>{const s='# Coral\nSee @Port Stell and @Coral.';expect(findLoreLinks(s)).toEqual(['Port Stell','Coral']);expect(consistencyIssues(s)).toContain('Unresolved lore link: @Port Stell')});
- it('builds a searchable encyclopedia index',()=>{expect(encyclopedia('# Coral\n*Capital*\nText\n# Stellaris\n*Empire*')).toHaveLength(2)});
+ it('finds @ lore links and unresolved references',()=>{const s='# Sample City\nSee @Harbor and @Sample City.';expect(findLoreLinks(s)).toEqual(['Harbor','Sample City']);expect(consistencyIssues(s)).toContain('Unresolved lore link: @Harbor')});
+ it('builds a searchable encyclopedia index',()=>{expect(encyclopedia('# Sample City\n*Capital*\nText\n# Sample Region\n*Region*')).toHaveLength(2)});
  it('sorts timeline events',()=>{const s='# B\n**Year / Age:** 900\nEvent B\n# A\n**Year / Age:** 100\nEvent A';const t=timelineFromSource(s);expect(t.map(x=>x.year)).toEqual([100,900])});
  it('removes GM-only entries from player source',()=>{const s='# Public\n*NPC · Player*\nKnown\n# Hidden\n*NPC · GM Only*\nSecret';const p=playerSafeSource(s);expect(p).toContain('Public');expect(p).not.toContain('Hidden')});
  it('handles a 1000-entry encyclopedia and relationship graph source',()=>{const s=Array.from({length:1000},(_,i)=>`# Place ${i}\n*Settlement · Player*\nSee @Place ${(i+1)%1000}.\n`).join('');expect(encyclopedia(s)).toHaveLength(1000);expect(findLoreLinks(s)).toHaveLength(1000);expect(consistencyIssues(s)).toHaveLength(0)});
