@@ -82,6 +82,12 @@ describe('empty source resilience',()=>{
  it('keeps one editable page when World Creator content is cleared',()=>{const pages=markdownToProjectPages('   \n');expect(pages).toHaveLength(1);expect(pages[0].sections).toEqual([])});
 });
 
+describe('page and column layout synchronization',()=>{
+ it('serializes two-column text with a column break marker',()=>{const p=createProject();const b=p.pages[0].blocks[0] as any;b.columns=2;const md=projectTextToMarkdown(p.pages as any);expect(md).toContain('\\\\column')});
+ it('restores column layout from synchronized markdown',()=>{const pages=markdownToProjectPages('# Page 1\\n\\n## First\\nText\\n\\n\\\\column\\n\\n## Second\\nMore');expect(pages[0].sections.some((s:any)=>s.columns===2)).toBe(true)});
+ it('preserves page boundaries and column metadata together',()=>{const pages=markdownToProjectPages('# One\\n\\nText\\n\\n\\\\page\\n\\n# Two\\n\\n## Next\\nMore\\n\\n\\\\column\\n\\n## Last\\nEnd');expect(pages).toHaveLength(2);expect(pages[1].sections.some((s:any)=>s.columns===2)).toBe(true)});
+});
+
 describe('book and World Creator synchronization',()=>{
  it('converts editable book pages to markdown without losing page boundaries',()=>{const p=createProject();p.pages[0].name='Opening';p.pages[0].blocks=[{...p.pages[0].blocks[0],title:'Introduction',body:'Visible book text'} as any];const second={...p.pages[0],id:'p2',name:'Second',blocks:[{...p.pages[0].blocks[0],id:'b2',title:'Next',body:'More text'} as any]};p.pages.push(second);const md=projectTextToMarkdown(p.pages as any);expect(md).toContain('# Opening');expect(md).toContain('\\page');expect(md).toContain('# Second');const back=markdownToProjectPages(md);expect(back.map(x=>x.name)).toEqual(['Opening','Second']);expect(back[0].sections.some(x=>x.body.includes('Visible book text'))).toBe(true)});
  it('converts World Creator headings into editable text sections',()=>{const s=markdownToTextSections('## History\nA long history.\n\n## People\nSeveral people.');expect(s.map(x=>x.title)).toEqual(['History','People']);expect(s[1].body).toBe('Several people.')});
