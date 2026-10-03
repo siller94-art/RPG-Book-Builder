@@ -50,7 +50,7 @@ export function projectTextToMarkdown(pages:{name:string;blocks:{kind:string;tit
    else if(b.style==='table')out.push('## '+(b.title||'Table')+'\n\n'+body);
    else out.push((b.title?'## '+b.title+'\n\n':'')+body);
   }
-  if(pages.length>1)out.push('\\page');
+  if(pages.length>1&&page!==pages[pages.length-1])out.push('\\page');
  }
  return out.join('\n\n').replace(/\n{3,}/g,'\n\n').trim();
 }
@@ -76,5 +76,5 @@ export function markdownToProjectPages(source:string){
   let name='Page '+(index+1);
   if(/^#\s+/.test(lines[0]||''))name=lines.shift()!.replace(/^#\s+/,'').trim()||name;
   return{name,sections:markdownToTextSections(lines.join('\n'))};
- }).filter(p=>p.sections.length||p.name);
+ }).filter((p,index)=>p.sections.length||rawPages[index].trim().length>0);
 }
