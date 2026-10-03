@@ -67,3 +67,14 @@ export function markdownToTextSections(source:string){
  }
  flush();return sections;
 }
+
+
+export function markdownToProjectPages(source:string){
+ const rawPages=source.replace(/\r\n?/g,'\n').split(/^\s*\\(?:page|pagebreak)\s*$/gmi);
+ return rawPages.map((raw,index)=>{
+  const lines=raw.trim().split('\n');
+  let name='Page '+(index+1);
+  if(/^#\s+/.test(lines[0]||''))name=lines.shift()!.replace(/^#\s+/,'').trim()||name;
+  return{name,sections:markdownToTextSections(lines.join('\n'))};
+ }).filter(p=>p.sections.length||p.name);
+}
