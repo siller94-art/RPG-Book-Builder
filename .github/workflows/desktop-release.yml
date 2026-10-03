@@ -42,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: RPG Campaign Creator ${{ github.ref_name }}
+          releaseName: RPG Book Builder ${{ github.ref_name }}
           releaseBody: Windows desktop build.
           releaseDraft: true
           prerelease: false
@@ -80,7 +80,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: RPG Campaign Creator ${{ github.ref_name }}
+          releaseName: RPG Book Builder ${{ github.ref_name }}
           releaseBody: macOS desktop build.
           releaseDraft: true
           prerelease: false
