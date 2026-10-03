@@ -18,5 +18,5 @@ export interface MapPin{id:number;x:number;y:number;label:string;}
 export interface MapWorkspace{name:string;notes:string;image:string;pins:MapPin[];}
 export interface TimelineEvent{date:string;title:string;text:string;}
 export interface BoardCard{title:string;text:string;status?:string;}
-export interface WorldToolsData{maps:MapWorkspace;timeline:TimelineEvent[];boards:BoardCard[];}
-export interface Project{schemaVersion:1;id:string;title:string;pages:Page[];activePageId:string;settings:ProjectSettings;updatedAt:string;brewSource?:string;worldTools?:WorldToolsData;}
+export interface WorldToolsData{maps:MapWorkspace;timeline:TimelineEvent[];boards:BoardCard[];}\nexport type CreatorKind='characters'|'items'|'spells'|'monsters';\nexport interface CreatorEntry{id:string;kind:CreatorKind;data:Record<string,string>;}
+export interface Project{schemaVersion:1;id:string;title:string;pages:Page[];activePageId:string;settings:ProjectSettings;updatedAt:string;brewSource?:string;worldTools?:WorldToolsData;creatorLibrary?:CreatorEntry[];}
