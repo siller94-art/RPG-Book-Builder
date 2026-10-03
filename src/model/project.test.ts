@@ -77,6 +77,11 @@ describe('stamps and seals',()=>{
  it('stress checks 5000 stamp placements',()=>{expect(()=>Array.from({length:5000},(_,i)=>clampStamp({...createStampPlacement('seal'),size:i,rotation:i,x:i%140,y:i%170}))).not.toThrow()});
 });
 
+describe('empty source resilience',()=>{
+ it('keeps one editable page for an empty markdown import',()=>{const pages=markdownToProjectPages('');expect(pages).toHaveLength(1);expect(pages[0].name).toBe('Page 1');expect(pages[0].sections).toEqual([])});
+ it('keeps one editable page when World Creator content is cleared',()=>{const pages=markdownToProjectPages('   \n');expect(pages).toHaveLength(1);expect(pages[0].sections).toEqual([])});
+});
+
 describe('book and World Creator synchronization',()=>{
  it('converts editable book pages to markdown without losing page boundaries',()=>{const p=createProject();p.pages[0].name='Opening';p.pages[0].blocks=[{...p.pages[0].blocks[0],title:'Introduction',body:'Visible book text'} as any];const second={...p.pages[0],id:'p2',name:'Second',blocks:[{...p.pages[0].blocks[0],id:'b2',title:'Next',body:'More text'} as any]};p.pages.push(second);const md=projectTextToMarkdown(p.pages as any);expect(md).toContain('# Opening');expect(md).toContain('\\page');expect(md).toContain('# Second');const back=markdownToProjectPages(md);expect(back.map(x=>x.name)).toEqual(['Opening','Second']);expect(back[0].sections.some(x=>x.body.includes('Visible book text'))).toBe(true)});
  it('converts World Creator headings into editable text sections',()=>{const s=markdownToTextSections('## History\nA long history.\n\n## People\nSeveral people.');expect(s.map(x=>x.title)).toEqual(['History','People']);expect(s[1].body).toBe('Several people.')});
