@@ -45,11 +45,11 @@ export function projectTextToMarkdown(pages:{name:string;blocks:{kind:string;tit
   for(const b of page.blocks){
    if(b.kind!=='text'&&b.kind!=='statblock')continue;
    const body=b.body??'';
+   if(b.columns===2)out.push('\\column');
    if(b.style==='heading')out.push('## '+(b.title||body||'Section'));
    else if(b.style==='note')out.push('> **'+(b.title||'Note')+'**\n> '+body.replace(/\n/g,'\n> '));
    else if(b.style==='table')out.push('## '+(b.title||'Table')+'\n\n'+body);
    else out.push((b.title?'## '+b.title+'\n\n':'')+body);
-   if(b.columns===2)out.push('\\column');
   }
   if(pages.length>1&&page!==pages[pages.length-1])out.push('\\page');
  }
