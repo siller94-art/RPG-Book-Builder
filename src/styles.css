@@ -477,3 +477,14 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 
 .textControls .textColor input[type=color]{width:30px;height:25px;max-width:none;padding:2px;border:1px solid #b89d78;border-radius:4px;cursor:pointer;background:transparent}
 .textControls .textColor{gap:5px}
+
+/* Readable table writing surface and unmistakable text color control */
+.block.table{background:#f1dfbd!important;color:#3a2020!important;border:1px solid #a5655d!important;padding:10px!important}
+.block.table textarea{background:#f8ead0!important;color:#382524!important;border:1px solid #b77a70!important;caret-color:#6e2428!important}
+.block.table .blockTitle{color:#7c302b!important}
+.block.table .textControls{color:#624942!important}
+.block.table .textControls select,.block.table .textControls input{background:#fff8e8!important;color:#392c27!important;border-color:#a76a61!important}
+.textControls .textColor{background:#f4e5c8;border:1px solid #b68c69;border-radius:5px;padding:2px 5px!important;color:#4c372d!important;font-weight:700}
+.textControls .textColor input[type=color]{display:block!important;width:34px!important;height:25px!important;min-width:34px!important;opacity:1!important;visibility:visible!important}
+.worldTree button{width:100%;text-align:left}
+.emptyWorldPanel button{margin:10px 0 0}
