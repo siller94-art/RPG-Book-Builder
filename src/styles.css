@@ -551,3 +551,10 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .paper table th,.liveWorldPreview table th,.lockedPreview table th{background:#d8c28f!important;color:#3b2b1e!important;border-bottom:2px solid #8b6a3d!important;padding:6px 8px!important;text-align:left}
 .paper table td,.liveWorldPreview table td,.lockedPreview table td{background:transparent!important;color:#2d251c!important;border-bottom:1px solid #c4aa73!important;padding:5px 8px!important}
 .paper table tr:nth-child(even) td,.liveWorldPreview table tr:nth-child(even) td,.lockedPreview table tr:nth-child(even) td{background:#f7ebcf!important}
+
+/* World Creator full-page fit: show the complete selected page without cropping */
+.splitEditor>.lockedPreview.worldPagePreview{align-self:center!important;justify-self:center!important;height:calc(100% - 28px)!important;width:auto!important;max-width:calc(100% - 28px)!important;min-height:0!important;overflow:auto!important;margin:14px!important}
+.splitEditor>.lockedPreview.worldPagePreview.portrait{aspect-ratio:8.5/11!important}
+.splitEditor>.lockedPreview.worldPagePreview.a4.portrait{aspect-ratio:210/297!important}
+.splitEditor>.lockedPreview.worldPagePreview.landscape{aspect-ratio:11/8.5!important}
+.splitEditor>.lockedPreview.worldPagePreview.a4.landscape{aspect-ratio:297/210!important}
