@@ -396,3 +396,81 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 
 /* Boards dedicated workspace */
 .workspace-boards .worldTool.single{display:block!important;background:#08141e}.workspace-boards .toolEditor{max-width:1200px;margin:auto;background:#0d1c28;color:#dbe5ea;border:1px solid #294457;border-radius:8px;padding:18px}.boardHead{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.boardHead h2,.boardHead p{margin:0 0 6px}.boardHead p{color:#93a7b5}.boardHead>b{background:#492126;border:1px solid #824047;padding:7px 10px;border-radius:999px}.workspace-boards .boardCreate{display:grid;grid-template-columns:minmax(180px,1fr) minmax(260px,2fr) auto;gap:8px;margin:16px 0}.workspace-boards input,.workspace-boards textarea,.workspace-boards select{background:#10202b;color:#edf2f4;border:1px solid #38505f;border-radius:5px;padding:9px}.workspace-boards .boardEditor{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}.workspace-boards .boardEditor article{display:grid;gap:8px;background:#25171a!important;border-color:#71353b!important}.boardCardTitle{font-weight:700;font-size:16px;color:#f2dddd!important}.workspace-boards .boardEditor textarea{min-height:140px;resize:vertical}.boardActions{display:flex;flex-wrap:wrap;gap:5px}.boardActions button{background:#492126!important;border-color:#824047!important}.boardActions .danger{margin-left:auto;color:#ffd5d5!important}@media(max-width:700px){.workspace-boards .boardCreate{grid-template-columns:1fr}.boardHead{display:block}}
+
+
+/* Build workspace layout repair — keep navigation, book canvas, and page tools in their intended columns */
+.workspace-build.app{
+  grid-template:58px minmax(0,1fr)/190px minmax(0,1fr) 250px!important;
+  height:100vh;
+  overflow:hidden;
+}
+.workspace-build>header{grid-column:1/-1!important;grid-row:1!important;height:58px!important}
+.workspace-build>.bookContentLabel{
+  grid-column:1!important;
+  grid-row:2!important;
+  align-self:start;
+  z-index:3;
+  height:48px;
+  padding:15px 14px 8px;
+  background:#0d1a25;
+  border-right:1px solid #294052;
+  color:#f0d99e;
+  font:700 16px Georgia,serif;
+  pointer-events:none;
+}
+.workspace-build>.pages{
+  grid-column:1!important;
+  grid-row:2!important;
+  min-width:0;
+  padding:52px 10px 12px!important;
+  overflow-y:auto;
+  background:#0d1a25!important;
+  border-right:1px solid #294052!important;
+}
+.workspace-build>main{
+  grid-column:2!important;
+  grid-row:2!important;
+  min-width:0!important;
+  overflow:auto!important;
+  padding:28px!important;
+  background:#15232f!important;
+  display:block!important;
+}
+.workspace-build>.tools{
+  grid-column:3!important;
+  grid-row:2!important;
+  width:auto!important;
+  min-width:0!important;
+  overflow-y:auto!important;
+  padding:12px!important;
+  background:#0b1822!important;
+  border-left:1px solid #294052!important;
+}
+.workspace-build .pageElementsTitle{margin:2px 0 12px;font-size:16px;color:#f0d99e}
+.workspace-build .storageMeter{background:#10212d!important;border-color:#314b5d!important;color:#dce6ec!important;padding:7px!important}
+.workspace-build .themeChoices{grid-template-columns:1fr 1fr!important;gap:5px!important}
+.workspace-build .themeChoice{min-height:32px!important;padding:5px 7px!important;font-size:10px!important}
+.workspace-build .field{margin-bottom:8px!important}
+.workspace-build .recoveryTools{margin:6px 0!important}
+.workspace-build .tools>h3{margin:12px 0 6px!important}
+.workspace-build .tools>button{min-height:31px!important;margin:2px 0!important;padding:6px 8px!important;font-size:11px!important}
+.workspace-build main>.mockEditorTitle{
+  max-width:min(100%,816px);
+  margin:0 auto 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:#dce6ec;
+}
+.workspace-build main>.mockEditorTitle h1{font-size:16px;margin:0}
+.workspace-build main>.workspaceBanner{display:none!important}
+.workspace-build .paper,.workspace-build .paper.a4{
+  width:min(100%,816px)!important;
+  margin:0 auto!important;
+  transform:none!important;
+}
+@media(max-width:1100px){
+  .workspace-build.app{grid-template-columns:160px minmax(0,1fr)!important}
+  .workspace-build>.tools{display:none!important}
+  .workspace-build>header{grid-column:1/-1!important}
+}
