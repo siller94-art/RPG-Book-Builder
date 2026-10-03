@@ -558,3 +558,8 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .splitEditor>.lockedPreview.worldPagePreview.a4.portrait{aspect-ratio:210/297!important}
 .splitEditor>.lockedPreview.worldPagePreview.landscape{aspect-ratio:11/8.5!important}
 .splitEditor>.lockedPreview.worldPagePreview.a4.landscape{aspect-ratio:297/210!important}
+
+/* Native book flow: visual two-column layout shared by editor, World Creator, and print */
+.paper .block.text.twoColumnFlow,.printBody.twoColumns,.liveWorldPreview .brew-columns{column-count:2;column-gap:28px;column-rule:1px solid #c5ae7e}
+.paper .block.text[data-columns="2"] textarea{column-count:2;column-gap:24px}
+.worldPagePreview .liveWorldPreview{height:calc(100% - 48px);overflow:hidden}
