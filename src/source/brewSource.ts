@@ -36,3 +36,34 @@ export function renderBrewMarkdown(source:string){
 export function sourceToPlainText(source:string){
  return source.replace(/<style[\s\S]*?<\/style>/gi,'').replace(/{{[^}]+}}/g,'').replace(/^\s*\\(?:page|pagebreak|column|columnbreak)\s*$/gmi,'').replace(/^#{1,6}\s+/gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/\*([^*]+)\*/g,'$1').replace(/__([^_]+)__/g,'$1').replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1').trim()
 }
+
+
+export function projectTextToMarkdown(pages:{name:string;blocks:{kind:string;title:string;body?:string;style?:string;columns?:number}[]}[]){
+ const out:string[]=[];
+ for(const page of pages){
+  if(pages.length>1)out.push('# '+page.name);
+  for(const b of page.blocks){
+   if(b.kind!=='text'&&b.kind!=='statblock')continue;
+   const body=b.body??'';
+   if(b.style==='heading')out.push('## '+(b.title||body||'Section'));
+   else if(b.style==='note')out.push('> **'+(b.title||'Note')+'**\n> '+body.replace(/\n/g,'\n> '));
+   else if(b.style==='table')out.push('## '+(b.title||'Table')+'\n\n'+body);
+   else out.push((b.title?'## '+b.title+'\n\n':'')+body);
+  }
+  if(pages.length>1)out.push('\\page');
+ }
+ return out.join('\n\n').replace(/\n{3,}/g,'\n\n').trim();
+}
+export function markdownToTextSections(source:string){
+ const sections:{title:string;body:string;style:'body'|'heading'|'note'|'table'}[]=[];
+ const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];
+ const flush=()=>{const text=body.join('\n').trim();if(title||text)sections.push({title:title||'New Section',body:text,style:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body'});title='';body=[]};
+ for(const line of lines){
+  const h=line.match(/^#{1,6}\s+(.+)$/);
+  if(h){flush();title=h[1].trim();continue}
+  if(/^\s*\\(?:page|pagebreak)\s*$/i.test(line)){flush();continue}
+  if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
+  body.push(line)
+ }
+ flush();return sections;
+}
