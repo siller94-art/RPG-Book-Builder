@@ -35,7 +35,8 @@
     ],
     "macOS": {
       "signingIdentity": "-",
-      "hardenedRuntime": true
+      "hardenedRuntime": true,
+      "minimumSystemVersion": "10.15"
     }
   }
 }
