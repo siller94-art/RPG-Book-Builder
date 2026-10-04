@@ -9,7 +9,8 @@ export function parseBrewSource(source:string):ParsedSource{
   const source=raw.trim();
   const columns=source.split(/^\s*(?:\\column|\\columnbreak|{{column[^}]*}})\s*$/gmi).map(x=>x.trim());
   return{source,columns:columns.length>1?columns:source?[source]:[]};
- }).filter(p=>p.source||p.columns.some(Boolean));
+ });
+ // Preserve pages created by explicit page directives, including intentionally empty pages.
  return{pages,customCss}
 }
 const esc=(s:string)=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]!));
@@ -80,13 +81,17 @@ export function projectTextToMarkdown(pages:{name:string;blocks:{kind:string;tit
 export function markdownToTextSections(source:string){
  const sections:{title:string;body:string;style:'body'|'heading'|'note'|'table';columns:1|2}[]=[];
  const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];let columns:1|2=1;
- const flush=()=>{const text=body.join('\n').trim();if(title||text)sections.push({title:title||'New Section',body:text,style:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body',columns});title='';body=[];columns=1};
+ let forcedStyle:'body'|'heading'|'note'|'table'='body';
+ const flush=()=>{const text=body.join('\n').trim();if(title||text){const style=forcedStyle!=='body'?forcedStyle:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body';sections.push({title:title||'New Section',body:text,style,columns})}title='';body=[];forcedStyle='body';columns=1};
  for(const line of lines){
   if(/^\s*\\(?:page|pagebreak)\s*$/i.test(line)){flush();continue}
   if(/^\s*\\(?:column|columnbreak)\s*$/i.test(line)){flush();columns=2;continue}
+  const container=line.match(/^\s*{{\s*(note|descriptive)\s*$/i);
+  if(container){flush();forcedStyle='note';title=container[1].toLowerCase()==='descriptive'?'Descriptive':'Note';continue}
+  if(/^\s*}}\s*$/.test(line)&&forcedStyle==='note'){flush();continue}
   const h=line.match(/^#{1,6}\s+(.+)$/);
-  if(h){const nextColumns:1|2=columns;flush();columns=nextColumns;title=h[1].trim();continue}
-  if(/^>\s?/.test(line)){body.push(line.replace(/^>\s?/,''));continue}
+  if(h){const nextColumns:1|2=columns;flush();columns=nextColumns;title=h[1].trim();forcedStyle='heading';continue}
+  if(/^>\s?/.test(line)){if(forcedStyle==='body')forcedStyle='note';body.push(line.replace(/^>\s?/,''));continue}
   body.push(line)
  }
  flush();return sections;
