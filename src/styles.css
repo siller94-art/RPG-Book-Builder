@@ -636,3 +636,7 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-world .worldInspector>.writingHelper .helperIssue{padding:6px;margin-top:6px;font-size:9px}
 .workspace-world .worldInspector>.writingHelper .helperActions button,.workspace-world .worldInspector>.writingHelper .fixAll{padding:4px 6px;font-size:9px}
 @media(max-width:1100px){.workspace-world .worldInspector>.writingHelper{display:none!important}}
+
+/* Title-page artwork picker in the Create/Insert inspector. */
+.titleImageInput{display:none!important}.worldInspector .titlePictureBtn{border-color:#9b7838!important;background:#182534!important;color:#f1d27f!important;font-weight:700!important}
+.liveWorldPreview img{display:block;max-width:100%;max-height:70%;object-fit:contain;margin:14px auto}
