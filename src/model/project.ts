@@ -16,6 +16,14 @@ export function createStatblock(template:StatblockKind='monster'):StatblockBlock
  };return{id:uid(),kind:'statblock',template,title:template==='spell'?'New Spell':template==='item'?'New Item':template==='encounter'?'New Encounter':template==='trap'?'New Trap':template==='vehicle'?'New Vehicle':template==='custom'?'Custom Block':'New Creature',body:'Add rules and details here.',fields:presets[template],sections:(template==='monster'||template==='npc')?{traits:[],actions:template==='monster'?[{id:uid(),name:'Attack',text:'Add an attack or action here.'}]:[],reactions:[],legendary:[]}:undefined}}
 
 export function createPage(name='Page 1'):Page{return{id:uid(),name,blocks:[]}}
+export function createTitlePage(projectTitle='Untitled Adventure'):Page{
+ const page=createPage('Title Page');
+ const title=createTextBlock();title.title=projectTitle;title.body='';title.style='heading';title.align='center';title.fontSize=36;title.width=100;title.spacing=24;
+ const subtitle=createTextBlock();subtitle.title='Subtitle';subtitle.body='Add a subtitle, campaign setting, or edition here.';subtitle.align='center';subtitle.fontSize=20;subtitle.width=100;subtitle.spacing=18;
+ const author=createTextBlock();author.title='By';author.body='Author or creator name';author.align='center';author.fontSize=16;author.width=100;author.spacing=18;
+ page.blocks=[title,subtitle,author];
+ return page
+}
 export function createProject():Project{const page=createPage();page.blocks=[{id:uid(),kind:'text',title:'Chapter One',body:'Begin writing your adventure here.',columns:1}];return{schemaVersion:PROJECT_SCHEMA_VERSION,id:uid(),title:'Untitled Adventure',pages:[page],activePageId:page.id,settings:{pageSize:'letter',orientation:'portrait',themeId:'parchment'},updatedAt:new Date().toISOString(),creatorLibrary:[],worldTools:{maps:{name:'',notes:'',image:'',pins:[]},timeline:[],boards:[]}}}
 export function cloneProject(project:Project):Project{return structuredClone(project)}
 export function activePage(project:Project):Page{return project.pages.find(p=>p.id===project.activePageId)??project.pages[0]}
