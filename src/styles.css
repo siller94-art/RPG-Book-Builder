@@ -566,3 +566,13 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 
 /* Format Code layout markers */
 .brew-column-break{break-before:column;column-break-before:always;height:0;margin:0;padding:0;border:0}
+
+/* Printable content color controls — intentionally do not theme the application chrome */
+.bookColorPanel,.contentColorControls{display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid #38505f;border-radius:6px;background:#10202b;color:#e8edf0}
+.bookColorPanel small{color:#aebdc7;line-height:1.35}.bookColorPanel label,.contentColorControls label{display:grid;grid-template-columns:1fr 42px 78px;align-items:center;gap:6px;font-size:11px}.contentColorControls label{grid-template-columns:1fr 46px}
+.bookColorPanel input[type=color],.contentColorControls input[type=color]{width:42px;height:30px;padding:1px;border:1px solid #587080;border-radius:4px;background:transparent;cursor:pointer}.hexColor{width:78px!important;min-width:0!important;padding:5px!important;font:10px ui-monospace,SFMono-Regular,Menlo,monospace!important}
+.paper h1,.paper h2,.paper h3,.printPaper h1,.printPaper h2,.printPaper h3{color:var(--book-heading,inherit)}
+.paper hr,.printPaper hr{border-color:var(--book-rule,#a5655d)}
+.block.statblock,.printBlock.statblock{border-color:var(--stat-line,var(--stat-accent,#a5655d))!important}
+.block.statblock .blockTitle,.block.statblock .statType,.block.statblock .ruleHeading,.printBlock.statblock h2,.printBlock.statblock h3{color:var(--stat-accent,#7c302b)!important}
+.block.statblock .ruleHeading,.printBlock.statblock .printRules h3{border-color:var(--stat-line,var(--stat-accent,#a5655d))!important}
