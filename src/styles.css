@@ -689,3 +689,82 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .photoPresetGrid button b{font-size:10px!important;color:#e7ca84!important}
 .photoPresetGrid button small{font-size:8px!important;line-height:1.25!important}
 @media(max-width:1050px){.photoPresetGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* Approved Home mockup — final authoritative desktop layout.
+   Keep this last so legacy responsive rules cannot restore the old narrow UI. */
+.workspace-build.app{
+  grid-template:64px minmax(0,1fr)/238px minmax(720px,1fr) 280px!important;
+  min-width:1080px!important;
+  background:#0b1720!important;
+}
+.workspace-build>header{
+  grid-column:1/-1!important;
+  grid-row:1!important;
+  height:64px!important;
+  padding:0 18px!important;
+  background:#09141c!important;
+  border-bottom:1px solid #2b4050!important;
+}
+.workspace-build>.pages{
+  display:block!important;
+  grid-column:1!important;
+  grid-row:2!important;
+  padding:70px 14px 18px!important;
+  background:#0d1a25!important;
+  border-right:1px solid #294052!important;
+  overflow-y:auto!important;
+}
+.workspace-build>.bookContentLabel{
+  position:absolute!important;
+  z-index:10!important;
+  left:14px!important;
+  top:82px!important;
+  width:205px!important;
+  height:auto!important;
+  padding:0 0 12px!important;
+  background:transparent!important;
+  color:#f0d99e!important;
+  font:700 17px Georgia,serif!important;
+  border-bottom:1px solid #294052!important;
+}
+.workspace-build>main{
+  display:block!important;
+  grid-column:2!important;
+  grid-row:2!important;
+  padding:14px 24px 30px!important;
+  overflow:auto!important;
+  background:#101e29!important;
+}
+.workspace-build>.tools{
+  display:block!important;
+  grid-column:3!important;
+  grid-row:2!important;
+  padding:16px 14px 24px!important;
+  overflow-y:auto!important;
+  background:#0b1822!important;
+  color:#dce7ee!important;
+  border-left:1px solid #294052!important;
+}
+.workspace-build .pageElementsTitle{font:700 19px Georgia,serif!important;color:#f0d99e!important;margin:2px 0 14px!important}
+.workspace-build .mockEditorTitle{
+  width:min(100%,816px)!important;
+  min-height:38px!important;
+  height:38px!important;
+  margin:0 auto 9px!important;
+  padding:0 10px!important;
+  background:#edf1f2!important;
+  color:#45555f!important;
+  border:1px solid #d6dde0!important;
+  border-radius:6px!important;
+}
+.workspace-build .mockEditorTitle h1{font-size:12px!important;color:#b7c3c8!important}
+.workspace-build .mockEditorTitle button{width:27px!important;height:27px!important;padding:2px!important}
+.workspace-build .paper,.workspace-build .paper.a4{width:min(100%,816px)!important;max-width:816px!important;margin:0 auto!important}
+.workspace-build .themeChoices{grid-template-columns:1fr 1fr!important}
+.workspace-build .bookColorPanel{width:100%!important;box-sizing:border-box!important}
+.workspace-build .hexColor{min-width:0!important}
+.workspace-build .tools button,.workspace-build .tools select,.workspace-build .tools input{max-width:100%!important;box-sizing:border-box!important}
+@media(max-width:1180px){
+ .workspace-build.app{grid-template-columns:215px minmax(650px,1fr) 255px!important;min-width:1020px!important}
+ .workspace-build>main{padding-left:16px!important;padding-right:16px!important}
+}
