@@ -14,7 +14,8 @@ export default function LoreStudio({source,projectTitle,onProjectTitleChange,pag
  const renameArticle=(name:string)=>{if(!selected)return;const end=content.indexOf('\n',selected.at),lineEnd=end<0?content.length:end;onReplace(content.slice(0,selected.at)+'# '+name+content.slice(lineEnd))};
  const removeLink=(name:string)=>{if(!confirm('Remove relationship @'+name+'?'))return;onReplace(content.split('\n').filter(line=>line.trim()!=='@'+name).join('\n'))};
  const activePage=pages.find(p=>p.id===activePageId),isTitlePage=/title/i.test(activePage?.name||'');
- const addPicture=(file?:File,label='Artwork')=>{if(!file||!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{const data=String(reader.result||'');if(!data)return;insert(`\n![${label}](${data})\n`,'','')};reader.readAsDataURL(file)};\n const addTitlePicture=(file?:File)=>addPicture(file,'Title artwork');
+ const addPicture=(file?:File,label='Artwork')=>{if(!file||!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{const data=String(reader.result||'');if(!data)return;insert(`\n![${label}](${data})\n`,'','')};reader.readAsDataURL(file)};
+ const addTitlePicture=(file?:File)=>addPicture(file,'Title artwork');
  const tabs=['Content','Details','Relationships','Map Pins','Timeline','Boards','GM/Player','Export'];
  const chooseTab=(x:string)=>{if(x==='Map Pins')return onNavigate?.('maps');if(x==='Timeline')return onNavigate?.('timeline');if(x==='Boards')return onNavigate?.('boards');setTab(x)};
  const railItems=[{label:'▣ World Library',tab:'Content'},{label:'▱ Categories',tab:'Categories'},{label:'⌘ World Tree',tab:'World Tree'},{label:'◉ Timeline',nav:'timeline'},{label:'▧ Atlas & Maps',nav:'maps'},{label:'▧ Boards',nav:'boards'},{label:'⌘ Relationships',tab:'Relationships'},{label:'◉ Secrets (GM/Player)',tab:'GM/Player'},{label:'✓ Consistency Check',tab:'Consistency Check'}] as const;
