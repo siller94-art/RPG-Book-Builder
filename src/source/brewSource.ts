@@ -28,6 +28,15 @@ export function brewPageSources(source:string){
  const normalized=source.replace(/\r\n?/g,'\n');
  return normalized.split(/^\s*\\(?:page|pagebreak)\s*$/gmi)
 }
+export function renderBrewPage(source:string){
+ const parsed=parseBrewSource(source);
+ const page=parsed.pages[0];
+ if(!page)return'';
+ if(page.columns.length>1){
+  return '<div class="brew-columns">'+page.columns.map((column,index)=>'<section class="brew-column" data-column="'+(index+1)+'">'+renderBrewMarkdown(column)+'</section>').join('')+'</div>'
+ }
+ return renderBrewMarkdown(page.source)
+}
 export function renderBrewMarkdown(source:string){
  const lines=expandContainers(source.replace(/<style[\s\S]*?<\/style>/gi,'')).split(/\n/),out:string[]=[];let list=false,quote=false,table=false,container='';
  const close=()=>{if(list){out.push('</ul>');list=false}if(quote){out.push('</blockquote>');quote=false}if(table){out.push('</tbody></table>');table=false}};
