@@ -1,5 +1,5 @@
 import{describe,it,expect}from'vitest';import{inspectSource,applySafeIssues}from'./writingHelper';
-import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
+import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown,parseBrewSource}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
 describe('Writing Helper regression and stress',()=>{
 it('finds and safely fixes Markdown/writing issues',()=>{const s='#Bad\nThe the coast!! x\\page next';const issues=inspectSource(s);expect(issues.length).toBeGreaterThanOrEqual(4);const fixed=applySafeIssues(s,issues);expect(fixed).toContain('# Bad');expect(fixed).toContain('The coast!');expect(fixed).toContain('x\n\\page')});
 it('does not auto-apply unsafe grammar advice',()=>{const s="It's history is old.";const issues=inspectSource(s);expect(issues.some(x=>!x.safe)).toBe(true);expect(applySafeIssues(s,issues)).toBe(s)});
@@ -41,7 +41,7 @@ describe('Full audit Homebrewery regressions',()=>{
 }}`;
  it('preserves explicit empty pages in both source parsers',()=>{
   expect(markdownToProjectPages('# One\n\\page').length).toBe(2);
-  expect((require('./brewSource') as typeof import('./brewSource')).parseBrewSource('# One\n\\page').pages.length).toBe(2);
+  expect(parseBrewSource('# One\n\\page').pages.length).toBe(2);
  });
  it('renders the CR descriptive table as a container and table',()=>{
   const html=renderBrewMarkdown(cr);expect(html).toContain('brew-snippet descriptive');expect(html).toContain('<table>');expect(html).toContain('11,500');expect(html).toContain('155,000');
