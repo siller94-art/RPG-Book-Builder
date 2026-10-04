@@ -607,3 +607,20 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 @media(max-width:900px){.workspace-export>header{overflow-x:auto!important}.workspace-export>header>nav{min-width:max-content}.workspace-export>main{padding:10px!important}}
 
 .worldPageActions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.worldPageActions button{justify-content:center!important;font-size:10px!important;padding:7px 5px!important}.worldPageActions button:first-child{background:#07537d!important}.worldPageActions button:last-child{background:#492126!important;border-color:#824047!important}
+
+/* Workspace isolation: Home owns the book editor columns; tools use the full body. */
+.app:not(.workspace-build){grid-template-columns:1fr}
+.app:not(.workspace-build)>.pages,
+.app:not(.workspace-build)>.bookContentLabel,
+.app:not(.workspace-build)>.tools{display:none!important}
+.app:not(.workspace-build)>main{grid-column:1/-1;grid-row:2;min-width:0;width:100%;padding:18px;overflow:auto}
+.app:not(.workspace-build)>main>.mockEditorTitle,
+.app:not(.workspace-build)>main>.paper,
+.app:not(.workspace-build)>main>.sourceModeBar,
+.app:not(.workspace-build)>main>.sourceWorkspace,
+.app:not(.workspace-build)>main>.pageHelper,
+.app:not(.workspace-build)>main>.overflowWarning{display:none!important}
+.workspace-world>main{background:#0d151b}
+.workspace-world .worldCreator{width:100%;max-width:1440px;margin:0 auto;min-height:calc(100vh - 96px)}
+.workspace-export>main,.workspace-settings>main,.workspace-preview>main,.workspace-characters>main,.workspace-items>main,.workspace-spells>main,.workspace-monsters>main,.workspace-maps>main,.workspace-timeline>main,.workspace-boards>main,.workspace-stamps>main,.workspace-assets>main{max-width:none}
+.workspaceNav button:first-child.active{box-shadow:inset 0 -3px #77aee5;color:#fff}
