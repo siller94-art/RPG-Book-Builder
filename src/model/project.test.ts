@@ -15,6 +15,8 @@ describe('brew markdown renderer',()=>{
  it('renders headings emphasis lists and links',()=>{const h=renderBrewMarkdown('# Title\n\n**Bold**\n\n- One\n- Two\n\n[OpenAI](https://openai.com)');expect(h).toContain('<h1>Title</h1>');expect(h).toContain('<strong>Bold</strong>');expect(h).toContain('<li>One</li>');expect(h).toContain('href="https://openai.com"')});
  it('escapes raw html',()=>{expect(renderBrewMarkdown('<script>alert(1)</script>')).not.toContain('<script>')});
  it('renders a simple brew table',()=>{const h=renderBrewMarkdown('Name | Value\n--- | ---\nAC | 15');expect(h).toContain('<table>');expect(h).toContain('<td>15</td>')});
+ it('renders uploaded PNG data images in the live preview',()=>{const h=renderBrewMarkdown('![Artwork](data:image/png;base64,iVBORw0KGgo=)');expect(h).toContain('<img src="data:image/png;base64,iVBORw0KGgo="');expect(h).toContain('alt="Artwork"')});
+ it('rejects unsafe non-image data URLs',()=>{const h=renderBrewMarkdown('![Bad](data:text/html;base64,PHNjcmlwdD4=)');expect(h).not.toContain('<img src="data:text/html')});
 });
 
 describe('advanced brew compatibility',()=>{
