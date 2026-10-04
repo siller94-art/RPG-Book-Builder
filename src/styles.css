@@ -814,3 +814,33 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
   margin:12px auto!important;
 }
 .workspace-world .previewTitle{font-size:12px!important;letter-spacing:.08em!important}
+
+/* World Creator mockup parity — structural desktop layout, not legacy wiki proportions. */
+.workspace-world.app{
+  grid-template:64px minmax(0,1fr)/238px minmax(720px,1fr) 280px!important;
+  min-width:1080px!important;
+  background:#0b1720!important;
+}
+.workspace-world>header{grid-column:1/-1!important;grid-row:1!important;height:64px!important}
+.workspace-world>main{grid-column:1/-1!important;grid-row:2!important;padding:0!important;overflow:hidden!important}
+.workspace-world .lockedWorld{
+  display:grid!important;
+  grid-template-columns:238px minmax(720px,1fr) 280px!important;
+  height:calc(100vh - 64px)!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  background:#0b1720!important;
+}
+.workspace-world .worldRail{grid-column:1!important;background:#0d1a25!important;border-right:1px solid #294052!important;padding:12px!important}
+.workspace-world .worldCenter{grid-column:2!important;background:#101e29!important;padding:14px 18px 24px!important}
+.workspace-world .worldInspector{grid-column:3!important;background:#0b1822!important;border-left:1px solid #294052!important;padding:16px 14px 24px!important}
+.workspace-world .worldEditor{grid-template-columns:minmax(330px,1fr) minmax(330px,1fr)!important;gap:14px!important}
+.workspace-world .worldPreview{max-width:100%!important;margin:0!important}
+.workspace-world .liveWorldPreview{width:100%!important;max-width:520px!important;margin:0 auto!important;box-sizing:border-box!important}
+.workspace-world .articleHead h1{font-size:24px!important}
+.workspace-world .worldInspector .artworkInsertBtn{border-color:#9b7838!important;background:#182534!important;color:#f1d27f!important;font-weight:700!important}
+@media(max-width:1180px){
+ .workspace-world.app{grid-template-columns:210px minmax(650px,1fr) 255px!important;min-width:1020px!important}
+ .workspace-world .lockedWorld{grid-template-columns:210px minmax(650px,1fr) 255px!important}
+}
