@@ -642,3 +642,8 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .liveWorldPreview img{display:block;max-width:100%;max-height:70%;object-fit:contain;margin:14px auto}
 
 .creatorArtwork{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}.creatorArtwork button{padding:7px 10px}.creatorPreviewArt{display:block;width:100%;max-height:230px;object-fit:contain;margin:0 auto 12px;border-radius:4px}
+
+/* Home left sidebar: prevent Book Content / project text from overlapping. */
+.workspace-build .bookContentLabel{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:52px!important;padding:18px 14px 8px!important;background:#0f1d25!important;white-space:nowrap!important;overflow:hidden!important;line-height:22px!important}
+.workspace-build .pages{position:relative!important;padding:62px 14px 18px!important}
+.workspace-build .pages>h2,.workspace-build .pages>h3{margin-top:0!important;line-height:1.35!important}
