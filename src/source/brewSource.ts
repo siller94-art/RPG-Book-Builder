@@ -13,7 +13,7 @@ export function parseBrewSource(source:string):ParsedSource{
  return{pages,customCss}
 }
 const esc=(s:string)=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]!));
-const inline=(s:string)=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2">$1</a>');
+const inline=(s:string)=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\(((?:https?:\/\/[^\s)]+)|(?:data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+))\)/g,'<a href="$2">$1</a>');
 export function safeBrewCss(css:string){return css.split('}').map(rule=>{const [sel,body]=rule.split('{');if(!body)return'';const safeSel=(sel||'').trim();if(!/^(?:\.brew[-\w ]*|h[1-6]|p|blockquote|table|th|td)(?:[.#:>+~\w\s-]*)$/.test(safeSel))return'';const declarations=body.split(';').map(d=>d.trim()).filter(d=>/^(?:color|background(?:-color)?|font-(?:size|weight|style)|text-align|border(?:-[\w-]+)?|padding(?:-[\w-]+)?|margin(?:-[\w-]+)?|width|max-width|min-height|column-count|column-gap)\s*:/i.test(d)&&!/(url\s*\(|expression\s*\(|javascript:|@import)/i.test(d));return declarations.length?safeSel+'{'+declarations.join(';')+'}':''}).filter(Boolean).join('\n')}
 function expandContainers(source:string){return source.replace(/{{\s*(note|descriptive|monster|statblock|wide|columns?)\s*\n([\s\S]*?)\n}}/gi,(_m,type,body)=>':::BREW:'+String(type).toLowerCase()+'\n'+body+'\n:::END')}
 export function renderBrewMarkdown(source:string){
