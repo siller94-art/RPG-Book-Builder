@@ -844,3 +844,8 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
  .workspace-world.app{grid-template-columns:210px minmax(650px,1fr) 255px!important;min-width:1020px!important}
  .workspace-world .lockedWorld{grid-template-columns:210px minmax(650px,1fr) 255px!important}
 }
+
+/* World Creator runtime fixes: keep title artwork contained and image placeholders readable. */
+.workspace-world .worldPagePreview .brew-image{max-width:100%!important;margin:10px auto!important;break-inside:avoid!important}
+.workspace-world .worldPagePreview .brew-image img{display:block!important;width:auto!important;max-width:92%!important;max-height:300px!important;object-fit:contain!important;margin:0 auto!important}
+.workspace-world .sourcePane textarea{overflow-wrap:anywhere!important;word-break:break-word!important;white-space:pre-wrap!important}
