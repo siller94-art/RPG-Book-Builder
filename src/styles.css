@@ -768,3 +768,49 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
  .workspace-build.app{grid-template-columns:215px minmax(650px,1fr) 255px!important;min-width:1020px!important}
  .workspace-build>main{padding-left:16px!important;padding-right:16px!important}
 }
+
+/* Home/World visual parity: sourcebook-scale typography and bounded artwork. */
+.workspace-build .paper .block.text .blockTitle{
+  font-size:clamp(16px,1.7vw,24px)!important;
+  line-height:1.12!important;
+  overflow-wrap:anywhere!important;
+}
+.workspace-build .paper .block.text textarea,
+.workspace-build .paper .block.text .fullBodyEditor{
+  font-size:13px!important;
+  line-height:1.42!important;
+  font-family:Georgia,serif!important;
+}
+.workspace-build .paper .block.text.heading .blockTitle{font-size:26px!important;line-height:1.08!important}
+.workspace-build .paper .block{max-width:100%!important;box-sizing:border-box!important}
+.workspace-build .paper .image{max-width:100%!important;overflow:visible!important}
+.workspace-build .paper .image img{
+  max-width:100%!important;
+  max-height:480px!important;
+  object-fit:contain!important;
+}
+.workspace-build .photoHelperPanel{
+  position:relative!important;
+  z-index:4!important;
+  max-height:260px!important;
+  overflow-y:auto!important;
+  margin-bottom:8px!important;
+}
+.workspace-build .photoPresetGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.workspace-world .liveWorldPreview{
+  font:13px/1.42 Georgia,serif!important;
+  color:#342c24!important;
+}
+.workspace-world .liveWorldPreview h1{font-size:28px!important;line-height:1.08!important;margin:12px 0 8px!important}
+.workspace-world .liveWorldPreview h2{font-size:22px!important;line-height:1.12!important;margin:11px 0 7px!important}
+.workspace-world .liveWorldPreview h3{font-size:18px!important;line-height:1.15!important;margin:9px 0 6px!important}
+.workspace-world .liveWorldPreview p,.workspace-world .liveWorldPreview li{font-size:13px!important;line-height:1.42!important}
+.workspace-world .liveWorldPreview img{
+  display:block!important;
+  width:auto!important;
+  max-width:92%!important;
+  max-height:430px!important;
+  object-fit:contain!important;
+  margin:12px auto!important;
+}
+.workspace-world .previewTitle{font-size:12px!important;letter-spacing:.08em!important}
