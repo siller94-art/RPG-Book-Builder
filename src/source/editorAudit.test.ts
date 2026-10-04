@@ -25,3 +25,38 @@ describe('Brew layout commands',()=>{
   expect(renderBrewMarkdown('First\n\\column\nSecond')).not.toContain('\\\\column');
  });
 });
+
+describe('Full audit Homebrewery regressions',()=>{
+ const cr=`{{descriptive
+#### Challenge Rating Reference
+
+| CR | XP | CR | XP |
+|:--|--:|:--|--:|
+| 0 | 0 or 10 | 14 | 11,500 |
+| 1/8 | 25 | 15 | 13,000 |
+| 1/4 | 50 | 16 | 15,000 |
+| 1/2 | 100 | 17 | 18,000 |
+| 1 | 200 | 18 | 20,000 |
+| 13 | 10,000 | 30 | 155,000 |
+}}`;
+ it('preserves explicit empty pages in both source parsers',()=>{
+  expect(markdownToProjectPages('# One\n\\page').length).toBe(2);
+  expect((require('./brewSource') as typeof import('./brewSource')).parseBrewSource('# One\n\\page').pages.length).toBe(2);
+ });
+ it('renders the CR descriptive table as a container and table',()=>{
+  const html=renderBrewMarkdown(cr);expect(html).toContain('brew-snippet descriptive');expect(html).toContain('<table>');expect(html).toContain('11,500');expect(html).toContain('155,000');
+ });
+ it('converts note and descriptive containers into visual note sections instead of raw braces',()=>{
+  const note=markdownToTextSections('{{note\n**About this edition.** Keep this note.\n}}');
+  const desc=markdownToTextSections(cr);
+  expect(note[0]).toMatchObject({style:'note',title:'Note'});
+  expect(note[0].body).not.toContain('{{');
+  expect(desc[0]).toMatchObject({style:'note',title:'Descriptive'});
+  expect(desc[0].body).toContain('Challenge Rating Reference');
+  expect(desc[0].body).not.toContain('}}');
+ });
+ it('marks imported headings and blockquotes semantically',()=>{
+  expect(markdownToTextSections('## History\nOld lore.')[0].style).toBe('heading');
+  expect(markdownToTextSections('> Important warning')[0].style).toBe('note');
+ });
+});
