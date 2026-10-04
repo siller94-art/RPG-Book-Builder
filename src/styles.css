@@ -640,3 +640,5 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 /* Title-page artwork picker in the Create/Insert inspector. */
 .titleImageInput{display:none!important}.worldInspector .titlePictureBtn{border-color:#9b7838!important;background:#182534!important;color:#f1d27f!important;font-weight:700!important}
 .liveWorldPreview img{display:block;max-width:100%;max-height:70%;object-fit:contain;margin:14px auto}
+
+.creatorArtwork{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}.creatorArtwork button{padding:7px 10px}.creatorPreviewArt{display:block;width:100%;max-height:230px;object-fit:contain;margin:0 auto 12px;border-radius:4px}
