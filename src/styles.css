@@ -854,3 +854,14 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-world .worldPagePreview .brew-columns{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:24px!important;align-items:start!important;width:100%!important}
 .workspace-world .worldPagePreview .brew-column{min-width:0!important;overflow-wrap:anywhere!important}
 .workspace-world .worldPagePreview .brew-column .brew-image img{max-width:100%!important}
+
+/* Homebrewery/GM Binder-style page viewer and faithful PDF capture */
+.worldPagePreview{background-color:#f0dfb7!important;background-image:radial-gradient(circle at 30% 20%,#fff6d6aa,transparent 45%)!important}
+.worldPagePreview .liveWorldPreview{font:12px/1.35 Georgia,serif;color:#211a12}
+.worldPagePreview .brew-column table{font-size:9px!important;table-layout:auto!important}
+.worldPagePreview .brew-column table th,.worldPagePreview .brew-column table td{padding:3px 4px!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
+.pdfCapturePage{box-sizing:border-box!important;margin:0!important;max-width:none!important;min-height:0!important;overflow:hidden!important;padding:56px 58px!important;box-shadow:none!important}
+.pdfCapturePage .liveWorldPreview{height:100%;overflow:hidden}
+.pdfCaptureHost .brew-columns{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:28px!important;align-items:start!important}
+.pdfCaptureHost .brew-column{min-width:0!important}
+.pdfCaptureHost .brew-image img{max-width:100%!important;height:auto!important;object-fit:contain!important}
