@@ -605,3 +605,5 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-export .exportWorkspace{width:min(1100px,100%);margin:0 auto!important}
 .workspace-export .foundryOptional{width:100%}
 @media(max-width:900px){.workspace-export>header{overflow-x:auto!important}.workspace-export>header>nav{min-width:max-content}.workspace-export>main{padding:10px!important}}
+
+.worldPageActions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}.worldPageActions button{justify-content:center!important;font-size:10px!important;padding:7px 5px!important}.worldPageActions button:first-child{background:#07537d!important}.worldPageActions button:last-child{background:#492126!important;border-color:#824047!important}
