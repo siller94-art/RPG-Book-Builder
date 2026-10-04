@@ -24,7 +24,8 @@
     "react": "latest",
     "react-dom": "latest",
     "lucide-react": "latest",
-    "jspdf": "^3.0.3"
+    "jspdf": "^3.0.3",
+    "html2canvas": "^1.4.1"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0",
