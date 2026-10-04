@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "test": "vitest run",
-    "check": "npm run build && npm test"
+    "check": "npm run build && npm test",
+    "mac:xcode:check": "xcodebuild -version && xcrun --sdk macosx --show-sdk-path && rustc --version && npm test && npm run build",
+    "mac:app": "npm run mac:xcode:check && npm run tauri -- build --bundles app",
+    "mac:dmg": "npm run mac:xcode:check && npm run tauri -- build --bundles dmg"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0",
