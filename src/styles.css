@@ -624,3 +624,15 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-world .worldCreator{width:100%;max-width:1440px;margin:0 auto;min-height:calc(100vh - 96px)}
 .workspace-export>main,.workspace-settings>main,.workspace-preview>main,.workspace-characters>main,.workspace-items>main,.workspace-spells>main,.workspace-monsters>main,.workspace-maps>main,.workspace-timeline>main,.workspace-boards>main,.workspace-stamps>main,.workspace-assets>main{max-width:none}
 .workspaceNav button:first-child.active{box-shadow:inset 0 -3px #77aee5;color:#fff}
+
+/* Dock the Markdown Writing Helper under Insert in the World Creator inspector. */
+.workspace-world .worldInspector>.writingHelper{display:block!important;position:static!important;right:auto!important;bottom:auto!important;width:100%!important;max-width:none!important;max-height:260px!important;margin:14px 0 0!important;padding:9px!important;overflow:auto;box-shadow:none!important;border:1px solid #294457!important;background:#0d1c28!important}
+.workspace-world .worldInspector>.writingHelper .helperHead{display:flex;align-items:flex-start;gap:6px}
+.workspace-world .worldInspector>.writingHelper .helperHead>div{min-width:0}
+.workspace-world .worldInspector>.writingHelper .helperHead b{font-size:12px;color:#e7ca84}
+.workspace-world .worldInspector>.writingHelper .helperHead small{display:block;font-size:9px;line-height:1.3;color:#9fb0bc}
+.workspace-world .worldInspector>.writingHelper .helperCount{margin-left:auto;font-size:8px;white-space:nowrap}
+.workspace-world .worldInspector>.writingHelper .helperIssues{max-height:170px;overflow:auto}
+.workspace-world .worldInspector>.writingHelper .helperIssue{padding:6px;margin-top:6px;font-size:9px}
+.workspace-world .worldInspector>.writingHelper .helperActions button,.workspace-world .worldInspector>.writingHelper .fixAll{padding:4px 6px;font-size:9px}
+@media(max-width:1100px){.workspace-world .worldInspector>.writingHelper{display:none!important}}
