@@ -849,3 +849,8 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-world .worldPagePreview .brew-image{max-width:100%!important;margin:10px auto!important;break-inside:avoid!important}
 .workspace-world .worldPagePreview .brew-image img{display:block!important;width:auto!important;max-width:92%!important;max-height:300px!important;object-fit:contain!important;margin:0 auto!important}
 .workspace-world .sourcePane textarea{overflow-wrap:anywhere!important;word-break:break-word!important;white-space:pre-wrap!important}
+
+/* Homebrewery column command: render each parsed column beside the next one. */
+.workspace-world .worldPagePreview .brew-columns{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:24px!important;align-items:start!important;width:100%!important}
+.workspace-world .worldPagePreview .brew-column{min-width:0!important;overflow-wrap:anywhere!important}
+.workspace-world .worldPagePreview .brew-column .brew-image img{max-width:100%!important}
