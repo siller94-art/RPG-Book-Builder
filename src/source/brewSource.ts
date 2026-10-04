@@ -79,6 +79,7 @@ export function markdownToProjectPages(source:string){
   let name='Page '+(index+1);
   if(/^#\s+/.test(lines[0]||''))name=lines.shift()!.replace(/^#\s+/,'').trim()||name;
   return{name,sections:markdownToTextSections(lines.join('\n'))};
- }).filter((p,index)=>p.sections.length||rawPages[index].trim().length>0);
+ });
+ // Preserve explicit \\page commands even when the newly-created page is still empty.
  return pages.length?pages:[{name:'Page 1',sections:[]}];
 }
