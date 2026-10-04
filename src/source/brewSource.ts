@@ -16,6 +16,18 @@ const esc=(s:string)=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const inline=(s:string)=>esc(s).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/__([^_]+)__/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\(((?:https?:\/\/[^\s)]+)|(?:data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+))\)/g,'<a href="$2">$1</a>');
 export function safeBrewCss(css:string){return css.split('}').map(rule=>{const [sel,body]=rule.split('{');if(!body)return'';const safeSel=(sel||'').trim();if(!/^(?:\.brew[-\w ]*|h[1-6]|p|blockquote|table|th|td)(?:[.#:>+~\w\s-]*)$/.test(safeSel))return'';const declarations=body.split(';').map(d=>d.trim()).filter(d=>/^(?:color|background(?:-color)?|font-(?:size|weight|style)|text-align|border(?:-[\w-]+)?|padding(?:-[\w-]+)?|margin(?:-[\w-]+)?|width|max-width|min-height|column-count|column-gap)\s*:/i.test(d)&&!/(url\s*\(|expression\s*\(|javascript:|@import)/i.test(d));return declarations.length?safeSel+'{'+declarations.join(';')+'}':''}).filter(Boolean).join('\n')}
 function expandContainers(source:string){return source.replace(/{{\s*(note|descriptive|monster|statblock|wide|columns?)\s*\n([\s\S]*?)\n}}/gi,(_m,type,body)=>':::BREW:'+String(type).toLowerCase()+'\n'+body+'\n:::END')}
+export function maskEmbeddedImages(source:string){
+ let index=0;
+ return source.replace(/!\[([^\]]*)\]\((data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+)\)/gi,(_m,alt)=>`![${alt}](embedded-image:${++index})`)
+}
+export function restoreEmbeddedImages(edited:string,original:string){
+ const images=[...original.matchAll(/!\[([^\]]*)\]\((data:image\/(?:png|jpeg|webp|gif);base64,[A-Za-z0-9+/=]+)\)/gi)].map(m=>m[2]);
+ return edited.replace(/embedded-image:(\d+)/gi,(_m,n)=>images[Number(n)-1]||_m)
+}
+export function brewPageSources(source:string){
+ const normalized=source.replace(/\r\n?/g,'\n');
+ return normalized.split(/^\s*\\(?:page|pagebreak)\s*$/gmi)
+}
 export function renderBrewMarkdown(source:string){
  const lines=expandContainers(source.replace(/<style[\s\S]*?<\/style>/gi,'')).split(/\n/),out:string[]=[];let list=false,quote=false,table=false,container='';
  const close=()=>{if(list){out.push('</ul>');list=false}if(quote){out.push('</blockquote>');quote=false}if(table){out.push('</tbody></table>');table=false}};
