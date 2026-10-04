@@ -30,6 +30,8 @@ jobs:
         run: npm install
       - name: Xcode toolchain tests
         run: npm run mac:xcode:check
+      - name: Generate desktop icons
+        run: npm run tauri -- icon src-tauri/app-icon.svg
       - name: Build macOS app bundle
         env:
           APPLE_SIGNING_IDENTITY: "-"
