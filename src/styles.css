@@ -585,3 +585,13 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .columnChooser{display:flex;align-items:center;gap:5px;margin-left:auto}.columnChooser>span{font-size:11px;font-weight:700}.columnChooser button{min-height:27px!important;padding:4px 8px!important;border-radius:4px}.columnChooser button.active{background:#6f3a3f!important;border-color:#b86a70!important;color:#fff!important}
 .workspace-build .textControls{display:flex!important;flex-wrap:wrap;align-items:center;gap:7px}.workspace-build .textControls>label{flex:0 0 auto}
 @media(max-width:760px){.workspace-build .block.text .fullBodyEditor.twoColumns{column-count:1}.columnChooser{width:100%;margin-left:0}}
+
+/* Export workspace: keep primary export controls visible and prevent companion tools from crushing the page */
+.workspace-export main{overflow:auto!important;min-width:0}
+.exportWorkspace{margin:12px 12px 18px;padding:18px;border:1px solid #294457;border-radius:8px;background:#0b1b26;color:#e8edf0;display:grid;gap:16px}
+.exportHead{display:flex;justify-content:space-between;align-items:start;gap:16px}.exportHead h1{margin:0 0 5px;font:700 25px Georgia,serif;color:#f0d99e}.exportHead p{margin:0;color:#b7c5cd}
+.exportActions{display:grid;grid-template-columns:repeat(5,minmax(110px,1fr));gap:8px}.exportActions button{justify-content:center;min-height:44px}
+.foundryOptional{border-top:1px solid #294457;padding-top:12px}.foundryOptional summary{cursor:pointer;font-weight:800;color:#e7ca84;padding:8px 0}.foundryOptional .foundryExport{max-width:none;margin:8px 0 0}
+.workspace-export .paper{margin-top:12px}
+@media(max-width:1000px){.exportActions{grid-template-columns:repeat(2,minmax(130px,1fr))}}
+@media(max-width:700px){.exportActions{grid-template-columns:1fr}.exportWorkspace{margin:8px;padding:12px}}
