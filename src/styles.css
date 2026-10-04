@@ -647,3 +647,22 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-build .bookContentLabel{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:52px!important;padding:18px 14px 8px!important;background:#0f1d25!important;white-space:nowrap!important;overflow:hidden!important;line-height:22px!important}
 .workspace-build .pages{position:relative!important;padding:62px 14px 18px!important}
 .workspace-build .pages>h2,.workspace-build .pages>h3{margin-top:0!important;line-height:1.35!important}
+
+/* Final World Creator UI alignment: keep navigation/timeline visible and match approved mockup. */
+.workspace-world .lockedWorld{height:calc(100vh - 60px)!important;grid-template-columns:238px minmax(620px,1fr) 260px!important;overflow:hidden!important}
+.workspace-world .worldRail{display:flex!important;flex-direction:column!important;min-height:0!important;overflow-y:auto!important;padding:12px!important;position:sticky!important;top:0!important}
+.workspace-world .worldRail>.newProject{order:-3!important}
+.workspace-world .worldRail>button{flex:0 0 auto!important;min-height:36px!important;margin:2px 0!important}
+.workspace-world .worldRail>button:nth-of-type(4){order:-2!important}
+.workspace-world .treeTitle{margin-top:10px!important}
+.workspace-world .worldCenter{min-height:0!important;overflow:auto!important;padding:10px 14px 16px!important}
+.workspace-world .worldInspector{display:block!important;min-height:0!important;overflow-y:auto!important;padding:12px!important}
+.workspace-world .crumb{margin:0 0 6px!important}
+.workspace-world .worldProjectName{margin-bottom:8px!important}
+@media(max-width:1180px){
+ .workspace-world .lockedWorld{grid-template-columns:210px minmax(560px,1fr) 230px!important}
+}
+@media(max-width:900px){
+ .workspace-world .lockedWorld{grid-template-columns:190px minmax(0,1fr)!important}
+ .workspace-world .worldInspector{display:none!important}
+}
