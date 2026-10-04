@@ -80,16 +80,17 @@ export function projectTextToMarkdown(pages:{name:string;blocks:{kind:string;tit
 }
 export function markdownToTextSections(source:string){
  const sections:{title:string;body:string;style:'body'|'heading'|'note'|'table';columns:1|2}[]=[];
- const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];let columns:1|2=1;
+ const lines=source.replace(/\r\n?/g,'\n').split('\n');let title='';let body:string[]=[];let columns:1|2=1,inContainer=false;
  let forcedStyle:'body'|'heading'|'note'|'table'='body';
  const flush=()=>{const text=body.join('\n').trim();if(title||text){const style=forcedStyle!=='body'?forcedStyle:text.includes('|')&&/^\s*[-:| ]+$/m.test(text)?'table':'body';sections.push({title:title||'New Section',body:text,style,columns})}title='';body=[];forcedStyle='body';columns=1};
  for(const line of lines){
   if(/^\s*\\(?:page|pagebreak)\s*$/i.test(line)){flush();continue}
   if(/^\s*\\(?:column|columnbreak)\s*$/i.test(line)){flush();columns=2;continue}
   const container=line.match(/^\s*{{\s*(note|descriptive)\s*$/i);
-  if(container){flush();forcedStyle='note';title=container[1].toLowerCase()==='descriptive'?'Descriptive':'Note';continue}
-  if(/^\s*}}\s*$/.test(line)&&forcedStyle==='note'){flush();continue}
+  if(container){flush();forcedStyle='note';inContainer=true;title=container[1].toLowerCase()==='descriptive'?'Descriptive':'Note';continue}
+  if(/^\s*}}\s*$/.test(line)&&inContainer){flush();inContainer=false;continue}
   const h=line.match(/^#{1,6}\s+(.+)$/);
+  if(h&&inContainer){body.push(line);continue}
   if(h){const nextColumns:1|2=columns;flush();columns=nextColumns;title=h[1].trim();forcedStyle='heading';continue}
   if(/^>\s?/.test(line)){if(forcedStyle==='body')forcedStyle='note';body.push(line.replace(/^>\s?/,''));continue}
   body.push(line)
