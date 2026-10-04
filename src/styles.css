@@ -595,3 +595,13 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .workspace-export .paper{margin-top:12px}
 @media(max-width:1000px){.exportActions{grid-template-columns:repeat(2,minmax(130px,1fr))}}
 @media(max-width:700px){.exportActions{grid-template-columns:1fr}.exportWorkspace{margin:8px;padding:12px}}
+
+/* Export is a dedicated workspace, not the Book Editor three-panel layout */
+.workspace-export.app{grid-template:58px minmax(0,1fr)/1fr!important;height:100vh!important;min-width:0!important;overflow:hidden!important}
+.workspace-export>header{grid-column:1!important;grid-row:1!important}
+.workspace-export>.bookContentLabel,.workspace-export>.pages,.workspace-export>.tools{display:none!important}
+.workspace-export>main{grid-column:1!important;grid-row:2!important;width:100%!important;max-width:none!important;min-width:0!important;padding:18px!important;overflow:auto!important;background:#08141e!important}
+.workspace-export>main>.mockEditorTitle,.workspace-export>main>.workspaceBanner,.workspace-export>main>.paper,.workspace-export>main>.overflowWarning{display:none!important}
+.workspace-export .exportWorkspace{width:min(1100px,100%);margin:0 auto!important}
+.workspace-export .foundryOptional{width:100%}
+@media(max-width:900px){.workspace-export>header{overflow-x:auto!important}.workspace-export>header>nav{min-width:max-content}.workspace-export>main{padding:10px!important}}
