@@ -22,6 +22,7 @@ export function renderBrewMarkdown(source:string){
  for(let i=0;i<lines.length;i++){const raw=lines[i],s=raw.trim();
   if(/^:::BREW:/.test(s)){close();container=s.slice(8);out.push('<div class="brew-snippet '+container+'">');continue}if(s===':::END'){close();if(container)out.push('</div>');container='';continue}
   if(!s){close();continue}
+  if(/^\\(?:column|columnbreak)$/i.test(s)){close();out.push('<div class="brew-column-break" aria-hidden="true"></div>');continue}
   const h=s.match(/^(#{1,6})\s+(.+)$/);if(h){close();out.push('<h'+h[1].length+'>'+inline(h[2])+'</h'+h[1].length+'>');continue}
   if(/^___+$/.test(s)){close();out.push('<hr>');continue}
   if(/^>/.test(s)){if(!quote){close();quote=true;out.push('<blockquote class="brew-note">')}out.push('<p>'+inline(s.replace(/^>\s?/,''))+'</p>');continue}
