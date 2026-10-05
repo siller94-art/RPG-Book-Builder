@@ -30,6 +30,8 @@ jobs:
           node-version: 22
       - uses: dtolnay/rust-toolchain@stable
       - run: npm install
+      - name: Dependency security audit
+        run: npm audit --audit-level=critical
       - name: Pre-release verification
         run: npm run check
       - name: Test
