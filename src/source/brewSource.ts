@@ -29,6 +29,33 @@ export function brewPageSources(source:string){
  const normalized=source.replace(/\r\n?/g,'\n');
  return normalized.split(/^\s*\\(?:page|pagebreak)\s*$/gmi)
 }
+export const TOC_MARKER='<!-- RPG-BOOK-BUILDER:TOC -->';
+export function hasTableOfContents(source:string){return source.includes(TOC_MARKER)}
+function tocPage(source:string){
+ const pages=brewPageSources(source);
+ const rows:string[]=[];
+ pages.forEach((page,index)=>{
+  if(page.includes(TOC_MARKER))return;
+  const title=(page.match(/^#\s+(.+)$/m)?.[1]||('Page '+(index+1))).trim();
+  rows.push('| '+(rows.length+1)+' | **'+title.replace(/\|/g,'\\|')+'** | '+(index+1)+' |');
+  for(const h of page.matchAll(/^##\s+(.+)$/gm))rows.push('|  | '+h[1].trim().replace(/\|/g,'\\|')+' | '+(index+1)+' |')
+ });
+ return '# Contents\n\n'+TOC_MARKER+'\n\n| Part | Chapter | Page |\n|:--|:--|--:|\n'+rows.join('\n')
+}
+export function syncTableOfContents(source:string){
+ if(!hasTableOfContents(source))return source;
+ const pages=brewPageSources(source),index=pages.findIndex(p=>p.includes(TOC_MARKER));
+ if(index<0)return source;
+ pages[index]=tocPage(source);
+ return pages.join('\n\\page\n')
+}
+export function insertTableOfContents(source:string){
+ if(hasTableOfContents(source))return syncTableOfContents(source);
+ const pages=brewPageSources(source),at=pages.length>1?1:0;
+ pages.splice(at,0,'# Contents\n\n'+TOC_MARKER);
+ const seeded=pages.join('\n\\page\n');
+ return syncTableOfContents(seeded)
+}
 export function renderBrewPage(source:string){
  const parsed=parseBrewSource(source);
  const page=parsed.pages[0];
@@ -43,7 +70,7 @@ export function renderBrewMarkdown(source:string){
  const close=()=>{if(list){out.push('</ul>');list=false}if(quote){out.push('</blockquote>');quote=false}if(table){out.push('</tbody></table>');table=false}};
  for(let i=0;i<lines.length;i++){const raw=lines[i],s=raw.trim();
   if(/^:::BREW:/.test(s)){close();container=s.slice(8);out.push('<div class="brew-snippet '+container+'">');continue}if(s===':::END'){close();if(container)out.push('</div>');container='';continue}
-  if(!s){close();continue}
+  if(!s||/^<!--.*-->$/.test(s)){close();continue}
   if(/^\\(?:column|columnbreak)$/i.test(s)){close();out.push('<div class="brew-column-break" aria-hidden="true"></div>');continue}
   const h=s.match(/^(#{1,6})\s+(.+)$/);if(h){close();out.push('<h'+h[1].length+'>'+inline(h[2])+'</h'+h[1].length+'>');continue}
   if(/^___+$/.test(s)){close();out.push('<hr>');continue}
