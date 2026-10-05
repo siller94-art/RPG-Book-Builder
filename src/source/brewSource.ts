@@ -57,7 +57,7 @@ export function renderBrewMarkdown(source:string){
  }close();return out.join('\n')
 }
 export function sourceToPlainText(source:string){
- return source.replace(/<style[\s\S]*?<\/style>/gi,'').replace(/{{[^}]+}}/g,'').replace(/^\s*\\(?:page|pagebreak|column|columnbreak)\s*$/gmi,'').replace(/^#{1,6}\s+/gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/\*([^*]+)\*/g,'$1').replace(/__([^_]+)__/g,'$1').replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1').trim()
+ return source.replace(/<style[\s\S]*?<\/style>/gi,'').replace(/^\s*{{\s*(?:note|descriptive|monster|statblock|wide|columns?)\s*$/gmi,'').replace(/^\s*}}\s*$/gmi,'').replace(/{{[^}]+}}/g,'').replace(/^\s*\\(?:page|pagebreak|column|columnbreak)\s*$/gmi,'').replace(/^#{1,6}\s+/gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/\*([^*]+)\*/g,'$1').replace(/__([^_]+)__/g,'$1').replace(/\[([^\]]+)\]\([^\)]+\)/g,'$1').trim()
 }
 
 
