@@ -1,5 +1,5 @@
 import{describe,it,expect}from'vitest';import{inspectSource,applySafeIssues}from'./writingHelper';
-import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown,parseBrewSource}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
+import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown,parseBrewSource,sourceToPlainText}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
 describe('Writing Helper regression and stress',()=>{
 it('finds and safely fixes Markdown/writing issues',()=>{const s='#Bad\nThe the coast!! x\\page next';const issues=inspectSource(s);expect(issues.length).toBeGreaterThanOrEqual(4);const fixed=applySafeIssues(s,issues);expect(fixed).toContain('# Bad');expect(fixed).toContain('The coast!');expect(fixed).toContain('x\n\\page')});
 it('does not auto-apply unsafe grammar advice',()=>{const s="It's history is old.";const issues=inspectSource(s);expect(issues.some(x=>!x.safe)).toBe(true);expect(applySafeIssues(s,issues)).toBe(s)});
@@ -58,5 +58,15 @@ describe('Full audit Homebrewery regressions',()=>{
  it('marks imported headings and blockquotes semantically',()=>{
   expect(markdownToTextSections('## History\nOld lore.')[0].style).toBe('heading');
   expect(markdownToTextSections('> Important warning')[0].style).toBe('note');
+ });
+});
+
+describe('Post-merge export regressions',()=>{
+ it('keeps multiline note and descriptive content in plain-text export while removing wrappers',()=>{
+  const plain=sourceToPlainText('{{note\n**About this edition.** Keep this note.\n}}\n\n{{descriptive\n#### Challenge Rating Reference\n| CR | XP |\n|:--|--:|\n| 1 | 200 |\n}}');
+  expect(plain).toContain('About this edition. Keep this note.');
+  expect(plain).toContain('Challenge Rating Reference');
+  expect(plain).toContain('| 1 | 200 |');
+  expect(plain).not.toContain('{{note');expect(plain).not.toContain('{{descriptive');expect(plain).not.toContain('}}');
  });
 });
