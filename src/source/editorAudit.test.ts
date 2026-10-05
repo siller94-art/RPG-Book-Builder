@@ -1,5 +1,5 @@
 import{describe,it,expect}from'vitest';import{inspectSource,applySafeIssues}from'./writingHelper';
-import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
+import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown,parseBrewSource}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
 describe('Writing Helper regression and stress',()=>{
 it('finds and safely fixes Markdown/writing issues',()=>{const s='#Bad\nThe the coast!! x\\page next';const issues=inspectSource(s);expect(issues.length).toBeGreaterThanOrEqual(4);const fixed=applySafeIssues(s,issues);expect(fixed).toContain('# Bad');expect(fixed).toContain('The coast!');expect(fixed).toContain('x\n\\page')});
 it('does not auto-apply unsafe grammar advice',()=>{const s="It's history is old.";const issues=inspectSource(s);expect(issues.some(x=>!x.safe)).toBe(true);expect(applySafeIssues(s,issues)).toBe(s)});
@@ -23,5 +23,40 @@ describe('Brew layout commands',()=>{
   expect(sections.some(s=>s.columns===2&&s.body.includes('Second column'))).toBe(true);
   expect(sections.every(s=>!s.body.includes('\\\\column'))).toBe(true);
   expect(renderBrewMarkdown('First\n\\column\nSecond')).not.toContain('\\\\column');
+ });
+});
+
+describe('Full audit Homebrewery regressions',()=>{
+ const cr=`{{descriptive
+#### Challenge Rating Reference
+
+| CR | XP | CR | XP |
+|:--|--:|:--|--:|
+| 0 | 0 or 10 | 14 | 11,500 |
+| 1/8 | 25 | 15 | 13,000 |
+| 1/4 | 50 | 16 | 15,000 |
+| 1/2 | 100 | 17 | 18,000 |
+| 1 | 200 | 18 | 20,000 |
+| 13 | 10,000 | 30 | 155,000 |
+}}`;
+ it('preserves explicit empty pages in both source parsers',()=>{
+  expect(markdownToProjectPages('# One\n\\page').length).toBe(2);
+  expect(parseBrewSource('# One\n\\page').pages.length).toBe(2);
+ });
+ it('renders the CR descriptive table as a container and table',()=>{
+  const html=renderBrewMarkdown(cr);expect(html).toContain('brew-snippet descriptive');expect(html).toContain('<table>');expect(html).toContain('11,500');expect(html).toContain('155,000');
+ });
+ it('converts note and descriptive containers into visual note sections instead of raw braces',()=>{
+  const note=markdownToTextSections('{{note\n**About this edition.** Keep this note.\n}}');
+  const desc=markdownToTextSections(cr);
+  expect(note[0]).toMatchObject({style:'note',title:'Note'});
+  expect(note[0].body).not.toContain('{{');
+  expect(desc[0]).toMatchObject({style:'note',title:'Descriptive'});
+  expect(desc[0].body).toContain('Challenge Rating Reference');
+  expect(desc[0].body).not.toContain('}}');
+ });
+ it('marks imported headings and blockquotes semantically',()=>{
+  expect(markdownToTextSections('## History\nOld lore.')[0].style).toBe('heading');
+  expect(markdownToTextSections('> Important warning')[0].style).toBe('note');
  });
 });
