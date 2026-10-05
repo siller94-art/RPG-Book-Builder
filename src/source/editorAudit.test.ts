@@ -1,5 +1,5 @@
 import{describe,it,expect}from'vitest';import{inspectSource,applySafeIssues}from'./writingHelper';
-import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown,parseBrewSource,sourceToPlainText}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
+import{markdownToProjectPages,markdownToTextSections,renderBrewMarkdown,parseBrewSource,sourceToPlainText,insertTableOfContents,syncTableOfContents,hasTableOfContents}from'./brewSource';import{findLoreLinks,consistencyIssues,playerSafeSource,timelineFromSource,encyclopedia}from'./loreStudio';
 describe('Writing Helper regression and stress',()=>{
 it('finds and safely fixes Markdown/writing issues',()=>{const s='#Bad\nThe the coast!! x\\page next';const issues=inspectSource(s);expect(issues.length).toBeGreaterThanOrEqual(4);const fixed=applySafeIssues(s,issues);expect(fixed).toContain('# Bad');expect(fixed).toContain('The coast!');expect(fixed).toContain('x\n\\page')});
 it('does not auto-apply unsafe grammar advice',()=>{const s="It's history is old.";const issues=inspectSource(s);expect(issues.some(x=>!x.safe)).toBe(true);expect(applySafeIssues(s,issues)).toBe(s)});
@@ -68,5 +68,27 @@ describe('Post-merge export regressions',()=>{
   expect(plain).toContain('Challenge Rating Reference');
   expect(plain).toContain('| 1 | 200 |');
   expect(plain).not.toContain('{{note');expect(plain).not.toContain('{{descriptive');expect(plain).not.toContain('}}');
+ });
+});
+
+
+describe('Automatic table of contents',()=>{
+ it('inserts a contents page after the opening page and calculates real page numbers',()=>{
+  const source='# Cover\nIntro\n\\page\n# Coral Empire\n## History\nLore\n\\page\n# Tazia Empire\nText';
+  const toc=insertTableOfContents(source);
+  expect(hasTableOfContents(toc)).toBe(true);
+  const pages=toc.split(/^\\page$/gm);
+  expect(pages).toHaveLength(4);
+  expect(pages[1]).toContain('# Contents');
+  expect(pages[1]).toContain('**Coral Empire** | 3 |');
+  expect(pages[1]).toContain('History | 3 |');
+  expect(pages[1]).toContain('**Tazia Empire** | 4 |');
+ });
+ it('refreshes page numbers without creating duplicate contents pages',()=>{
+  const first=insertTableOfContents('# Cover\n\\page\n# One\n\\page\n# Two');
+  const moved=first.replace('# One','\\page\n# Added\n\\page\n# One');
+  const synced=syncTableOfContents(moved);
+  expect((synced.match(/RPG-BOOK-BUILDER:TOC/g)||[])).toHaveLength(1);
+  expect(synced).toContain('**One** | 5 |');
  });
 });
