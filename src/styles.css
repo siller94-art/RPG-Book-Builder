@@ -865,3 +865,16 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .pdfCaptureHost .brew-columns{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:28px!important;align-items:start!important}
 .pdfCaptureHost .brew-column{min-width:0!important}
 .pdfCaptureHost .brew-image img{max-width:100%!important;height:auto!important;object-fit:contain!important}
+
+
+/* Native Xcode v18 artwork parity — shared by Windows and macOS desktop builds. */
+.stampedImage img.artStyle-transparent-cutout{background:transparent!important}
+.stampedImage img.artStyle-watercolor,
+.printBlock img.artStyle-watercolor{
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 48%,rgba(0,0,0,.92) 58%,rgba(0,0,0,.55) 72%,transparent 94%);
+  mask-image:radial-gradient(ellipse at center,#000 48%,rgba(0,0,0,.92) 58%,rgba(0,0,0,.55) 72%,transparent 94%);
+  filter:saturate(.96) contrast(.98);
+}
+.block.image:has(.artStyle-watercolor){overflow:visible}
+.printBlock.image:has(.artStyle-watercolor){overflow:visible}
+.paper:has(> .block.image .artStyle-watercolor) .block.image{isolation:isolate}
