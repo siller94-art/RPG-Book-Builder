@@ -14,7 +14,8 @@
   },
   "esmodules": [
     "scripts/main.js",
-    "scripts/approval.js"
+    "scripts/approval.js",
+    "scripts/srd-catalog.js"
   ],
   "styles": [
     "styles/companion.css"
