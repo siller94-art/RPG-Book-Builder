@@ -1,5 +1,5 @@
 import type{ImageBlock}from'../model/types';
-export type PhotoPreset='portrait'|'half'|'wide'|'background'|'decoration'|'chapterHero'|'sidebarPortrait'|'fullBleed'|'watermark'|'cornerArt'|'banner'|'bestiarum'|'itemSpotlight';
+export type PhotoPreset='portrait'|'half'|'wide'|'background'|'decoration'|'chapterHero'|'sidebarPortrait'|'fullBleed'|'watermark'|'cornerArt'|'banner'|'bestiarum'|'itemSpotlight'|'wrapLeft'|'wrapRight'|'watercolorCenter'|'watercolorEdge'|'watercolorCorner'|'watercolorSplatter'|'fullPageArt'|'transparentCutout';
 export interface PhotoAdvice{level:'good'|'tip'|'warning';message:string}
 export const photoPresets:Record<PhotoPreset,{label:string;patch:Partial<ImageBlock>;description:string}>={
  portrait:{label:'Portrait',description:'NPC or character artwork',patch:{width:42,fit:'cover',height:360,position:'right',layer:'inline',opacity:1}},
@@ -14,7 +14,15 @@ export const photoPresets:Record<PhotoPreset,{label:string;patch:Partial<ImageBl
  cornerArt:{label:'Corner Art',description:'Small decorative sourcebook illustration',patch:{width:24,fit:'contain',position:'right',layer:'inline',opacity:1}},
  banner:{label:'Chapter Banner',description:'Wide shallow art below a chapter heading',patch:{width:100,fit:'cover',height:190,position:'center',layer:'inline',opacity:1}},
  bestiarum:{label:'Bestiary Art',description:'Creature illustration sized for a stat page',patch:{width:46,fit:'contain',height:390,position:'right',layer:'inline',opacity:1}},
- itemSpotlight:{label:'Item Spotlight',description:'Magic item or relic art with surrounding lore',patch:{width:32,fit:'contain',height:300,position:'center',layer:'inline',opacity:1}}
+ itemSpotlight:{label:'Item Spotlight',description:'Magic item or relic art with surrounding lore',patch:{width:32,fit:'contain',height:300,position:'center',layer:'inline',opacity:1}},
+ wrapLeft:{label:'Wrap Left',description:'Sourcebook art anchored beside text on the left',patch:{width:45,fit:'cover',height:330,position:'left',layer:'inline',opacity:1}},
+ wrapRight:{label:'Wrap Right',description:'Sourcebook art anchored beside text on the right',patch:{width:45,fit:'cover',height:330,position:'right',layer:'inline',opacity:1}},
+ watercolorCenter:{label:'Watercolor Center',description:'Soft centered D&D-style illustration',patch:{width:72,fit:'contain',height:390,position:'center',layer:'inline',opacity:.92}},
+ watercolorEdge:{label:'Watercolor Edge',description:'Large faded edge illustration for lore pages',patch:{width:48,fit:'cover',height:430,position:'right',layer:'inline',opacity:.82}},
+ watercolorCorner:{label:'Watercolor Corner',description:'Decorative faded corner artwork',patch:{width:34,fit:'contain',height:300,position:'right',layer:'inline',opacity:.8}},
+ watercolorSplatter:{label:'Watercolor Splatter',description:'Loose fantasy illustration treatment',patch:{width:62,fit:'contain',height:380,position:'center',layer:'inline',opacity:.86}},
+ fullPageArt:{label:'Full Page Art',description:'Large illustration for art-focused pages',patch:{width:100,fit:'contain',height:650,position:'center',layer:'inline',opacity:1}},
+ transparentCutout:{label:'Transparent Cutout',description:'Crest or character cutout after background removal',patch:{width:42,fit:'contain',height:380,position:'center',layer:'inline',opacity:1}}
 };
 export function photoAdvice(image:ImageBlock):PhotoAdvice[]{
  const a:PhotoAdvice[]=[],kb=(image.storedBytes??0)/1024;
