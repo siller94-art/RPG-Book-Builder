@@ -120,8 +120,8 @@ async function reviewSubmission(submissionId,action,note=""){
 }
 
 async function createApprovedDocument(s){
-  const c=s.content,observer=CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER,owner=CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
-  const ownership={default:observer,[s.userId]:owner};
+  const c=s.content,owner=CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+  const ownership={default:CONST.DOCUMENT_OWNERSHIP_LEVELS.NONE,[s.userId]:owner};
   const flags={[MODULE_ID]:{approvalStatus:STATUS.APPROVED,submissionId:s.id,submittedBy:s.userId,revision:s.revision}};
   let type="loot",system={description:{value:`<p>${esc(c.description).replace(/\n/g,"</p><p>")}</p>`}};
   if(c.type==="spell")type="spell";
