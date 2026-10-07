@@ -39,3 +39,10 @@ The native package format uses `format: "rpg-book-builder-foundry"` and an `entr
 
 ## Scope
 The module is system-agnostic for Journal lore. Deeper Actor/Item automation is designed for D&D 5e structured exports. Other game systems can still use the standalone Journal importer.
+
+
+## D&D SRD support
+
+The companion can use SRD content installed with the Foundry D&D5e system in two separate rules modes: **2014 (SRD 5.1)** and **2024 (SRD 5.2.1)**. The catalog reads native Foundry compendium documents rather than duplicating proprietary non-SRD books. Custom player-created species, items, and spells continue through the GM approval workflow.
+
+SRD material is used under CC BY 4.0. This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the Coast LLC and material taken from System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC. SRD 5.1 and SRD 5.2.1 are licensed under the Creative Commons Attribution 4.0 International License.
