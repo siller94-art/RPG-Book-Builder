@@ -7,7 +7,7 @@ const manifest=JSON.parse(fs.readFileSync(path.join(root,'module.json'),'utf8'))
 
 describe('Foundry release package',()=>{
   it('has the required module files',()=>{
-    for(const file of ['module.json','README.md','scripts/main.js','scripts/approval.js','scripts/srd-catalog.js','styles/companion.css']){
+    for(const file of ['module.json','README.md','scripts/main.js','scripts/approval.js','scripts/srd-catalog.js','scripts/character-creator.js','styles/companion.css']){
       expect(fs.existsSync(path.join(root,file)),file).toBe(true);
     }
   });
@@ -19,6 +19,7 @@ describe('Foundry release package',()=>{
     expect(manifest.esmodules).toContain('scripts/main.js');
     expect(manifest.esmodules).toContain('scripts/approval.js');
     expect(manifest.esmodules).toContain('scripts/srd-catalog.js');
+    expect(manifest.esmodules).toContain('scripts/character-creator.js');
     expect(manifest.styles).toContain('styles/companion.css');
     expect(manifest.manifest).toMatch(/releases\/latest\/download\/module\.json$/);
     expect(manifest.download).toBe(`https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v${manifest.version}/rpg-book-builder-companion.zip`);
