@@ -12,7 +12,10 @@
     "check": "npm run build && npm test",
     "mac:xcode:check": "xcodebuild -version && xcrun --sdk macosx --show-sdk-path && rustc --version && npm test && npm run build",
     "mac:app": "npm run mac:xcode:check && npm run tauri -- build --bundles app",
-    "mac:dmg": "npm run mac:xcode:check && npm run tauri -- build --bundles dmg"
+    "mac:dmg": "npm run mac:xcode:check && npm run tauri -- build --bundles dmg",
+    "windows:check": "npm run check",
+    "windows:exe": "npm run windows:check && npm run tauri -- build --bundles nsis",
+    "desktop:check": "npm run check"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.0.0",
