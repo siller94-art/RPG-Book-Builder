@@ -15,7 +15,8 @@
   "esmodules": [
     "scripts/main.js",
     "scripts/approval.js",
-    "scripts/srd-catalog.js"
+    "scripts/srd-catalog.js",
+    "scripts/character-creator.js"
   ],
   "styles": [
     "styles/companion.css"
