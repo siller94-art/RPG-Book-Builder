@@ -958,3 +958,9 @@ main{padding:20px;background:#20262d}
  .printPaper .printBlock.image,.printPaper .printBlock.statblock{break-inside:avoid!important;page-break-inside:avoid!important}
  .printPaper .printBody.twoColumns{column-fill:auto!important}
 }
+
+/* Per-artwork watercolor feathering, shared by editor and printed page. */
+.paper img.artStyle-watercolor,.printPaper img.artStyle-watercolor,.printBlock img.artStyle-watercolor{
+ -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,#000 calc(100% - var(--watercolor-feather,35%)),transparent 100%)!important;
+ mask-image:radial-gradient(ellipse at center,#000 0%,#000 calc(100% - var(--watercolor-feather,35%)),transparent 100%)!important;
+}
