@@ -1,0 +1,53 @@
+name: Publish Foundry VTT Module
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'foundry-v*'
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Determine version
+        id: version
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/foundry-v* ]]; then
+            echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=foundry-v0.4.0" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Validate and package Foundry module
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('foundry-module')
+          m=json.loads((p/'module.json').read_text())
+          for entry in m['esmodules']+m['styles']:
+              assert (p/entry).is_file(), f"Missing module asset: {entry}"
+          assert m['id']=='rpg-book-builder-companion'
+          assert m['download'].endswith('/rpg-book-builder-companion.zip')
+          print('Validated Foundry module',m['version'])
+          PY
+          cd foundry-module
+          zip -r ../rpg-book-builder-companion.zip module.json scripts styles
+          cp module.json ../module.json
+          unzip -t ../rpg-book-builder-companion.zip
+      - name: Publish release with installable manifest and ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "RPG Book Builder Foundry v0.4.0" --notes "Foundry VTT 14 module with character creator, SRD catalog, Quick Homebrew and GM approval."
+          fi
+          gh release upload "$TAG" module.json rpg-book-builder-companion.zip --clobber
+          curl --fail --location --retry 5 --retry-delay 2 --output /tmp/released-module.json "https://github.com/${GITHUB_REPOSITORY}/releases/download/$TAG/module.json"
+          python3 -m json.tool /tmp/released-module.json >/dev/null
