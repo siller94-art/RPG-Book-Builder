@@ -21,7 +21,7 @@ describe('Foundry release package',()=>{
     expect(manifest.esmodules).toContain('scripts/srd-catalog.js');
     expect(manifest.esmodules).toContain('scripts/character-creator.js');
     expect(manifest.styles).toContain('styles/companion.css');
-    expect(manifest.manifest).toMatch(/releases\/latest\/download\/module\.json$/);
+    expect(manifest.manifest).toBe(`https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v${manifest.version}/module.json`);
     expect(manifest.download).toBe(`https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v${manifest.version}/rpg-book-builder-companion.zip`);
   });
   it('keeps manifest entry points inside the packaged folder',()=>{
