@@ -865,3 +865,39 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .pdfCaptureHost .brew-columns{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:28px!important;align-items:start!important}
 .pdfCaptureHost .brew-column{min-width:0!important}
 .pdfCaptureHost .brew-image img{max-width:100%!important;height:auto!important;object-fit:contain!important}
+
+
+/* Unified editor: one screen, flexible three-panel layout, no forced horizontal overflow. */
+.workspace-build.app{
+  grid-template:64px minmax(0,1fr)/clamp(190px,18vw,238px) minmax(0,1fr) clamp(220px,22vw,280px)!important;
+  min-width:0!important;
+  width:100%!important;
+  height:100vh!important;
+  overflow:hidden!important;
+}
+.workspace-build>header{min-width:0!important;overflow-x:auto!important}
+.workspace-build>.pages,.workspace-build>main,.workspace-build>.tools{
+  min-width:0!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+}
+.workspace-build>main{overflow-y:auto!important;overflow-x:hidden!important;padding:12px clamp(8px,2vw,24px) 24px!important}
+.workspace-build .paper,.workspace-build .paper.a4{
+  width:100%!important;
+  max-width:816px!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+.workspace-build .mockEditorTitle{width:100%!important;max-width:816px!important;box-sizing:border-box!important}
+.workspace-build .paper .block,.workspace-build .paper textarea,.workspace-build .paper img{max-width:100%!important;box-sizing:border-box!important}
+.workspace-build .paper textarea{resize:vertical!important}
+@media(max-width:1050px){
+ .workspace-build.app{grid-template-columns:190px minmax(0,1fr) 220px!important;min-width:0!important}
+ .workspace-build>main{padding:10px!important}
+}
+@media(max-width:760px){
+ .workspace-build.app{grid-template-columns:170px minmax(0,1fr)!important;min-width:0!important}
+ .workspace-build>.tools{grid-column:2!important;grid-row:2!important;position:absolute!important;right:0!important;top:64px!important;bottom:0!important;width:min(240px,55vw)!important;transform:translateX(calc(100% - 18px));transition:transform .2s!important;z-index:15!important;box-shadow:-8px 0 18px #0005!important}
+ .workspace-build>.tools:hover,.workspace-build>.tools:focus-within{transform:translateX(0)!important}
+ .workspace-build>.bookContentLabel{left:8px!important;width:145px!important}
+}
