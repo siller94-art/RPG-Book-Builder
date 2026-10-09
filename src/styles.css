@@ -912,3 +912,30 @@ main{padding:20px;background:#20262d}
 .paper .block.note:nth-of-type(4n){background:#f0c5b8;border-left-color:#a34d3d}
 @media(min-width:1400px){.app{grid-template-columns:205px minmax(700px,1fr) 270px}.paper{transform:none}}
 @media(max-width:1100px){.app{grid-template-columns:170px minmax(520px,1fr) 210px}.paper{transform-origin:top center}}
+
+/* Responsive book workspace and reliable page boundaries */
+@media screen {
+ .app:not(.workspace-world):not(.workspace-build){grid-template-columns:clamp(165px,16vw,205px) minmax(0,1fr) clamp(210px,21vw,270px)!important;min-width:0!important}
+ .app:not(.workspace-world):not(.workspace-build) main{min-width:0!important;overflow:auto!important;padding:18px clamp(12px,2vw,28px)!important}
+ .app:not(.workspace-world):not(.workspace-build) .paper{box-sizing:border-box!important;max-width:100%!important;min-width:0!important;margin-left:auto!important;margin-right:auto!important;overflow-wrap:anywhere!important}
+ .paper .block,.paper .block textarea,.paper .block .fullBodyEditor{min-width:0!important;max-width:100%!important;box-sizing:border-box!important;overflow-wrap:anywhere!important}
+ .paper .block.image img{max-width:100%!important;height:auto}
+ .pages,.tools{min-width:0!important;overflow-x:hidden!important}
+ .pages .thumb{contain:layout paint}
+}
+@media screen and (max-width:1100px){
+ .app:not(.workspace-world):not(.workspace-build){grid-template-columns:150px minmax(0,1fr) 195px!important}
+ .app:not(.workspace-world):not(.workspace-build) .paper{padding:clamp(20px,4vw,48px)!important;transform:none!important}
+}
+@media screen and (max-width:760px){
+ .app:not(.workspace-world):not(.workspace-build){grid-template-columns:130px minmax(0,1fr)!important}
+ .app:not(.workspace-world):not(.workspace-build) .tools{display:none!important}
+}
+@media print {
+ .printPaper{box-sizing:border-box!important;break-after:page!important;page-break-after:always!important;overflow:hidden!important}
+ .printPaper:last-child{break-after:auto!important;page-break-after:auto!important}
+ .printBlock{box-sizing:border-box!important;max-width:100%!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ .printBlock img{max-width:100%!important}
+ .printBody{overflow-wrap:anywhere!important;word-break:normal!important}
+ .printBody.twoColumns{column-fill:auto!important}
+}
