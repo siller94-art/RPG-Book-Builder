@@ -865,3 +865,102 @@ main{min-width:0;max-width:100%;overflow-x:hidden}
 .pdfCaptureHost .brew-columns{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:28px!important;align-items:start!important}
 .pdfCaptureHost .brew-column{min-width:0!important}
 .pdfCaptureHost .brew-image img{max-width:100%!important;height:auto!important;object-fit:contain!important}
+
+
+/* Native Xcode v18 artwork parity — shared by Windows and macOS desktop builds. */
+.stampedImage img.artStyle-transparent-cutout{background:transparent!important}
+.stampedImage img.artStyle-watercolor,
+.printBlock img.artStyle-watercolor{
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 48%,rgba(0,0,0,.92) 58%,rgba(0,0,0,.55) 72%,transparent 94%);
+  mask-image:radial-gradient(ellipse at center,#000 48%,rgba(0,0,0,.92) 58%,rgba(0,0,0,.55) 72%,transparent 94%);
+  filter:saturate(.96) contrast(.98);
+}
+.block.image:has(.artStyle-watercolor){overflow:visible}
+.printBlock.image:has(.artStyle-watercolor){overflow:visible}
+.paper:has(> .block.image .artStyle-watercolor) .block.image{isolation:isolate}
+
+
+/* Combined macOS + Windows reference UI parity — 2026-10 */
+.app{grid-template:58px 1fr/190px minmax(640px,1fr) 250px;background:#111820}
+header{height:58px;padding:0 12px;gap:10px;background:linear-gradient(#171d24,#10151b);border-bottom:1px solid #39414a}
+header b{font:700 16px Inter,sans-serif;color:#f2f3f5}
+.projectTitle{height:30px;width:235px;text-align:center;border-radius:14px;background:#151b22;border-color:#252d36;font-size:12px}
+nav button,nav .quality{min-height:29px;padding:5px 8px;font-size:11px;border-radius:5px}
+.pages,.tools{padding:10px;background:#141a21;border-color:#343b44}
+.pages{width:auto}.tools{width:auto}
+.pages h3,.tools h3{margin:4px 0 8px;font:700 11px Inter,sans-serif;color:#d8dde3;text-transform:uppercase;letter-spacing:.5px}
+.pages .thumb{height:112px!important;padding:7px!important;background:#1b222a!important;border:1px solid #343d47!important;justify-content:flex-end!important;overflow:hidden;position:relative}
+.pages .thumb:before{content:'';position:absolute;left:22px;right:22px;top:9px;height:75px;background:linear-gradient(180deg,#f2e6c8,#ead9b4);border:1px solid #a89067;box-shadow:0 2px 5px #0008}
+.pages .thumb.selected{border:2px solid #2686ff!important;background:#202934!important;box-shadow:0 0 0 1px #2686ff55!important}
+.pages .thumb span,.pages .thumb small{position:relative;z-index:2}
+.pages .thumb span{font-size:10px}.pages .thumb small{font-size:9px}
+main{padding:20px;background:#20262d}
+.paper{box-shadow:0 4px 18px #000b,0 0 0 1px #9e8b69;padding:54px 56px;background-color:#f0e2bd;background-image:radial-gradient(circle at 45% 16%,#fff8dfaa,transparent 52%),linear-gradient(90deg,#8f6b3815,#fff0 9%,#fff0 91%,#8f6b3815)}
+.mockEditorTitle{max-width:816px;margin:0 auto 8px;min-height:28px;display:flex;align-items:center;justify-content:space-between;color:#cfd5dc}
+.mockEditorTitle h1{font:600 12px Inter,sans-serif;margin:0}
+.workspaceBanner{max-width:816px;margin:0 auto 8px;padding:0;background:transparent;border:0;color:#9faab5;font-size:10px}
+.tools .imageInspector{background:#11171d;border:1px solid #343c45;border-radius:5px;padding:8px}
+.imageControls{background:#141b22;border:1px solid #313a44;border-radius:5px;padding:6px;color:#c5cdd6;justify-content:flex-start}
+.imageControls select{background:#202832;color:#e3e7eb;border-color:#48535e}
+.imageControls input[type=range]{accent-color:#2d8cff}
+.image img.artStyle-transparent-cutout{background:transparent}
+.image img.artStyle-watercolor{-webkit-mask-image:radial-gradient(ellipse at center,#000 56%,#000c 68%,#0005 79%,transparent 94%);mask-image:radial-gradient(ellipse at center,#000 56%,#000c 68%,#0005 79%,transparent 94%);filter:saturate(.92) contrast(.98)}
+.paper .block.note{box-shadow:0 2px 4px #0002;border-radius:2px}
+.paper .block.note:nth-of-type(4n+1){background:#dfe7b7;border-left-color:#677936}
+.paper .block.note:nth-of-type(4n+2){background:#f2dfac;border-left-color:#9b6d29}
+.paper .block.note:nth-of-type(4n+3){background:#ddd0ef;border-left-color:#6b4a9d}
+.paper .block.note:nth-of-type(4n){background:#f0c5b8;border-left-color:#a34d3d}
+@media(min-width:1400px){.app{grid-template-columns:205px minmax(700px,1fr) 270px}.paper{transform:none}}
+@media(max-width:1100px){.app{grid-template-columns:170px minmax(520px,1fr) 210px}.paper{transform-origin:top center}}
+
+/* Responsive book workspace and reliable page boundaries */
+@media screen {
+ .app:not(.workspace-world):not(.workspace-build){grid-template-columns:clamp(165px,16vw,205px) minmax(0,1fr) clamp(210px,21vw,270px)!important;min-width:0!important}
+ .app:not(.workspace-world):not(.workspace-build) main{min-width:0!important;overflow:auto!important;padding:18px clamp(12px,2vw,28px)!important}
+ .app:not(.workspace-world):not(.workspace-build) .paper{box-sizing:border-box!important;max-width:100%!important;min-width:0!important;margin-left:auto!important;margin-right:auto!important;overflow-wrap:anywhere!important}
+ .paper .block,.paper .block textarea,.paper .block .fullBodyEditor{min-width:0!important;max-width:100%!important;box-sizing:border-box!important;overflow-wrap:anywhere!important}
+ .paper .block.image img{max-width:100%!important;height:auto}
+ .pages,.tools{min-width:0!important;overflow-x:hidden!important}
+ .pages .thumb{contain:layout paint}
+}
+@media screen and (max-width:1100px){
+ .app:not(.workspace-world):not(.workspace-build){grid-template-columns:150px minmax(0,1fr) 195px!important}
+ .app:not(.workspace-world):not(.workspace-build) .paper{padding:clamp(20px,4vw,48px)!important;transform:none!important}
+}
+@media screen and (max-width:760px){
+ .app:not(.workspace-world):not(.workspace-build){grid-template-columns:130px minmax(0,1fr)!important}
+ .app:not(.workspace-world):not(.workspace-build) .tools{display:none!important}
+}
+@media print {
+ .printPaper{box-sizing:border-box!important;break-after:page!important;page-break-after:always!important;overflow:hidden!important}
+ .printPaper:last-child{break-after:auto!important;page-break-after:auto!important}
+ .printBlock{box-sizing:border-box!important;max-width:100%!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ .printBlock img{max-width:100%!important}
+ .printBody{overflow-wrap:anywhere!important;word-break:normal!important}
+ .printBody.twoColumns{column-fill:auto!important}
+}
+
+/* Homebrewery-inspired typography and balanced two-column reading layout.
+   Only book content receives this treatment; editing controls stay full width. */
+.paper .block.text .fullBodyEditor,.paper .block.text textarea{line-height:1.45!important}
+.printPaper .printBody.twoColumns{columns:2!important;column-gap:24px!important;column-rule:0!important;column-fill:auto!important}
+.printPaper .printBody{line-height:1.45!important;overflow-wrap:break-word!important;hyphens:auto}
+.printPaper .printBlock h2{break-after:avoid!important;page-break-after:avoid!important}
+.printPaper .printStats,.printPaper .printRules section,.printPaper table{break-inside:avoid!important;page-break-inside:avoid!important}
+.workspace-world .worldPagePreview .brew-columns,.pdfCaptureHost .brew-columns{grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:22px!important;align-items:start!important}
+.workspace-world .worldPagePreview .brew-column,.pdfCaptureHost .brew-column{min-width:0!important;overflow-wrap:break-word!important}
+.workspace-world .worldPagePreview .brew-column p,.pdfCaptureHost .brew-column p{margin:0 0 .55em!important;line-height:1.42!important}
+.workspace-world .worldPagePreview .brew-column h1,.workspace-world .worldPagePreview .brew-column h2,.workspace-world .worldPagePreview .brew-column h3{break-after:avoid!important;margin-top:.7em!important;margin-bottom:.3em!important}
+.workspace-world .worldPagePreview .brew-column table,.pdfCaptureHost .brew-column table{width:100%!important;table-layout:auto!important;border-collapse:collapse!important;break-inside:avoid!important}
+.workspace-world .worldPagePreview .brew-column td,.workspace-world .worldPagePreview .brew-column th{white-space:normal!important;overflow-wrap:break-word!important}
+@media print{
+ .printPaper .printBlock{break-inside:auto!important;page-break-inside:auto!important}
+ .printPaper .printBlock.image,.printPaper .printBlock.statblock{break-inside:avoid!important;page-break-inside:avoid!important}
+ .printPaper .printBody.twoColumns{column-fill:auto!important}
+}
+
+/* Per-artwork watercolor feathering, shared by editor and printed page. */
+.paper img.artStyle-watercolor,.printPaper img.artStyle-watercolor,.printBlock img.artStyle-watercolor{
+ -webkit-mask-image:radial-gradient(ellipse at center,#000 0%,#000 calc(100% - var(--watercolor-feather,35%)),transparent 100%)!important;
+ mask-image:radial-gradient(ellipse at center,#000 0%,#000 calc(100% - var(--watercolor-feather,35%)),transparent 100%)!important;
+}
