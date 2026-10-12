@@ -6,6 +6,7 @@ A Foundry VTT module that works in two ways:
 2. **Standalone Lore Importer** — Foundry users who do not use RPG Book Builder can import their own Markdown, text, or compatible JSON lore.
 
 ## Supported files
+
 - `.rpgfoundry` — full RPG Book Builder package
 - `.json` — compatible structured package
 - `.md` — Markdown lore
@@ -14,6 +15,7 @@ A Foundry VTT module that works in two ways:
 Markdown headings beginning with `# ` become separate Journal entries. A text file without headings becomes one Journal entry.
 
 ## Current features
+
 - GM import button in the Journal directory
 - Preview/review window with per-entry selection
 - New vs Update status
@@ -32,10 +34,13 @@ Markdown headings beginning with `# ` become separate Journal entries. A text fi
   - `previewPackage(data)`
 
 ## Standalone use
+
 Copy this folder to Foundry's `Data/modules/rpg-book-builder-companion`, restart Foundry, enable the module in a world, open Journals, and press **RPG Book Builder**. Despite the button name, Markdown and text imports do not require RPG Book Builder.
 
 ## Structured package
+
 The native package format uses `format: "rpg-book-builder-foundry"` and an `entries` array. Structured entries can specify name, kind, visibility, body, links, image, and D&D 5e data.
 
 ## Scope
+
 The module is system-agnostic for Journal lore. Deeper Actor/Item automation is designed for D&D 5e structured exports. Other game systems can still use the standalone Journal importer.

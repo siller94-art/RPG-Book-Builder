@@ -1,6 +1,7 @@
 # Roadmap
 
 ## Working now
+
 - Multi-page visual document editing
 - Text and RPG statblocks
 - Artwork import and drag/drop
@@ -12,6 +13,7 @@
 - CI web build checks
 
 ## Next production milestones
+
 - Structured editors for monster/NPC/spell/item/vehicle/trap templates
 - Image crop, opacity, positioning and compression
 - Automatic text columns and overflow pagination

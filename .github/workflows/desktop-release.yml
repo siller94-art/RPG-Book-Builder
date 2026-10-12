@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
   pull_request:
   push:
-    branches: ["main", "feature/dnd-campaign-creator-foundation"]
-    tags: ["v*"]
+    branches: ['main', 'feature/dnd-campaign-creator-foundation']
+    tags: ['v*']
 permissions:
   contents: write
 jobs:

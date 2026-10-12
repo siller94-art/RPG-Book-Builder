@@ -22,4 +22,5 @@ A local-first desktop publishing tool for tabletop RPG books, inspired by the ea
 ## Status
 
 Project initialization is underway. The first milestone is a usable editor shell with pages, text, images, statblocks, save/open, undo/redo, and PDF export.
+
 <!-- Foundry v14 final validation: 2026-09-24 -->
