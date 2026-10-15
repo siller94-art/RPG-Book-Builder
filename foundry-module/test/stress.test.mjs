@@ -43,6 +43,9 @@ describe("garbage-shaped entries", () => {
 
 describe("scale", () => {
   beforeEach(() => fresh());
+  // Seeding 5,000 documents takes several seconds on CI runners. Only the preview is timed,
+  // but the seed must finish inside the test: if vitest's default 5 s timeout cuts it off, the
+  // import keeps running in the background and slows every later test in this file.
   it("previews 5,000 entries against 5,000 existing documents quickly", async () => {
     const entries = Array.from({length: 5000}, (_, i) => ({id: `e${i}`, name: `Entry ${i}`, body: `Lore ${i}`}));
     await I.importPackage(pkg(entries.slice(0, 5000)));
@@ -51,7 +54,7 @@ describe("scale", () => {
     const counts = I.previewPackage(pkg(entries));
     expect(performance.now() - t).toBeLessThan(1500);
     expect(counts).toMatchObject({Unchanged: 4999, Update: 1, New: 0});
-  });
+  }, 120_000);
   it("parses a 4 MB markdown file with 10,000 headings", () => {
     const text = Array.from({length: 10000}, (_, i) => `# Heading ${i}\n${"Lorem ipsum dolor sit amet. ".repeat(14)}`).join("\n");
     const t = performance.now();
