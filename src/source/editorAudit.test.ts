@@ -73,6 +73,12 @@ describe('Post-merge export regressions',()=>{
 
 
 describe('Automatic table of contents',()=>{
+ it('uses Homebrewery pageNumber boundaries consistently for TOC pages',()=>{
+  const source='# Cover\n{{pageNumber 1}}\n# Chapter One';
+  const toc=insertTableOfContents(source);
+  expect(hasTableOfContents(toc)).toBe(true);
+  expect(toc).toContain('**Chapter One** | 3 |');
+ });
  it('inserts a contents page after the opening page and calculates real page numbers',()=>{
   const source='# Cover\nIntro\n\\page\n# Coral Empire\n## History\nLore\n\\page\n# Tazia Empire\nText';
   const toc=insertTableOfContents(source);

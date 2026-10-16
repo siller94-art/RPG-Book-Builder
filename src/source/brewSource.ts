@@ -27,7 +27,7 @@ export function restoreEmbeddedImages(edited:string,original:string){
 }
 export function brewPageSources(source:string){
  const normalized=source.replace(/\r\n?/g,'\n');
- return normalized.split(/^\s*\\(?:page|pagebreak)\s*$/gmi)
+ return normalized.split(/^\s*(?:\\page|\\pagebreak|{{pageNumber[^}]*}})\s*$/gmi)
 }
 export const TOC_MARKER='<!-- RPG-BOOK-BUILDER:TOC -->';
 export function hasTableOfContents(source:string){return source.includes(TOC_MARKER)}
