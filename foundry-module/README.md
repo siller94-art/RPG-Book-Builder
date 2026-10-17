@@ -1,48 +1,77 @@
-# RPG Book Builder Companion / Standalone Lore Importer
+# RPG Book Builder Companion
 
-A Foundry VTT module that works in two ways:
+A Foundry VTT (v14) module with three tools:
 
-1. **RPG Book Builder Companion** — imports structured `.rpgfoundry` campaign exports.
-2. **Standalone Lore Importer** — Foundry users who do not use RPG Book Builder can import their own Markdown, text, or compatible JSON lore.
+1. **Import Lore** — bring an RPG Book Builder `.rpgfoundry` export, a compatible `.json` package, or any Markdown / text file into your world.
+2. **Character Creator** — a step-by-step D&D 5e builder that pulls species, backgrounds, classes, feats, spells and gear from the SRD compendiums that ship with the D&D 5e system.
+3. **Custom Content approval** — players write their own species, items and spells; nothing reaches a character until the GM approves it.
 
-## Supported files
-- `.rpgfoundry` — full RPG Book Builder package
-- `.json` — compatible structured package
-- `.md` — Markdown lore
-- `.txt` — plain-text lore
+## Install
 
-Markdown headings beginning with `# ` become separate Journal entries. A text file without headings becomes one Journal entry.
+Paste this manifest URL into Foundry's **Install Module** dialog:
 
-## Current features
-- GM import button in the Journal directory
-- Preview/review window with per-entry selection
-- New vs Update status
-- Organized folders
-- Player / GM Only / Secret permissions for structured packages
-- Update-by-source-ID instead of duplicate imports
-- Journal relationship links using Foundry UUID links
-- RPG Book Builder Creature/Person -> Actor conversion
-- RPG Book Builder Item -> Item conversion
-- D&D 5e AC, HP, abilities, speed, CR, attacks, damage, ranges, senses, languages, resistances, immunities and vulnerabilities mapping where structured data is available
-- Actor-owned imported features/actions
-- API for other modules/macros:
-  - `importPackage(data)`
-  - `importPlainLore(title, text)`
-  - `plainLorePackage(title, text)`
-  - `previewPackage(data)`
+```
+https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v0.5.0/module.json
+```
 
-## Standalone use
-Copy this folder to Foundry's `Data/modules/rpg-book-builder-companion`, restart Foundry, enable the module in a world, open Journals, and press **RPG Book Builder**. Despite the button name, Markdown and text imports do not require RPG Book Builder.
+or copy this folder to `Data/modules/rpg-book-builder-companion` and restart Foundry. Enable it in your world.
 
-## Structured package
-The native package format uses `format: "rpg-book-builder-foundry"` and an `entries` array. Structured entries can specify name, kind, visibility, body, links, image, and D&D 5e data.
+## Import Lore (GM)
 
-## Scope
-The module is system-agnostic for Journal lore. Deeper Actor/Item automation is designed for D&D 5e structured exports. Other game systems can still use the standalone Journal importer.
+Open the **Journal** sidebar and press **Import Lore**. Pick a file and the Import Manager shows every entry with its status:
 
+| Status | Meaning |
+| --- | --- |
+| **New** | Not in this world yet. |
+| **Update** | Imported before, and the source has changed. |
+| **Unchanged** | Already up to date — skipped. |
+| **Skipped** | The entry has no name. |
 
-## D&D SRD support
+Filter by status, by type (Journals / Actors / Items) or by name, tick what you want, and press **Import**. One bad entry never stops the rest; failures are listed at the end.
 
-The companion can use SRD content installed with the Foundry D&D5e system in two separate rules modes: **2014 (SRD 5.1)** and **2024 (SRD 5.2.1)**. The catalog reads native Foundry compendium documents rather than duplicating proprietary non-SRD books. Custom player-created species, items, and spells continue through the GM approval workflow.
+- Markdown `# Headings` become separate Journal entries; text before the first heading is kept as its own entry. Bodies are rendered as Markdown.
+- Re-importing updates documents in place (matched by source id) and never moves anything you've re-filed into your own folders.
+- `@Name` mentions become clickable links when the target is in the same package or was imported earlier.
+- **Player** entries are visible to players; **GM Only** and **Secret** entries are hidden.
+- With the D&D 5e system, *Creature* and *Person* entries become NPC Actors (AC, HP and hit-dice formula, abilities, CR including fractions like `1/2`, speeds, saves and skills as proficiencies, damage and condition traits, size) with their actions as items. *Item* entries become Items. In any other system everything imports as Journals.
+- Embedded images are uploaded into `worlds/<world>/rpg-book-builder/`.
 
-SRD material is used under CC BY 4.0. This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") by Wizards of the Coast LLC and material taken from System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC. SRD 5.1 and SRD 5.2.1 are licensed under the Creative Commons Attribution 4.0 International License.
+## Character Creator (D&D 5e)
+
+Open the **Actors** sidebar and press **Character Creator**. Choose the character, then **2014 · SRD 5.1** or **2024 · SRD 5.2.1** rules, and work through Species → Background → Class → Subclass → Feats → Spell Book → Equipment → Review.
+
+- Classes, subclasses, species and backgrounds go through D&D 5e's own Advancement prompts, exactly as if you'd dragged them onto the sheet.
+- Items already on the sheet are marked, and spells, feats and origins can't be added twice.
+- **Homebrew** opens the custom-content form for anything the SRD doesn't have.
+
+## Custom content approval
+
+**Players:** press **My Custom Content** in the Actors or Items sidebar. Pick Species, Item or Spell, write it up (the *Start from* buttons give a template), and **Submit to GM**. Drafts save automatically. A GM must be online to receive a submission; you'll get a notification when it's approved, returned for changes, or rejected. Returned submissions have a **Revise & resubmit** button.
+
+**GMs:** press **Content Approval** (the count shows how many are waiting). Approve to create an Item owned by that player in the **Player Content** folder, return it with a note, or reject it.
+
+## API
+
+```js
+const api = game.modules.get("rpg-book-builder-companion").api;
+await api.importPackage(data);              // {created, updated, unchanged, failed, total}
+await api.importPlainLore("Title", markdown);
+api.plainLorePackage("Title", markdown);    // build a package without importing
+api.previewPackage(data);                   // counts by type and status
+api.showPreview(data);                      // open the Import Manager
+api.openCharacterCreator({actorId});
+api.getSrdCatalog({rulesVersion: "2024", kind: "spell", query: "fire"});
+api.openPlayerContentBuilder();  api.openApprovalQueue();
+```
+
+## Package format
+
+`{"format": "rpg-book-builder-foundry", "version": 1, "title": "…", "entries": [...]}`. Each entry may have `id`, `name`, `kind` (History, Empire, Settlement, Person, Faction, Religion, Item, Creature, Mystery…), `visibility` (`Player`, `GM Only`, `Secret`), `body` (Markdown) or `html`, `links`, `image`, and `dnd5e: {fields, sections}`. Older desktop exports with lowercase kinds (`monster`, `spell`, …) are accepted too.
+
+## Development
+
+`npm test` at the repository root runs the module's tests (`foundry-module/test`) against a strict Foundry API stand-in, including stress cases (thousands of entries, hostile input, concurrent imports and reviews). `test/harness/index.html` boots the real module in a browser against the same stand-in for UI work — serve the repository root and open it (`?role=player`, `?seed=queue`).
+
+## Licence notes
+
+SRD material is used under CC BY 4.0. This work includes material taken from the System Reference Document 5.1 ("SRD 5.1") and the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, licensed under the Creative Commons Attribution 4.0 International License. The module reads the compendiums installed with the D&D 5e system; it does not bundle any rules content.
