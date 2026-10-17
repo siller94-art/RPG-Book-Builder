@@ -27,7 +27,7 @@ describe('Foundry release package',()=>{
     expect(manifest.id).toBe('rpg-book-builder-companion');
     expect(manifest.version).toMatch(/^\d+\.\d+\.\d+$/);
     expect(manifest.compatibility.minimum).toBe('14.367');
-    expect(manifest.compatibility.verified).toBe('14.368');
+    expect(manifest.compatibility.verified).toBe('14.369');
     expect(manifest.esmodules).toEqual(['scripts/main.js']);
     expect(manifest.styles).toContain('styles/companion.css');
     expect(manifest.manifest).toBe(`https://github.com/siller94-art/RPG-Book-Builder/releases/download/foundry-v${manifest.version}/module.json`);
